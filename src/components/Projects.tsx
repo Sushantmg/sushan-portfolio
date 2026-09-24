@@ -31,7 +31,7 @@ export function Projects() {
         <StaggerGroup className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project, i) => (
             <StaggerItem key={project.name}>
-              <TiltCard intensity={6} className="group relative h-full border border-line bg-carbon transition-all duration-300 hover:-translate-y-1 hover:hard-shadow-sm hover:border-transparent">
+              <TiltCard intensity={6} className="shine group relative h-full border border-line bg-carbon transition-all duration-300 hover:-translate-y-1 hover:hard-shadow-sm hover:border-transparent">
                 <div className={`h-1.5 ${accents[project.accent] ?? "bg-acid"} opacity-70 transition-opacity duration-300 group-hover:opacity-100`} />
                 <div className="flex h-full flex-col p-6">
                   <div className="flex items-start justify-between">

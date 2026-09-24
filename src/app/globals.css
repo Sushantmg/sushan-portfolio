@@ -130,3 +130,67 @@ body {
     cursor: none;
   }
 }
+
+@keyframes petal-fall {
+  0% {
+    transform: translate3d(0, -8vh, 0) rotate(0deg) rotateZ(var(--rot));
+  }
+  25% {
+    transform: translate3d(var(--sway), 20vh, 0) rotate(70deg);
+  }
+  50% {
+    transform: translate3d(calc(var(--sway) * -0.65), 46vh, 0) rotate(150deg);
+  }
+  75% {
+    transform: translate3d(var(--sway), 72vh, 0) rotate(240deg);
+  }
+  100% {
+    transform: translate3d(0, 105vh, 0) rotate(330deg);
+  }
+}
+
+.petal {
+  position: absolute;
+  top: -3vh;
+  display: block;
+  border-radius: 62% 38% 58% 42% / 52% 46% 54% 48%;
+  box-shadow: inset -2px 1px 3px rgba(255, 255, 255, 0.4);
+  opacity: 0.8;
+  will-change: transform;
+  animation: petal-fall var(--dur) linear var(--delay) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petal {
+    display: none;
+  }
+  .ticker,
+  .caret,
+  .drift {
+    animation: none;
+  }
+}
+
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+.shine::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 42%,
+    rgba(199, 245, 66, 0.08) 50%,
+    transparent 58%
+  );
+  transform: translateX(-130%);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.group:hover .shine::before,
+.shine:hover::before {
+  transform: translateX(130%);
+}

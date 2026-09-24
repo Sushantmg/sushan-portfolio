@@ -9,6 +9,7 @@ import { Experience } from "@/components/Experience";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { Navbar } from "@/components/Navbar";
+import { Petals } from "@/components/Petals";
 import { Preloader } from "@/components/Preloader";
 import { Projects } from "@/components/Projects";
 import { Skills } from "@/components/Skills";
@@ -17,6 +18,7 @@ export default function Home() {
   return (
     <div className="grain relative min-h-screen">
       <Preloader />
+      <Petals />
       <Navbar />
       <main>
         <Hero />

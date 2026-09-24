@@ -7,6 +7,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { profile } from "@/lib/data";
 import { GitHubIcon, LinkedInIcon } from "./BrandIcons";
 import { LiveClock } from "./LiveClock";
+import { Magnetic } from "./Magnetic";
 import { SkillIcon } from "./SkillIcon";
 import { TiltCard } from "./TiltCard";
 
@@ -157,6 +158,7 @@ export function Hero() {
               transition={{ delay: 0.4, duration: 0.7 }}
               className="mt-10 flex flex-wrap items-center gap-3"
             >
+              <Magnetic>
               <a
                 href="#projects"
                 className="group inline-flex items-center gap-2 bg-acid px-6 py-3 text-sm font-bold text-carbon transition-transform duration-200 hover:-translate-y-0.5"
@@ -164,6 +166,7 @@ export function Hero() {
                 View work
                 <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>
+            </Magnetic>
               <a
                 href="#contact"
                 className="inline-flex items-center gap-2 border border-line bg-carbon-2 px-6 py-3 text-sm font-semibold text-ink transition-colors duration-200 hover:border-acid hover:text-acid"

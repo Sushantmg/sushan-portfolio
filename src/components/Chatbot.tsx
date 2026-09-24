@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Send, Terminal } from "lucide-react";
+import { Bot, Send, Terminal, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { botMeta, getReply, quickPrompts } from "@/lib/chatbot";
 
@@ -21,11 +21,21 @@ let nextId = 1;
 
 export function Chatbot() {
   const [open, setOpen] = useState(false);
+  const [hint, setHint] = useState(false);
   const [messages, setMessages] = useState<Message[]>([welcome]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const t = setTimeout(() => setHint(true), 1800);
+    const hide = setTimeout(() => setHint(false), 9000);
+    return () => {
+      clearTimeout(t);
+      clearTimeout(hide);
+    };
+  }, []);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -67,22 +77,59 @@ export function Chatbot() {
 
   return (
     <>
+      <AnimatePresence>
+        {!open && hint && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ delay: 0, duration: 0.35 }}
+            className="fixed bottom-[5.5rem] right-5 z-[45] w-56 border border-acid/40 bg-carbon-2 p-3 font-mono text-[0.7rem] leading-relaxed text-ink shadow-xl sm:right-6"
+          >
+            <p className="text-acid">{"//"} hi — it&apos;s me, a bot</p>
+            <p className="mt-1.5 text-muted">
+              I&apos;m live inside this site. Ask me anything about sushan —
+              projects, skills, contact.
+            </p>
+            <span className="absolute -bottom-1.5 right-5 h-3 w-3 rotate-45 bg-carbon-2" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <motion.button
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        onClick={() => (open ? setOpen(false) : openPanel())}
-        aria-label="Open chat with Sushan bot"
-        className={`fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center border transition-all duration-200 ${
+        transition={{ delay: 1.1 }}
+        onClick={() => {
+          setHint(false);
+          if (open) setOpen(false);
+          else openPanel();
+        }}
+        aria-label={open ? "Close chat" : "Chat with the Sushan bot"}
+        className={`fixed bottom-5 right-5 z-50 flex h-14 items-center gap-2.5 border px-4 font-mono text-xs font-bold uppercase tracking-widest transition-all duration-200 ${
           open
-            ? "border-acid bg-carbon text-acid"
-            : "border-line bg-acid text-carbon hover:-translate-y-0.5 hover:hard-shadow-sm"
+            ? "border-line bg-carbon text-ink hover:border-acid hover:text-acid"
+            : "hard-shadow-sm border-acid bg-acid text-carbon hover:-translate-y-0.5"
         }`}
       >
         {open ? (
-          <Terminal className="h-5 w-5 rotate-180" />
+          <>
+            <X className="h-5 w-5" />
+            <span className="hidden sm:inline">close</span>
+          </>
         ) : (
-          <Terminal className="h-5 w-5" />
+          <>
+            <span className="relative grid h-8 w-8 place-items-center bg-carbon text-acid">
+              <Bot className="h-4 w-4" />
+              <span className="absolute -right-1 -top-1 h-2 w-2 animate-pulse rounded-full bg-acid ring-2 ring-carbon" />
+            </span>
+            <span className="flex flex-col items-start leading-none">
+              <span>ask sushan</span>
+              <span className="mt-1 text-[0.55rem] font-medium normal-case text-carbon/70">
+                an AI bot · online
+              </span>
+            </span>
+          </>
         )}
       </motion.button>
 
