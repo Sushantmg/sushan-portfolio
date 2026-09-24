@@ -72,169 +72,166 @@ export function Hero() {
     target: ref,
     offset: ["start start", "end start"],
   });
-  const yText = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const yText = useTransform(scrollYProgress, [0, 1], [0, 60]);
   const opacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
 
   return (
     <section
       ref={ref}
       id="top"
-      className="relative flex min-h-screen flex-col overflow-hidden pt-24 lg:pt-0 lg:pl-16"
+      className="relative flex min-h-screen flex-col overflow-hidden pt-16 lg:pt-0 lg:pl-16"
     >
-      <motion.span
-        aria-hidden
-        className="font-display pointer-events-none absolute -right-10 top-6 select-none text-[20rem] font-black italic leading-none text-carbon-2 lg:text-[26rem]"
-        style={{ transform: yText }}
-      >
-        st
-      </motion.span>
-
       <motion.div
         style={{ opacity }}
-        className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-5 py-16 sm:px-8 lg:px-14"
+        className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-5 py-12 sm:px-8 lg:px-14"
       >
-        <div className="grid items-center gap-12 lg:grid-cols-12">
+        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
+          <div className="lg:col-span-7">
+            <motion.blockquote
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              className="font-display mb-8 flex max-w-xl items-start gap-3 border-l-2 border-acid pl-4 text-lg font-light italic leading-snug text-muted"
+            >
+              <span aria-hidden className="font-display -mt-1 text-4xl font-bold not-italic text-acid">
+                “
+              </span>
+              <span>
+                The best way to predict the future is to invent it.
+                <footer className="label mt-2 not-italic text-muted">
+                  — Alan Kay
+                </footer>
+              </span>
+            </motion.blockquote>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              className="font-display max-w-3xl text-[2.9rem] font-semibold leading-[0.98] tracking-tight sm:text-7xl lg:text-8xl"
+              style={{ y: yText }}
+            >
+              Sushan{" "}
+              <em className="font-light italic text-acid">Tamang.</em>
+              <br />
+              <span className="text-muted">I build</span> software{" "}
+              <em className="font-light italic text-ink">with a brain.</em>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25, duration: 0.7 }}
+              className="mt-8 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
+            >
+              Full-stack developer engineering production-grade AI
+              applications — RAG pipelines, MCP agents, real-time web
+              systems — from Pokhara, Nepal. I turn messy problems into{" "}
+              <span className="text-ink">fast, intuitive, deployable</span>{" "}
+              software.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.7 }}
+              className="mt-10 flex flex-wrap items-center gap-3"
+            >
+              <a
+                href="#projects"
+                className="group inline-flex items-center gap-2 bg-acid px-6 py-3 text-sm font-bold text-carbon transition-transform duration-200 hover:-translate-y-0.5"
+              >
+                View work
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+              <a
+                href="#contact"
+                className="inline-flex items-center gap-2 border border-line bg-carbon-2 px-6 py-3 text-sm font-semibold text-ink transition-colors duration-200 hover:border-acid hover:text-acid"
+              >
+                Get in touch
+              </a>
+              <div className="ml-1 hidden items-center gap-3 sm:flex">
+                <a
+                  href={profile.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                  className="grid h-11 w-11 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
+                >
+                  <GitHubIcon className="h-4 w-4" />
+                </a>
+                <a
+                  href={profile.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                  className="grid h-11 w-11 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
+                >
+                  <LinkedInIcon className="h-4 w-4" />
+                </a>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+              className="mt-14 max-w-md"
+            >
+              <TerminalCard />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+              className="mt-12 hidden flex-wrap items-center gap-x-8 gap-y-2 font-mono text-xs text-muted lg:flex"
+            >
+              <span className="flex items-center gap-2">
+                <span className="h-1 w-1 bg-acid" />
+                B.Sc. Software Engineering · GCES, Pokhara
+              </span>
+              <span className="flex items-center gap-2">
+                <span className="h-1 w-1 bg-acid" />
+                RAG · MCP · MERN · LangChain
+              </span>
+              <span className="flex items-center gap-2">
+                <span className="h-1 w-1 bg-acid" />
+                Open to internships & freelance
+              </span>
+            </motion.div>
+          </div>
+
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.1, duration: 0.9 }}
-            className="order-2 lg:order-1 lg:col-span-5"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.9, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:col-span-5"
           >
-            <div className="relative mx-auto max-w-[360px] lg:max-w-none">
-              <div className="group
-relative -rotate-2 transition-transform duration-500 hover:rotate-0">
-                <div className="absolute -inset-2 border border-acid" />
-                <div className="relative aspect-[9/16] overflow-hidden border border-line bg-carbon-2 shadow-[12px_12px_0_0_#c7f542] transition-all duration-500 group-hover:shadow-[16px_16px_0_0_#c7f542]">
+            <div className="mx-auto w-full max-w-[340px] lg:max-w-[380px]">
+              <div className="group relative rotate-2 transition-transform duration-500 hover:rotate-0">
+                <div className="pointer-events-none absolute -inset-2 -z-10 border border-acid/60" />
+                <div className="relative aspect-[9/16] overflow-hidden border border-line bg-carbon-2">
                   <Image
                     src="/images/drone.jpg"
                     alt="Aerial shot of Sushan from above, captured with a DJI drone"
                     fill
                     priority
-                    sizes="(min-width: 1024px) 40vw, 360px"
+                    sizes="(min-width: 1024px) 40vw, 340px"
                     className="object-cover grayscale contrast-105 transition-all duration-700 group-hover:grayscale-0"
                   />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-carbon/90 to-transparent p-4 pt-14">
-                    <p className="font-mono text-[0.68rem] leading-relaxed text-muted">
-                      <span className="text-acid">file:</span>{" "}
-                      DJI_20260706173539_0152_D.JPG
-                      <br />
-                      <span className="text-acid">shot:</span> drone · 2026-07-06
-                      · Pokhara
-                    </p>
-                  </div>
                 </div>
+              </div>
+              <div className="mt-3 flex items-center justify-between border border-line bg-carbon-2 px-3 py-2 font-mono text-[0.65rem] text-muted">
+                <span>
+                  <span className="text-acid">file:</span>{" "}
+                  DJI_20260706173539_0152_D
+                </span>
+                <span className="text-muted">pokhara · 2026</span>
               </div>
             </div>
           </motion.div>
-
-          <div className="order-1 lg:order-2 lg:col-span-7">
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="label mb-7 flex items-center gap-3"
-        >
-          <span className="inline-block h-2 w-2 bg-acid" />
-          Portfolio · 2023 → 2027
-        </motion.p>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="font-display max-w-4xl text-[2.9rem] font-semibold leading-[0.98] tracking-tight sm:text-7xl lg:text-8xl"
-          style={{ y: yText }}
-        >
-          Sushan{" "}
-          <em className="font-light italic text-acid">Tamang.</em>
-          <br />
-          <span className="text-muted">I build</span> software{" "}
-          <em className="font-light italic text-ink">with a brain.</em>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25, duration: 0.7 }}
-          className="mt-8 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
-        >
-          Full-stack developer engineering production-grade AI applications —
-          RAG pipelines, MCP agents, real-time web systems — from Pokhara,
-          Nepal. I turn messy problems into{" "}
-          <span className="text-ink">fast, intuitive, deployable</span> software.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.7 }}
-          className="mt-10 flex flex-wrap items-center gap-3"
-        >
-          <a
-            href="#projects"
-            className="group inline-flex items-center gap-2 bg-acid px-6 py-3 text-sm font-bold text-carbon transition-transform duration-200 hover:-translate-y-0.5"
-          >
-            View work
-            <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </a>
-          <a
-            href="#contact"
-            className="inline-flex items-center gap-2 border border-line bg-carbon-2 px-6 py-3 text-sm font-semibold text-ink transition-colors duration-200 hover:border-acid hover:text-acid"
-          >
-            Get in touch
-          </a>
-          <div className="ml-1 hidden items-center gap-3 sm:flex">
-            <a
-              href={profile.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-              className="grid h-11 w-11 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
-            >
-              <GitHubIcon className="h-4 w-4" />
-            </a>
-            <a
-              href={profile.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className="grid h-11 w-11 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
-            >
-              <LinkedInIcon className="h-4 w-4" />
-            </a>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-          className="mt-14 max-w-md"
-        >
-          <TerminalCard />
-        </motion.div>
-          </div>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="mt-12 hidden items-center gap-8 font-mono text-xs text-muted sm:flex"
-        >
-          <span className="flex items-center gap-2">
-            <span className="h-1 w-1 bg-acid" />
-            B.Sc. Software Engineering · GCES, Pokhara
-          </span>
-          <span className="flex items-center gap-2">
-            <span className="h-1 w-1 bg-acid" />
-            RAG · MCP · MERN · LangChain
-          </span>
-          <span className="flex items-center gap-2">
-            <span className="h-1 w-1 bg-acid" />
-            Open to internships & freelance
-          </span>
-        </motion.div>
 
         <motion.a
           href="#about"
