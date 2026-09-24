@@ -19,6 +19,7 @@ export function Projects() {
         <SectionHeading
           index="04"
           eyebrow="Projects"
+          watermark="作"
           title={
             <>
               Things I&apos;ve{" "}

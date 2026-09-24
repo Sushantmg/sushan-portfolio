@@ -24,6 +24,7 @@ export function About() {
         <SectionHeading
           index="01"
           eyebrow="About"
+          watermark="心"
           title={
             <>
               Software that has{" "}

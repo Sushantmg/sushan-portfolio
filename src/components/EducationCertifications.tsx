@@ -19,6 +19,7 @@ export function EducationCertifications() {
         <SectionHeading
           index="05"
           eyebrow="Education & Certifications"
+          watermark="学"
           title={
             <>
               The paperwork behind the{" "}

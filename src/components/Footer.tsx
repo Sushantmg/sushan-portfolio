@@ -7,6 +7,11 @@ export function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 font-mono text-xs text-muted sm:flex-row sm:px-8 lg:px-14">
         <p>
           © {new Date().getFullYear()} {profile.name}
+          <span className="ml-2 inline-block align-middle">
+            <span className="hanko inline-grid h-5 w-5 rotate-[-4deg] text-[0.6rem]">
+              山
+            </span>
+          </span>
         </p>
         <p className="flex items-center gap-2">
           built by hand <span className="text-acid">→</span> next.js ·

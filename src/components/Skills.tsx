@@ -9,6 +9,7 @@ export function Skills() {
         <SectionHeading
           index="03"
           eyebrow="Skills"
+          watermark="道"
           title={
             <>
               The toolkit I{" "}

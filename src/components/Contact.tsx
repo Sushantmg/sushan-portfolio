@@ -12,6 +12,7 @@ export function Contact() {
             <SectionHeading
               index="06"
               eyebrow="Contact"
+              watermark="縁"
               title={
                 <>
                   Got a build in mind?{" "}

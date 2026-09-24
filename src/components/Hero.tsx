@@ -139,18 +139,31 @@ export function Hero() {
               </Line>
             </motion.h1>
 
-            <motion.p
+            <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.7 }}
               className="mt-8 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
             >
+              <p>
               Full-stack developer engineering production-grade AI
               applications — RAG pipelines, MCP agents, real-time web
               systems — from Pokhara, Nepal. I turn messy problems into{" "}
               <span className="text-ink">fast, intuitive, deployable</span>{" "}
               software.
-            </motion.p>
+              </p>
+              <p className="mt-5 flex items-center gap-3 font-mono text-[0.65rem] text-muted">
+                <span className="hanko h-8 w-8 rotate-[-5deg] text-sm">
+                  山
+                </span>
+                <span className="tategaki kanji text-[0.9rem] text-vermilion">
+                  一期一会
+                </span>
+                <span className="text-muted/70">
+                  every meeting, one chance — let&apos;s make it count
+                </span>
+              </p>
+            </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 24 }}

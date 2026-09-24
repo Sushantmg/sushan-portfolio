@@ -8,6 +8,7 @@ export function Experience() {
         <SectionHeading
           index="02"
           eyebrow="Experience"
+          watermark="行"
           title={
             <>
               Shipped work,{" "}

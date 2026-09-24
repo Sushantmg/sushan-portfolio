@@ -15,6 +15,9 @@ const links = [
   { label: "Contact", href: "#contact", index: "06" },
 ];
 
+const KANJI = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
+const kanjiOf = (index: string) => KANJI[(parseInt(index, 10) || 1) - 1];
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -60,13 +63,28 @@ export function Navbar() {
             style={{ scaleY: progress }}
           />
 
-          <a
-            href="#top"
-            className="font-display grid h-10 w-10 place-items-center border border-line text-lg font-bold italic text-ink transition-colors hover:border-acid hover:text-acid"
-            aria-label="Top"
-          >
-            s.
-          </a>
+          <div className="relative flex flex-col items-center gap-3">
+            <span className="hanko h-9 w-9 rotate-[-6deg] text-base">
+              山
+            </span>
+            <svg viewBox="0 0 48 48" className="enso absolute -inset-1 h-12 w-12" aria-hidden>
+              <path
+                d="M24 44c-11-0.5-19.5-8.5-20-19.5S11.5 4.5 23 5s18.5 7.5 19.5 17C43.5 31 39 41 29.5 42.5"
+                fill="none"
+                stroke="#ff6a44"
+                strokeOpacity="0.35"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+            <a
+              href="#top"
+              className="font-display grid h-10 w-10 place-items-center border border-line text-lg font-bold italic text-ink transition-colors hover:border-acid hover:text-acid"
+              aria-label="Top"
+            >
+              s.
+            </a>
+          </div>
 
           <nav className="flex flex-col items-center gap-5">
             {links.map((link) => {
@@ -86,7 +104,13 @@ export function Navbar() {
                         : "text-transparent group-hover:text-acid"
                     }`}
                   >
-                    <span className="text-acid">{link.index}</span> {link.label}
+                    <span className="kanji text-acid">
+                      {kanjiOf(link.index)}
+                    </span>
+                    <span className="font-mono text-[0.55rem] text-muted">
+                      /{link.index}
+                    </span>
+                    {link.label}
                   </span>
                   <span
                     className={`h-1.5 w-1.5 transition-all duration-200 group-hover:scale-150 group-hover:bg-acid ${
@@ -171,7 +195,7 @@ export function Navbar() {
                       onClick={() => setOpen(false)}
                       className="flex items-baseline gap-3 border-b border-line/60 py-3.5 last:border-0"
                     >
-                      <span className="label text-acid">{link.index}</span>
+                      <span className="label text-acid">{kanjiOf(link.index)}</span>
                       <span className="text-sm font-medium text-ink">
                         {link.label}
                       </span>
