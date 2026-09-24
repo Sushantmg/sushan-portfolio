@@ -1,11 +1,12 @@
 import { profile } from "@/lib/data";
+import { CountUp } from "./CountUp";
 import { Reveal, SectionHeading } from "./Reveal";
 
 const stats = [
-  { value: "10+", label: "marketplaces scraped" },
-  { value: "07", label: "certs & diplomas" },
-  { value: "06", label: "production projects" },
-  { value: "03", label: "LLM integrations" },
+  { to: 10, pad: 0, suffix: "+", label: "marketplaces scraped" },
+  { to: 7, pad: 2, suffix: "", label: "certs & diplomas" },
+  { to: 6, pad: 2, suffix: "", label: "production projects" },
+  { to: 3, pad: 2, suffix: "", label: "LLM integrations" },
 ];
 
 const focuses = [
@@ -54,7 +55,7 @@ export function About() {
                 <Reveal key={stat.label} delay={i * 0.06}>
                   <div className="border border-line bg-carbon-2 p-5">
                     <p className="font-display text-4xl font-semibold text-acid">
-                      {stat.value}
+                      <CountUp to={stat.to} pad={stat.pad} suffix={stat.suffix} />
                     </p>
                     <p className="label mt-2 text-muted">{stat.label}</p>
                   </div>
@@ -66,7 +67,7 @@ export function About() {
                 <Reveal key={stat.label} delay={i * 0.06}>
                   <div className="flex items-center justify-between border border-line bg-carbon-2 px-5 py-4">
                     <p className="font-display text-5xl font-semibold text-acid">
-                      {stat.value}
+                      <CountUp to={stat.to} pad={stat.pad} suffix={stat.suffix} />
                     </p>
                     <p className="label text-muted">{stat.label}</p>
                   </div>

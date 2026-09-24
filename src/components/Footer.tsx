@@ -1,4 +1,5 @@
 import { profile } from "@/lib/data";
+import { LiveClock } from "./LiveClock";
 
 export function Footer() {
   return (
@@ -11,7 +12,11 @@ export function Footer() {
           built by hand <span className="text-acid">→</span> next.js ·
           typescript · tailwind
         </p>
-        <p>
+        <p className="flex items-center gap-4">
+          <span className="flex items-center gap-1.5">
+            <span className="h-1 w-1 animate-pulse bg-acid" />
+            <LiveClock timeZone="Asia/Kathmandu" />
+          </span>
           <span className="text-acid">~/</span>sushan
         </p>
       </div>

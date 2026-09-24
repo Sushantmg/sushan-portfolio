@@ -118,3 +118,15 @@ body {
 .drift {
   animation: drift 9s ease-in-out infinite;
 }
+
+@media (pointer: fine) {
+  body.has-cursor,
+  body.has-cursor a,
+  body.has-cursor button,
+  body.has-cursor input,
+  body.has-cursor textarea,
+  body.has-cursor select,
+  body.has-cursor [role="button"] {
+    cursor: none;
+  }
+}

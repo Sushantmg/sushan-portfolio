@@ -54,6 +54,17 @@ export function Chatbot() {
     setTimeout(() => inputRef.current?.focus(), 150);
   };
 
+  useEffect(() => {
+    const onAsk = (e: Event) => {
+      const detail = (e as CustomEvent<string>).detail;
+      setOpen(true);
+      setTimeout(() => send(detail), 120);
+    };
+    window.addEventListener("sushan:ask", onAsk);
+    return () => window.removeEventListener("sushan:ask", onAsk);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <motion.button

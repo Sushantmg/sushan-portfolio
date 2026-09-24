@@ -3,10 +3,12 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { profile } from "@/lib/data";
 import { GitHubIcon, LinkedInIcon } from "./BrandIcons";
+import { LiveClock } from "./LiveClock";
 import { SkillIcon } from "./SkillIcon";
+import { TiltCard } from "./TiltCard";
 
 const responseLine =
   "sushan — full-stack & AI dev. RAG, MCP, MERN, Next.js. Open to work.";
@@ -67,6 +69,21 @@ function TerminalCard() {
   );
 }
 
+function Line({ delay, children }: { delay: number; children: ReactNode }) {
+  return (
+    <span className="-mt-[0.1em] block overflow-hidden pb-[0.12em]">
+      <motion.span
+        initial={{ y: "115%" }}
+        animate={{ y: "0%" }}
+        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1], delay }}
+        className="block"
+      >
+        {children}
+      </motion.span>
+    </span>
+  );
+}
+
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -106,17 +123,19 @@ export function Hero() {
             </motion.blockquote>
 
             <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
               className="font-display max-w-3xl text-[2.9rem] font-semibold leading-[0.98] tracking-tight sm:text-7xl lg:text-8xl"
               style={{ y: yText }}
             >
-              Sushan{" "}
-              <em className="font-light italic text-acid">Tamang.</em>
-              <br />
-              <span className="text-muted">I build</span> software{" "}
-              <em className="font-light italic text-ink">with a brain.</em>
+              <Line delay={0.1}>
+                Sushan <em className="font-light italic text-acid">Tamang.</em>
+              </Line>
+              <Line delay={0.22}>
+                <span className="text-muted">I build</span> software{" "}
+                <em className="font-light italic text-ink">with a brain.</em>
+              </Line>
             </motion.h1>
 
             <motion.p
@@ -200,6 +219,11 @@ export function Hero() {
                 <span className="h-1 w-1 bg-acid" />
                 Open to internships & freelance
               </span>
+              <span className="flex items-center gap-2">
+                <span className="h-1 w-1 animate-pulse bg-acid" />
+                <LiveClock timeZone="Asia/Kathmandu" />
+                <span className="text-muted/70">:: NPT</span>
+              </span>
             </motion.div>
           </div>
 
@@ -210,7 +234,7 @@ export function Hero() {
             className="lg:col-span-5"
           >
             <div className="mx-auto w-full max-w-[340px] lg:max-w-[380px]">
-              <div className="group relative rotate-2 transition-transform duration-500 hover:rotate-0">
+              <TiltCard className="group relative rotate-2 transition-transform duration-500 hover:rotate-0">
                 <div className="pointer-events-none absolute -inset-2 -z-10 border border-acid/60" />
                 <div className="relative aspect-[9/16] overflow-hidden border border-line bg-carbon-2">
                   <Image
@@ -222,7 +246,7 @@ export function Hero() {
                     className="object-cover grayscale contrast-105 transition-all duration-700 group-hover:grayscale-0"
                   />
                 </div>
-              </div>
+              </TiltCard>
               <div className="mt-3 flex items-center justify-between border border-line bg-carbon-2 px-3 py-2 font-mono text-[0.65rem] text-muted">
                 <span>
                   <span className="text-acid">file:</span>{" "}

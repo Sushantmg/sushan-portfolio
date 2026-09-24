@@ -18,6 +18,7 @@ const links = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("top");
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
 
@@ -26,6 +27,23 @@ export function Navbar() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const ids = ["top", ...links.map((l) => l.href.slice(1))];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-40% 0px -55% 0px" },
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -37,6 +55,11 @@ export function Navbar() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="fixed inset-y-0 left-0 z-40 flex w-16 flex-col items-center justify-between border-r border-line bg-carbon-2 py-6"
         >
+          <motion.span
+            className="absolute left-1 top-0 h-full w-[2px] origin-top bg-acid/70"
+            style={{ scaleY: progress }}
+          />
+
           <a
             href="#top"
             className="font-display grid h-10 w-10 place-items-center border border-line text-lg font-bold italic text-ink transition-colors hover:border-acid hover:text-acid"
@@ -46,23 +69,39 @@ export function Navbar() {
           </a>
 
           <nav className="flex flex-col items-center gap-5">
-            {links.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="group relative flex items-center"
-                aria-label={link.label}
-                title={`${link.index}. ${link.label}`}
-              >
-                <span className="label absolute left-0 ml-[-6.5rem] flex items-center gap-2 whitespace-nowrap text-transparent transition-all duration-200 group-hover:text-acid">
-                  <span className="text-acid">{link.index}</span> {link.label}
-                </span>
-                <span className="h-1.5 w-1.5 bg-muted transition-all duration-200 group-hover:scale-150 group-hover:bg-acid" />
-              </a>
-            ))}
+            {links.map((link) => {
+              const isActive = link.href === `#${active}`;
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="group relative flex items-center"
+                  aria-label={link.label}
+                  title={`${link.index}. ${link.label}`}
+                >
+                  <span
+                    className={`label absolute left-0 ml-[-6.5rem] flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
+                      isActive
+                        ? "text-acid"
+                        : "text-transparent group-hover:text-acid"
+                    }`}
+                  >
+                    <span className="text-acid">{link.index}</span> {link.label}
+                  </span>
+                  <span
+                    className={`h-1.5 w-1.5 transition-all duration-200 group-hover:scale-150 group-hover:bg-acid ${
+                      isActive ? "scale-150 bg-acid" : "bg-muted"
+                    }`}
+                  />
+                </a>
+              );
+            })}
           </nav>
 
           <div className="flex flex-col items-center gap-3">
+            <span className="select-none border border-line px-1.5 py-1 font-mono text-[0.6rem] text-muted">
+              ⌘k
+            </span>
             <a
               href={profile.github}
               target="_blank"
