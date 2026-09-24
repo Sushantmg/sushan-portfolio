@@ -1,11 +1,8 @@
 "use client";
 
-import {
-  motion,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { profile } from "@/lib/data";
 import { GitHubIcon, LinkedInIcon } from "./BrandIcons";
@@ -96,6 +93,41 @@ export function Hero() {
         style={{ opacity }}
         className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-5 py-16 sm:px-8 lg:px-14"
       >
+        <div className="grid items-center gap-12 lg:grid-cols-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.1, duration: 0.9 }}
+            className="order-2 lg:order-1 lg:col-span-5"
+          >
+            <div className="relative mx-auto max-w-[360px] lg:max-w-none">
+              <div className="group
+relative -rotate-2 transition-transform duration-500 hover:rotate-0">
+                <div className="absolute -inset-2 border border-acid" />
+                <div className="relative aspect-[9/16] overflow-hidden border border-line bg-carbon-2 shadow-[12px_12px_0_0_#c7f542] transition-all duration-500 group-hover:shadow-[16px_16px_0_0_#c7f542]">
+                  <Image
+                    src="/images/drone.jpg"
+                    alt="Aerial shot of Sushan from above, captured with a DJI drone"
+                    fill
+                    priority
+                    sizes="(min-width: 1024px) 40vw, 360px"
+                    className="object-cover grayscale contrast-105 transition-all duration-700 group-hover:grayscale-0"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-carbon/90 to-transparent p-4 pt-14">
+                    <p className="font-mono text-[0.68rem] leading-relaxed text-muted">
+                      <span className="text-acid">file:</span>{" "}
+                      DJI_20260706173539_0152_D.JPG
+                      <br />
+                      <span className="text-acid">shot:</span> drone · 2026-07-06
+                      · Pokhara
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <div className="order-1 lg:order-2 lg:col-span-7">
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -181,6 +213,8 @@ export function Hero() {
         >
           <TerminalCard />
         </motion.div>
+          </div>
+        </div>
 
         <motion.div
           initial={{ opacity: 0 }}

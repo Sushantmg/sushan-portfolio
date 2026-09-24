@@ -38,6 +38,7 @@ export const metadata: Metadata = {
     description:
       "Building production-grade AI-powered applications, scalable web platforms, and multi-service architectures.",
     type: "website",
+    images: ["/images/drone.jpg"],
   },
 };
 
