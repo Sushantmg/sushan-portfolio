@@ -22,7 +22,7 @@ const intents: Intent[] = [
   },
   {
     id: "who",
-    keywords: ["who are you", "who is sushan", "about you", "about him", "introduce", "yourself", "tell me about", "bio", "background", "who's sushan"],
+    keywords: ["who are you", "who is sushan", "about you", "about him", "about yourself", "introduce", "yourself", "bio", "background", "who's sushan"],
     reply: () =>
       `${profile.name} is a software engineering student and full-stack developer from Pokhara, Nepal. He spends his time building AI-powered apps — RAG platforms, MCP agents, and real-time web systems with the MERN/Next.js stack.\n\nShort version: he makes software that has a brain. 🧠`,
   },
@@ -40,7 +40,7 @@ const intents: Intent[] = [
   },
   {
     id: "skills",
-    keywords: ["skill", "language", "frontend", "backend", "database", "devops", "framework", "libraries", "known tech", "knows"],
+    keywords: ["skill", "skills", "language", "languages", "frontend", "backend", "database", "devops", "framework", "frameworks", "libraries", "known tech", "knows"],
     reply: () => {
       const line = (label: string, s: string[]) => `[ ${label} ] ${s.join(" · ")}`;
       return skillGroups.map((g) => line(g.label, g.skills)).join("\n");
@@ -48,7 +48,7 @@ const intents: Intent[] = [
   },
   {
     id: "projects",
-    keywords: ["project", "work", "portfolio", "built", "what has", "products", "apps", "case studies", "show me", "cool stuff"],
+    keywords: ["project", "projects", "work", "portfolio", "built", "what has", "products", "apps", "case studies", "show me", "cool stuff"],
     reply: () =>
       `Here are 6 things he's shipped:\n\n${list(projects.map((p) => `${p.name} — ${p.tagline}`))}\n\nAsk about any one of them by name, e.g. "tell me about ARLY".`,
   },
@@ -134,7 +134,7 @@ const intents: Intent[] = [
   },
   {
     id: "spoken_languages",
-    keywords: ["language", "english", "nepali", "speak", "fluent", "bilingual"],
+    keywords: ["language", "languages", "english", "nepali", "speak", "fluent", "bilingual"],
     reply: () =>
       `He speaks English and Nepali fluently — both for docs and for interviews. 😄`,
   },
@@ -175,16 +175,51 @@ function normalize(input: string) {
     .trim();
 }
 
+function matchText(text: string, keyword: string): boolean {
+  const words = normalize(keyword).split(" ");
+  const tokens = text.split(" ");
+  if (words.length === 1) return tokens.includes(words[0]);
+  for (let i = 0; i + words.length <= tokens.length; i++) {
+    let ok = true;
+    for (let j = 0; j < words.length; j++) {
+      if (tokens[i + j] !== words[j]) {
+        ok = false;
+        break;
+      }
+    }
+    if (ok) return true;
+  }
+  return false;
+}
+
+const brandMap: Record<string, string> = {
+  arly: "arly",
+  documind: "documind",
+  "model context protocol": "mcp",
+  "mcp chat": "mcp",
+  fitgurkha: "frontend_projects",
+  "hamro mart": "frontend_projects",
+  "college management": "cms",
+  "college management system": "cms",
+};
+
 export function getReply(input: string): string {
   const text = normalize(input);
   if (!text) return fallbacks[0];
+
+  for (const [word, id] of Object.entries(brandMap)) {
+    if (matchText(text, word)) {
+      const intent = intents.find((i) => i.id === id);
+      if (intent) return intent.reply();
+    }
+  }
 
   let best: { score: number; reply: string } | null = null;
   for (const intent of intents) {
     let score = 0;
     for (const keyword of intent.keywords) {
       const kw = normalize(keyword);
-      if (text.includes(kw)) {
+      if (matchText(text, keyword)) {
         score += kw.split(" ").length > 1 ? 3 : 1;
       }
     }
