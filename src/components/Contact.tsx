@@ -45,7 +45,7 @@ export function Contact() {
           </div>
 
           <Reveal delay={0.15}>
-            <div className="hard-shadow flex h-full flex-col justify-between border border-line bg-carbon">
+            <div className="shikiji-frame hard-shadow flex h-full flex-col justify-between border border-line bg-carbon">
               <div className="border-b border-line p-5">
                 <p className="label text-muted">
                   / links & socials

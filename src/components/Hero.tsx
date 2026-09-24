@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { profile } from "@/lib/data";
 import { GitHubIcon, LinkedInIcon } from "./BrandIcons";
+import { Kamon } from "./Kamon";
 import { LiveClock } from "./LiveClock";
 import { Magnetic } from "./Magnetic";
 import { SkillIcon } from "./SkillIcon";
@@ -106,6 +107,14 @@ export function Hero() {
       >
         <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-7">
+            <motion.div
+              initial={{ opacity: 0, rotate: -20, scale: 0.85 }}
+              animate={{ opacity: 1, rotate: 0, scale: 1 }}
+              transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+              className="mb-5"
+            >
+              <Kamon className="h-11 w-11 text-acid/75" />
+            </motion.div>
             <motion.blockquote
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -263,7 +272,7 @@ export function Hero() {
                   />
                 </div>
               </TiltCard>
-              <div className="mt-3 flex items-center justify-between border border-line bg-carbon-2 px-3 py-2 font-mono text-[0.65rem] text-muted">
+              <div className="shikiji-frame mt-3 flex items-center justify-between border border-line bg-carbon-2 px-3 py-2 font-mono text-[0.65rem] text-muted">
                 <span>
                   <span className="text-acid">file:</span>{" "}
                   DJI_20260706173539_0152_D

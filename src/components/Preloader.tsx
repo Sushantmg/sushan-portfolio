@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { Kamon } from "./Kamon";
 
 const bootLines = [
   "> init portfolio…",
@@ -35,6 +36,14 @@ export function Preloader() {
           exit={{ y: "-100%", transition: { duration: 0.55, ease: [0.76, 0, 0.24, 1] } }}
           className="fixed inset-0 z-[100] flex flex-col justify-center gap-3 bg-carbon px-8 sm:px-16"
         >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="mb-4"
+          >
+            <Kamon className="h-14 w-14 text-acid" />
+          </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}

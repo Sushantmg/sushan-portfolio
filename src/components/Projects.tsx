@@ -33,6 +33,7 @@ export function Projects() {
           {projects.map((project, i) => (
             <StaggerItem key={project.name}>
               <TiltCard intensity={6} className="shine group relative h-full border border-line bg-carbon transition-all duration-300 hover:-translate-y-1 hover:hard-shadow-sm hover:border-transparent">
+                <span className="pointer-events-none absolute right-0 top-0 h-0 w-0 border-l-[16px] border-t-[16px] border-l-transparent border-t-vermilion/90 transition-colors duration-300 group-hover:border-t-vermilion" />
                 <div className={`h-1.5 ${accents[project.accent] ?? "bg-acid"} opacity-70 transition-opacity duration-300 group-hover:opacity-100`} />
                 <div className="flex h-full flex-col p-6">
                   <div className="flex items-start justify-between">

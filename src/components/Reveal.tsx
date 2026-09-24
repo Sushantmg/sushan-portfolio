@@ -77,6 +77,7 @@ export function StaggerItem({
 }
 
 const KANJI = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
+const KANJI_READING = ["いち", "に", "さん", "よん", "ご", "ろく", "しち", "はち", "きゅう", "じゅう"];
 
 export function SectionHeading({
   index,
@@ -93,6 +94,7 @@ export function SectionHeading({
 }) {
   const n = parseInt(index, 10);
   const kanji = KANJI[(n || 1) - 1] ?? index;
+  const reading = KANJI_READING[(n || 1) - 1];
 
   return (
     <div className="relative mb-16 sm:mb-24">
@@ -105,6 +107,9 @@ export function SectionHeading({
         <Reveal>
           <div className="mb-5 flex items-center gap-3">
             <span className="kanji label text-acid">{kanji}</span>
+            <span className="font-mono text-[0.6rem] text-acid/60">
+              {reading}
+            </span>
             <span className="font-mono text-[0.6rem] text-muted">
               /{index}
             </span>

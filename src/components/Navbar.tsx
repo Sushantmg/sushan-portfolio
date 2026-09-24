@@ -5,6 +5,7 @@ import { ArrowUpRight, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { profile } from "@/lib/data";
 import { GitHubIcon, LinkedInIcon } from "./BrandIcons";
+import { Kamon } from "./Kamon";
 
 const links = [
   { label: "About", href: "#about", index: "01" },
@@ -64,19 +65,7 @@ export function Navbar() {
           />
 
           <div className="relative flex flex-col items-center gap-3">
-            <span className="hanko h-9 w-9 rotate-[-6deg] text-base">
-              山
-            </span>
-            <svg viewBox="0 0 48 48" className="enso absolute -inset-1 h-12 w-12" aria-hidden>
-              <path
-                d="M24 44c-11-0.5-19.5-8.5-20-19.5S11.5 4.5 23 5s18.5 7.5 19.5 17C43.5 31 39 41 29.5 42.5"
-                fill="none"
-                stroke="#ff6a44"
-                strokeOpacity="0.35"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
+            <Kamon className="h-10 w-10 text-acid/80" />
             <a
               href="#top"
               className="font-display grid h-10 w-10 place-items-center border border-line text-lg font-bold italic text-ink transition-colors hover:border-acid hover:text-acid"
@@ -161,8 +150,11 @@ export function Navbar() {
           }`}
         >
           <div className="flex items-center justify-between px-5 py-3.5">
-            <a href="#top" className="font-display text-xl font-bold italic text-ink">
-              sushan<span className="text-acid">.</span>
+            <a href="#top" className="flex items-center gap-2">
+              <Kamon className="h-8 w-8 text-acid" />
+              <span className="font-display text-xl font-bold italic text-ink">
+                sushan<span className="text-acid">.</span>
+              </span>
             </a>
             <button
               onClick={() => setOpen((v) => !v)}

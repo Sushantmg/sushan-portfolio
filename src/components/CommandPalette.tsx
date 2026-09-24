@@ -99,6 +99,7 @@ export function CommandPalette() {
           >
             <div className="flex items-center gap-3 border-b border-line px-4 py-3">
               <span className="font-mono text-sm text-acid">❯</span>
+              <span className="kanji text-[0.7rem] text-vermilion/80">検索</span>
               <input
                 ref={inputRef}
                 value={query}

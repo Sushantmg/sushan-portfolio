@@ -8,6 +8,7 @@ import { EducationCertifications } from "@/components/EducationCertifications";
 import { Experience } from "@/components/Experience";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
+import { Karesansui } from "@/components/Karesansui";
 import { Navbar } from "@/components/Navbar";
 import { Petals, SakuraBranch } from "@/components/Petals";
 import { Preloader } from "@/components/Preloader";
@@ -17,12 +18,14 @@ import { Skills } from "@/components/Skills";
 export default function Home() {
   return (
     <div className="grain relative min-h-screen">
+      <div aria-hidden className="seigaiha fixed inset-0 z-0 opacity-[0.045]" />
       <Preloader />
       <Petals />
       <SakuraBranch />
       <Navbar />
-      <main>
+      <main className="relative">
         <Hero />
+        <Karesansui />
         <About />
         <Experience />
         <Skills />
