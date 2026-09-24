@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { profile } from "@/lib/data";
 import { GitHubIcon, LinkedInIcon } from "./BrandIcons";
+import { SkillIcon } from "./SkillIcon";
 
 const responseLine =
   "sushan — full-stack & AI dev. RAG, MCP, MERN, Next.js. Open to work.";
@@ -274,8 +275,11 @@ export function Hero() {
                   key={`${item}-${i}`}
                   className="font-mono flex items-center gap-8 whitespace-nowrap text-xs uppercase tracking-[0.2em] text-muted"
                 >
-                  {item}
-                  <span className="text-acid">/</span>
+                  <span className="flex items-center gap-2">
+                    <SkillIcon skill={item} className="h-3.5 w-3.5 text-acid" />
+                    {item}
+                  </span>
+                  <span>/</span>
                 </span>
               )),
             )}

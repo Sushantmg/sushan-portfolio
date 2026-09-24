@@ -199,37 +199,51 @@ export const certifications = [
   {
     title: "Full-Stack MERN Diploma (180 Hours)",
     issuer: "SkillShikshya",
+    issuerIcon: "skillshikshya",
     verify: "https://skillshikshya.com/verify-certificates/FMDC260005",
+    image: "/images/certs/mern.jpg",
   },
   {
     title: "Generative AI Course",
     issuer: "Code IT",
+    issuerIcon: "codeit",
     verify: "https://codeit.com.np/certificate-verification/CION-22691",
+    image: "/images/certs/genai.jpg",
   },
   {
     title: "Frontend with React Diploma (120 Hours)",
     issuer: "Skill Shikshya",
+    issuerIcon: "skillshikshya",
     verify: null,
+    image: "/images/certs/react.jpg",
   },
   {
     title: "Introduction to Model Context Protocol",
     issuer: "Anthropic",
+    issuerIcon: "anthropic",
     verify: "https://verify.skilljar.com/c/eb2jgefzbipe",
+    image: "/images/certs/mcp.jpg",
   },
   {
     title: "AI Fluency: Framework & Foundations",
     issuer: "Anthropic",
+    issuerIcon: "anthropic",
     verify: "https://verify.skilljar.com/c/aqyrdghwb632",
+    image: null,
   },
   {
     title: "Model Context Protocol: Advanced Topics",
     issuer: "Anthropic",
+    issuerIcon: "anthropic",
     verify: "https://verify.skilljar.com/c/ci92tw2i5ta9",
+    image: null,
   },
   {
     title: "Claude 101",
     issuer: "Anthropic",
+    issuerIcon: "anthropic",
     verify: "https://verify.skilljar.com/c/zxxov5howm4o",
+    image: null,
   },
 ];
 

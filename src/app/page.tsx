@@ -1,4 +1,5 @@
 import { About } from "@/components/About";
+import { BackToTop } from "@/components/BackToTop";
 import { Chatbot } from "@/components/Chatbot";
 import { Contact } from "@/components/Contact";
 import { EducationCertifications } from "@/components/EducationCertifications";
@@ -24,6 +25,7 @@ export default function Home() {
       </main>
       <Footer />
       <Chatbot />
+      <BackToTop />
     </div>
   );
 }

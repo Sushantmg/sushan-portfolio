@@ -1,5 +1,6 @@
 import { skillGroups } from "@/lib/data";
 import { Reveal, SectionHeading } from "./Reveal";
+import { SkillIcon } from "./SkillIcon";
 
 export function Skills() {
   return (
@@ -27,12 +28,13 @@ export function Skills() {
                     {String(i + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <div className="mt-4 flex flex-wrap gap-2">
+                <div className="mt-5 flex flex-wrap gap-2">
                   {group.skills.map((skill) => (
                     <span
                       key={skill}
-                      className="border border-line bg-carbon px-3 py-1 text-sm text-ink transition-all duration-200 hover:-translate-y-0.5 hover:border-acid hover:text-acid"
+                      className="flex items-center gap-1.5 border border-line bg-carbon px-2.5 py-1.5 text-sm text-ink transition-all duration-200 hover:-translate-y-0.5 hover:border-acid hover:text-acid"
                     >
+                      <SkillIcon skill={skill} className="h-4 w-4 shrink-0 text-muted transition-colors duration-200 group-hover:text-acid" />
                       {skill}
                     </span>
                   ))}
