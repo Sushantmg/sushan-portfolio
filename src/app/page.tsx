@@ -14,10 +14,30 @@ import { Petals, SakuraBranch } from "@/components/Petals";
 import { Preloader } from "@/components/Preloader";
 import { Projects } from "@/components/Projects";
 import { Skills } from "@/components/Skills";
+import { SmoothScroll } from "@/components/SmoothScroll";
 
 export default function Home() {
+  const personJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Sushan Tamang",
+    url: "https://github.com/Sushantmg/sushan-portfolio",
+    jobTitle: "Full-Stack & AI Developer",
+    address: { "@type": "PostalAddress", addressLocality: "Pokhara", addressCountry: "NP" },
+    email: "mailto:sushantmg2004@gmail.com",
+    sameAs: [
+      "https://github.com/Sushantmg",
+      "https://www.linkedin.com/in/sushan-tamang-9406712b1/",
+    ],
+  };
+
   return (
     <div className="grain relative min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
+      <SmoothScroll />
       <div aria-hidden className="seigaiha fixed inset-0 z-0 opacity-[0.045]" />
       <Preloader />
       <Petals />

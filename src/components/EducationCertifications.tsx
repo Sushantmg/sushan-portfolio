@@ -12,6 +12,13 @@ type Cert = (typeof certifications)[number];
 
 export function EducationCertifications() {
   const [active, setActive] = useState<Cert | null>(null);
+  const [filter, setFilter] = useState<"all" | "anthropic" | "local">("all");
+
+  const visibleCerts = certifications.filter(
+    (c) =>
+      filter === "all" ||
+      (filter === "anthropic" ? c.issuerIcon === "anthropic" : c.issuerIcon !== "anthropic"),
+  );
 
   return (
     <section id="education" className="relative scroll-mt-20 border-t border-line py-24 sm:py-32 lg:pl-16">
@@ -60,8 +67,28 @@ export function EducationCertifications() {
               <h3 className="label mb-5 text-acid">/ certifications</h3>
             </Reveal>
 
+            <div className="mb-4 flex flex-wrap gap-2">
+              {(["all", "anthropic", "local"] as const).map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  onClick={() => setFilter(f)}
+                  className={`label border px-3 py-1.5 transition-colors duration-200 ${
+                    filter === f
+                      ? "border-acid bg-acid text-carbon"
+                      : "border-line text-muted hover:border-acid hover:text-acid"
+                  }`}
+                >
+                  {f}
+                </button>
+              ))}
+              <span className="label ml-auto self-center text-muted">
+                {visibleCerts.length} / {certifications.length}
+              </span>
+            </div>
+
             <div className="grid gap-3 sm:grid-cols-2">
-              {certifications.map((cert, i) => (
+              {visibleCerts.map((cert, i) => (
                 <StaggerItem key={cert.title} className="sm:contents">
                   {cert.image ? (
                     <button

@@ -20,7 +20,10 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sushan Tamang — Full-Stack & AI Developer",
+  title: {
+    default: "Sushan Tamang — Full-Stack & AI Developer",
+    template: "%s · Sushan Tamang",
+  },
   description:
     "Portfolio of Sushan Tamang — software engineering student and full-stack developer building production-grade AI-powered applications, scalable web platforms, and multi-service architectures.",
   keywords: [
@@ -31,15 +34,42 @@ export const metadata: Metadata = {
     "React",
     "MERN",
     "RAG",
+    "MCP",
+    "LangChain",
     "Nepal",
+    "Pokhara",
   ],
+  creator: "Sushan Tamang",
+  authors: [{ name: "Sushan Tamang", url: "https://github.com/Sushantmg" }],
   openGraph: {
     title: "Sushan Tamang — Full-Stack & AI Developer",
     description:
       "Building production-grade AI-powered applications, scalable web platforms, and multi-service architectures.",
     type: "website",
+    url: "https://github.com/Sushantmg/sushan-portfolio",
+    siteName: "Sushan Tamang",
+    locale: "en_US",
+    images: [
+      {
+        url: "/images/drone.jpg",
+        width: 1400,
+        height: 2489,
+        alt: "Aerial photo of Sushan Tamang taken by drone",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sushan Tamang — Full-Stack & AI Developer",
+    description:
+      "Building production-grade AI-powered applications, scalable web platforms, and multi-service architectures.",
     images: ["/images/drone.jpg"],
   },
+  robots: { index: true, follow: true },
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#10120f" },
+    { media: "(prefers-color-scheme: dark)", color: "#10120f" },
+  ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

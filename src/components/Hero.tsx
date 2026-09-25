@@ -1,10 +1,10 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { profile } from "@/lib/data";
+import { profile, roles } from "@/lib/data";
 import { GitHubIcon, LinkedInIcon } from "./BrandIcons";
 import { Kamon } from "./Kamon";
 import { LiveClock } from "./LiveClock";
@@ -71,6 +71,30 @@ function TerminalCard() {
   );
 }
 
+function RoleRotator() {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setI((v) => (v + 1) % roles.length), 2600);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <span className="relative inline-flex h-[1.35em] items-center overflow-hidden align-bottom">
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={roles[i]}
+          initial={{ y: "105%" }}
+          animate={{ y: "0%" }}
+          exit={{ y: "-105%" }}
+          transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+          className="whitespace-nowrap"
+        >
+          {roles[i]}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+}
+
 function Line({ delay, children }: { delay: number; children: ReactNode }) {
   return (
     <span className="-mt-[0.1em] block overflow-hidden pb-[0.12em]">
@@ -105,6 +129,10 @@ export function Hero() {
         style={{ opacity }}
         className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-5 py-12 sm:px-8 lg:px-14"
       >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -top-16 -left-24 h-80 w-80 rounded-full bg-acid/10 blur-[110px]"
+        />
         <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-7">
             <motion.div
@@ -172,6 +200,17 @@ export function Hero() {
                   every meeting, one chance — let&apos;s make it count
                 </span>
               </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.6 }}
+              className="mt-6 font-mono text-sm text-ink sm:text-base"
+            >
+              <span className="text-acid">❯</span>{" "}
+              <span className="text-muted">currently</span>{" "}
+              <RoleRotator />
             </motion.div>
 
             <motion.div

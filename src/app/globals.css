@@ -33,6 +33,11 @@ body {
   overflow-x: hidden;
 }
 
+:focus-visible {
+  outline: 2px dashed #c7f542;
+  outline-offset: 3px;
+}
+
 ::selection {
   background: #c7f542;
   color: #10120f;
