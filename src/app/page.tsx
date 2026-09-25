@@ -9,6 +9,7 @@ import { Experience } from "@/components/Experience";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { Karesansui } from "@/components/Karesansui";
+import { MobileDock } from "@/components/MobileDock";
 import { Navbar } from "@/components/Navbar";
 import { Petals, SakuraBranch } from "@/components/Petals";
 import { Preloader } from "@/components/Preloader";
@@ -39,6 +40,10 @@ export default function Home() {
       />
       <SmoothScroll />
       <div aria-hidden className="seigaiha fixed inset-0 z-0 opacity-[0.045]" />
+      <div
+        aria-hidden
+        className="fixed inset-0 z-0 bg-[linear-gradient(to_right,#c7f542_1px,transparent_1px),linear-gradient(to_bottom,#c7f542_1px,transparent_1px)] bg-[size:5rem_1rem] opacity-[0.03]"
+      />
       <Preloader />
       <Petals />
       <SakuraBranch />
@@ -56,6 +61,7 @@ export default function Home() {
       <Footer />
       <Chatbot />
       <BackToTop />
+      <MobileDock />
       <CommandPalette />
       <CustomCursor />
     </div>

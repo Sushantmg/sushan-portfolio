@@ -38,6 +38,26 @@ body {
   outline-offset: 3px;
 }
 
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #10120f;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2e26;
+  border: 2px solid #10120f;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #6b7241;
+}
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #2a2e26 #10120f;
+}
+
 ::selection {
   background: #c7f542;
   color: #10120f;

@@ -1,14 +1,22 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, CornerDownLeft, NotebookPen, MessageSquareText } from "lucide-react";
+import {
+  ArrowUpRight,
+  Bot,
+  Copy,
+  CornerDownLeft,
+  Mail,
+  NotebookPen,
+} from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { GitHubIcon, LinkedInIcon } from "./BrandIcons";
 
 type Action = {
   id: string;
   label: string;
   hint: string;
-  kind: "nav" | "ask";
+  kind: "nav" | "ask" | "do" | "open";
   href?: string;
   query?: string;
 };
@@ -20,6 +28,14 @@ const navActions: Action[] = [
   { id: "projects", label: "Projects", hint: "live work", kind: "nav", href: "#projects" },
   { id: "education", label: "Education", hint: "certs & degrees", kind: "nav", href: "#education" },
   { id: "contact", label: "Contact", hint: "hire / reach out", kind: "nav", href: "#contact" },
+  { id: "top", label: "Back to top", hint: "scroll to hero", kind: "nav", href: "#top" },
+];
+
+const doActions: Action[] = [
+  { id: "email", label: "Copy email", hint: "sushantmg2004@gmail.com", kind: "do" },
+  { id: "chat", label: "Open chat", hint: "ask ?sushan anything", kind: "do" },
+  { id: "github", label: "Open GitHub", hint: "github.com/Sushantmg", kind: "open", href: "https://github.com/Sushantmg" },
+  { id: "linkedin", label: "Open LinkedIn", hint: "linkedin.com/in/sushan-tamang-9406712b1", kind: "open", href: "https://www.linkedin.com/in/sushan-tamang-9406712b1/" },
 ];
 
 export function CommandPalette() {
@@ -49,8 +65,12 @@ export function CommandPalette() {
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
+    const match = (hay: string) => !q || hay.toLowerCase().includes(q);
     const navs = navActions.filter(
-      (a) => !q || a.label.toLowerCase().includes(q) || a.hint.includes(q),
+      (a) => match(a.label) || match(a.hint),
+    );
+    const dos = doActions.filter(
+      (a) => match(a.label) || match(a.hint),
     );
     const asks: Action[] = q
       ? [
@@ -63,7 +83,7 @@ export function CommandPalette() {
           },
         ]
       : [];
-    return [...navs, ...asks];
+    return [...navs, ...dos, ...asks];
   }, [query]);
 
   const run = (action: Action) => {
@@ -73,6 +93,14 @@ export function CommandPalette() {
       window.dispatchEvent(
         new CustomEvent("sushan:ask", { detail: action.query }),
       );
+    } else if (action.kind === "do") {
+      if (action.id === "email") {
+        navigator.clipboard?.writeText("sushantmg2004@gmail.com").catch(() => {});
+      } else if (action.id === "chat") {
+        window.dispatchEvent(new CustomEvent("sushan:ask", { detail: "hi" }));
+      }
+    } else if (action.kind === "open" && action.href) {
+      window.open(action.href, "_blank", "noopener,noreferrer");
     }
     setOpen(false);
     setQuery("");
@@ -143,24 +171,37 @@ export function CommandPalette() {
                       active ? "bg-acid/10" : ""
                     }`}
                   >
-                    <span className="flex min-w-0 items-center gap-3">
-                      {action.kind === "nav" ? (
-                        <NotebookPen className="h-4 w-4 shrink-0 text-acid" />
-                      ) : (
-                        <MessageSquareText className="h-4 w-4 shrink-0 text-vermilion" />
-                      )}
-                      <span className="truncate text-sm text-ink">
-                        {action.label}
-                      </span>
-                    </span>
+<span className="flex min-w-0 items-center gap-3">
+  {action.kind === "nav" ? (
+    <NotebookPen className="h-4 w-4 shrink-0 text-acid" />
+  ) : action.kind === "ask" ? (
+    <Bot className="h-4 w-4 shrink-0 text-vermilion" />
+  ) : action.kind === "do" && action.id === "email" ? (
+    <Copy className="h-4 w-4 shrink-0 text-acid" />
+  ) : action.kind === "do" ? (
+    <Bot className="h-4 w-4 shrink-0 text-vermilion" />
+  ) : action.id === "github" ? (
+    <GitHubIcon className="h-4 w-4 shrink-0 text-muted" />
+  ) : (
+    <LinkedInIcon className="h-4 w-4 shrink-0 text-muted" />
+  )}
+  <span className="truncate text-sm text-ink">
+    {action.label}
+  </span>
+</span>
                     <span className="flex shrink-0 items-center gap-2">
                       <span className="font-mono hidden text-[0.65rem] text-muted sm:block">
                         {action.hint}
                       </span>
-                      {action.kind === "nav" ? (
+                      {action.kind === "nav" ||
+                      action.kind === "open" ? (
                         <ArrowUpRight className="h-3.5 w-3.5 text-muted" />
-                      ) : (
+                      ) : action.kind === "ask" ? (
                         <CornerDownLeft className="h-3.5 w-3.5 text-muted" />
+                      ) : action.kind === "do" && action.id === "chat" ? (
+                        <Bot className="h-3.5 w-3.5 text-muted" />
+                      ) : (
+                        <Mail className="h-3.5 w-3.5 text-muted" />
                       )}
                     </span>
                   </button>

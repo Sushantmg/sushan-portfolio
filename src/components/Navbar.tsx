@@ -50,6 +50,15 @@ export function Navbar() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (active === "top") {
+      document.title = "Sushan Tamang — Full-Stack & AI Developer";
+      return;
+    }
+    const link = links.find((l) => l.href === `#${active}`);
+    if (link) document.title = `${kanjiOf(link.index)} ${link.label} · Sushan Tamang`;
+  }, [active]);
+
   return (
     <>
       <div className="hidden lg:block">

@@ -1,9 +1,9 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ExternalLink, X, ZoomIn } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, X, ZoomIn } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { certifications, education } from "@/lib/data";
 import { Reveal, SectionHeading, StaggerGroup, StaggerItem } from "./Reveal";
 import { IssuerIcon } from "./SkillIcon";
@@ -14,11 +14,32 @@ export function EducationCertifications() {
   const [active, setActive] = useState<Cert | null>(null);
   const [filter, setFilter] = useState<"all" | "anthropic" | "local">("all");
 
-  const visibleCerts = certifications.filter(
-    (c) =>
-      filter === "all" ||
-      (filter === "anthropic" ? c.issuerIcon === "anthropic" : c.issuerIcon !== "anthropic"),
+  const visibleCerts = useMemo(
+    () =>
+      certifications.filter(
+        (c) =>
+          filter === "all" ||
+          (filter === "anthropic" ? c.issuerIcon === "anthropic" : c.issuerIcon !== "anthropic"),
+      ),
+    [filter],
   );
+
+  useEffect(() => {
+    if (!active) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setActive(null);
+        return;
+      }
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const i = visibleCerts.findIndex((c) => c.title === active.title);
+      if (i === -1) return;
+      const step = e.key === "ArrowRight" ? 1 : -1;
+      setActive(visibleCerts[(i + step + visibleCerts.length) % visibleCerts.length]);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [active, visibleCerts]);
 
   return (
     <section id="education" className="relative scroll-mt-20 border-t border-line py-24 sm:py-32 lg:pl-16">
@@ -191,6 +212,32 @@ export function EducationCertifications() {
                   <p className="font-mono text-xs text-muted">{active.issuer}</p>
                 </div>
                 <div className="flex items-center gap-2">
+                  <span className="mr-1 font-mono text-[0.65rem] text-muted">
+                    {visibleCerts.findIndex((c) => c.title === active.title) + 1} /{" "}
+                    {visibleCerts.length}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const i = visibleCerts.findIndex((c) => c.title === active.title);
+                      setActive(visibleCerts[(i - 1 + visibleCerts.length) % visibleCerts.length]);
+                    }}
+                    aria-label="Previous certificate"
+                    className="grid h-8 w-8 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const i = visibleCerts.findIndex((c) => c.title === active.title);
+                      setActive(visibleCerts[(i + 1) % visibleCerts.length]);
+                    }}
+                    aria-label="Next certificate"
+                    className="grid h-8 w-8 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
                   {active.verify && (
                     <a
                       href={active.verify}
