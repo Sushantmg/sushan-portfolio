@@ -20,6 +20,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://github.com/Sushantmg/sushan-portfolio"),
   title: {
     default: "Sushan Tamang — Full-Stack & AI Developer",
     template: "%s · Sushan Tamang",

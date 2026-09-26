@@ -114,6 +114,7 @@ export const projects = [
       "Multi-service e-commerce intelligence platform scraping and comparing product prices across 10+ Nepali marketplaces with LLM-powered extraction.",
     tags: ["React 19", "TypeScript", "Express.js", "Supabase"],
     accent: "from-violet-500 to-fuchsia-500",
+    featured: true,
   },
   {
     name: "DocuMind AI",

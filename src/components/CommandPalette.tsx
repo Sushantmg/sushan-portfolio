@@ -42,6 +42,7 @@ export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [index, setIndex] = useState(0);
+  const [copied, setCopied] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -96,6 +97,8 @@ export function CommandPalette() {
     } else if (action.kind === "do") {
       if (action.id === "email") {
         navigator.clipboard?.writeText("sushantmg2004@gmail.com").catch(() => {});
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1600);
       } else if (action.id === "chat") {
         window.dispatchEvent(new CustomEvent("sushan:ask", { detail: "hi" }));
       }
@@ -210,7 +213,7 @@ export function CommandPalette() {
             </div>
 
             <div className="flex items-center justify-between border-t border-line px-4 py-2 font-mono text-[0.65rem] text-muted">
-              <span>↑↓ navigate · ↵ run · esc close</span>
+              <span>{copied ? "✓ email copied to clipboard" : "↑↓ navigate · ↵ run · esc close"}</span>
               <span className="text-acid">⌘k</span>
             </div>
           </motion.div>

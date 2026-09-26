@@ -37,8 +37,15 @@ export function Projects() {
                 <div className={`h-1.5 ${accents[project.accent] ?? "bg-acid"} opacity-70 transition-opacity duration-300 group-hover:opacity-100`} />
                 <div className="flex h-full flex-col p-6">
                   <div className="flex items-start justify-between">
-                    <span className="font-mono text-xs text-muted">
-                      0{i + 1}
+                    <span className="flex items-center gap-2">
+                      <span className="font-mono text-xs text-muted">
+                        0{i + 1}
+                      </span>
+                      {"featured" in project && project.featured && (
+                        <span className="kanji rotate-[-2deg] border border-vermilion/60 px-1.5 py-0.5 text-[0.6rem] text-vermilion">
+                          注目
+                        </span>
+                      )}
                     </span>
                     <ArrowUpRight className="h-4 w-4 text-muted transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-acid" />
                   </div>

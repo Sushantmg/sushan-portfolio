@@ -214,6 +214,21 @@ export function Hero() {
             </motion.div>
 
             <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.38, duration: 0.6 }}
+              className="mt-4 flex flex-wrap items-center gap-3 font-mono text-[0.65rem]"
+            >
+              <span className="inline-flex items-center gap-1.5 border border-line bg-carbon-2 px-2.5 py-1.5 text-muted">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-acid" />
+                open to work · 2026
+              </span>
+              <span className="text-muted/60">
+                合 pokhara, nepal <span className="text-acid">/</span> npt
+              </span>
+            </motion.div>
+
+            <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.7 }}
