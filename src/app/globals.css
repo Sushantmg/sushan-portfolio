@@ -297,6 +297,16 @@ html {
   -webkit-text-stroke: 1px rgba(236, 233, 222, 0.05);
   writing-mode: vertical-rl;
   text-orientation: upright;
+  animation: wmDrift 16s ease-in-out infinite alternate;
+}
+
+@keyframes wmDrift {
+  from {
+    transform: translateY(-10px);
+  }
+  to {
+    transform: translateY(10px);
+  }
 }
 
 .enso {

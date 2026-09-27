@@ -210,7 +210,8 @@ export function Hero() {
             >
               <span className="text-acid">❯</span>{" "}
               <span className="text-muted">currently</span>{" "}
-              <RoleRotator />
+              <RoleRotator />{" "}
+              <span className="caret font-bold text-acid">▍</span>
             </motion.div>
 
             <motion.div

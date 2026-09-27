@@ -124,6 +124,9 @@ export function Navbar() {
             <span className="select-none border border-line px-1.5 py-1 font-mono text-[0.6rem] text-muted">
               ⌘k
             </span>
+            <span className="select-none font-mono text-[0.6rem] text-muted">
+              ~/<span className="text-acid">{active}</span>
+            </span>
             <a
               href={profile.github}
               target="_blank"

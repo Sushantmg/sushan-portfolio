@@ -52,6 +52,14 @@ export function Preloader() {
           >
             s.
           </motion.p>
+          <div className="mt-5 h-[2px] w-40 overflow-hidden bg-line">
+            <motion.div
+              className="h-full bg-acid"
+              initial={{ width: "0%" }}
+              animate={{ width: "100%" }}
+              transition={{ duration: 1.4, ease: "easeInOut" }}
+            />
+          </div>
           <div className="font-mono text-xs leading-6 text-muted sm:text-sm">
             {bootLines.slice(0, lines).map((line) => (
               <motion.p

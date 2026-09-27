@@ -1,5 +1,6 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 import { profile } from "@/lib/data";
+import { ContactForm } from "./ContactForm";
 import { CopyEmail } from "./CopyEmail";
 import { Reveal, SectionHeading } from "./Reveal";
 import { GitHubIcon, LinkedInIcon } from "./BrandIcons";
@@ -52,29 +53,35 @@ export function Contact() {
             <div className="shikiji-frame hard-shadow flex h-full flex-col justify-between border border-line bg-carbon">
               <div className="border-b border-line p-5">
                 <p className="label text-muted">
-                  / links & socials
+                  / quick message
                 </p>
               </div>
-              <div className="grid flex-1 grid-cols-2 gap-px bg-line">
-                {[
-                  { label: "GitHub", icon: GitHubIcon, href: profile.github },
-                  { label: "LinkedIn", icon: LinkedInIcon, href: profile.linkedin },
-                  { label: "Email", icon: Mail, href: `mailto:${profile.email}` },
-                  { label: "Call", icon: Phone, href: `tel:${profile.phone.replace(/\s/g, "")}` },
-                ].map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    target={link.href.startsWith("http") ? "_blank" : undefined}
-                    rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="group flex flex-col items-center justify-center gap-3 bg-carbon p-6 transition-colors duration-300 hover:bg-carbon-2"
-                  >
-                    <link.icon className="h-6 w-6 text-muted transition-colors duration-300 group-hover:text-acid" />
-                    <span className="label text-muted transition-colors duration-300 group-hover:text-ink">
-                      {link.label}
-                    </span>
-                  </a>
-                ))}
+              <ContactForm />
+              <div className="p-5">
+                <p className="label mb-4 text-muted">
+                  / links & socials
+                </p>
+                <div className="grid gap-px bg-line sm:grid-cols-2">
+                  {[
+                    { label: "GitHub", icon: GitHubIcon, href: profile.github },
+                    { label: "LinkedIn", icon: LinkedInIcon, href: profile.linkedin },
+                    { label: "Email", icon: Mail, href: `mailto:${profile.email}` },
+                    { label: "Call", icon: Phone, href: `tel:${profile.phone.replace(/\s/g, "")}` },
+                  ].map((link) => (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target={link.href.startsWith("http") ? "_blank" : undefined}
+                      rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                      className="group flex flex-col items-center justify-center gap-3 bg-carbon p-5 transition-colors duration-300 hover:bg-carbon-2"
+                    >
+                      <link.icon className="h-6 w-6 text-muted transition-colors duration-300 group-hover:text-acid" />
+                      <span className="label text-muted transition-colors duration-300 group-hover:text-ink">
+                        {link.label}
+                      </span>
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </Reveal>
