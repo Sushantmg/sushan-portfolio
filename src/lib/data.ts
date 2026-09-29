@@ -61,6 +61,7 @@ export const experience = [
   {
     role: "Full-Stack & AI Developer",
     company: "ARLY — AI Product Finder",
+    current: true,
     points: [
       "Architected a multi-service e-commerce intelligence platform that scrapes and compares product prices across 10+ Nepali retail marketplaces using LLM-powered extraction pipelines.",
       "Built a React 19 + TypeScript frontend with Vite, Tailwind CSS v4, and Supabase for authentication, role-based admin dashboards, and premium subscription management.",

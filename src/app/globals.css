@@ -323,3 +323,38 @@ html {
     inset 0 0 0 1px rgba(236, 233, 222, 0.1),
     inset 0 0 0 5px rgba(236, 233, 222, 0.045);
 }
+
+@media print {
+  @page {
+    margin: 0.6cm;
+  }
+  html,
+  body {
+    background: #ffffff !important;
+    color: #171a14 !important;
+    overflow: visible !important;
+  }
+  .grain::before,
+  aside,
+  header,
+  nav,
+  [class*="fixed"],
+  [class*="absolute"] {
+    display: none !important;
+  }
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  #projects .grid > *,
+  #skills .grid > *,
+  #education .grid > *,
+  #contact .grid > * {
+    break-inside: avoid;
+  }
+  section {
+    break-before: auto;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}

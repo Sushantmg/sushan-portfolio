@@ -2,6 +2,7 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import { profile } from "@/lib/data";
 import { ContactForm } from "./ContactForm";
 import { CopyEmail } from "./CopyEmail";
+import { PrintCv } from "./PrintCv";
 import { Reveal, SectionHeading } from "./Reveal";
 import { GitHubIcon, LinkedInIcon } from "./BrandIcons";
 
@@ -25,15 +26,16 @@ export function Contact() {
             />
 
             <Reveal>
-              <span className="flex flex-wrap items-center">
-                <a
-                  href={`mailto:${profile.email}`}
-                  className="font-display group inline-block text-2xl font-semibold text-ink underline decoration-acid decoration-2 underline-offset-8 transition-colors duration-300 hover:text-acid sm:text-3xl"
-                >
-                  {profile.email}
-                </a>
-                <CopyEmail email={profile.email} />
-              </span>
+<span className="flex flex-wrap items-center">
+  <a
+    href={`mailto:${profile.email}`}
+    className="font-display group inline-block text-2xl font-semibold text-ink underline decoration-acid decoration-2 underline-offset-8 transition-colors duration-300 hover:text-acid sm:text-2xl"
+  >
+    {profile.email}
+  </a>
+  <CopyEmail email={profile.email} />
+  <PrintCv />
+</span>
             </Reveal>
 
             <Reveal delay={0.1}>

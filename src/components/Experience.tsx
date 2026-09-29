@@ -29,6 +29,15 @@ export function Experience() {
                     {item.company}
                   </h3>
                   <p className="label mt-1 text-muted">{item.role}</p>
+                  {"current" in item && item.current && (
+                    <span className="mt-2 inline-flex items-center gap-2 font-mono text-[0.62rem] text-acid">
+                      <span className="relative flex h-2 w-2">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-acid opacity-60" />
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
+                      </span>
+                      current — 2026
+                    </span>
+                  )}
                 </div>
                 <div className="sm:col-span-6">
                   <ul className="space-y-2">

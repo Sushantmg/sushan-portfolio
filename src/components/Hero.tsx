@@ -164,7 +164,7 @@ export function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="font-display max-w-3xl text-[2.9rem] font-semibold leading-[0.98] tracking-tight sm:text-7xl lg:text-8xl"
+              className="font-display max-w-3xl text-[2.9rem] font-semibold leading-[0.98] tracking-tight text-balance sm:text-7xl lg:text-8xl"
               style={{ y: yText }}
             >
               <Line delay={0.1}>

@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Bot, Send, Terminal, X } from "lucide-react";
+import { Bot, RotateCcw, Send, Terminal, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { botMeta, getReply, quickPrompts } from "@/lib/chatbot";
 
@@ -18,6 +18,26 @@ const welcome: Message = {
 };
 
 let nextId = 1;
+
+function CopyMsg({ text }: { text: string }) {
+  const [ok, setOk] = useState(false);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {}
+    setOk(true);
+    setTimeout(() => setOk(false), 1500);
+  };
+  return (
+    <button
+      onClick={copy}
+      aria-label="Copy message"
+      className="font-mono text-[0.6rem] text-muted/50 transition-colors hover:text-acid"
+    >
+      {ok ? "✓ copied" : "[ copy ]"}
+    </button>
+  );
+}
 
 export function Chatbot() {
   const [open, setOpen] = useState(false);
@@ -57,6 +77,12 @@ export function Chatbot() {
       ]);
       setTyping(false);
     }, delay);
+  };
+
+  const resetChat = () => {
+    nextId = 1;
+    setMessages([welcome]);
+    setTyping(false);
   };
 
   const openPanel = () => {
@@ -157,13 +183,23 @@ export function Chatbot() {
                   </p>
                 </div>
               </div>
-              <button
-                onClick={() => setOpen(false)}
-                aria-label="Close chat"
-                className="font-mono grid h-7 w-7 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
-              >
-                ×
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={resetChat}
+                  aria-label="Start new chat"
+                  title="new chat"
+                  className="font-mono grid h-7 w-7 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
+                >
+                  <RotateCcw className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  onClick={() => setOpen(false)}
+                  aria-label="Close chat"
+                  className="font-mono grid h-7 w-7 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
+                >
+                  ×
+                </button>
+              </div>
             </div>
 
             <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
@@ -173,7 +209,7 @@ export function Chatbot() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
-                  className={`flex ${m.from === "user" ? "justify-end" : "justify-start"}`}
+                  className={`flex flex-col ${m.from === "user" ? "items-end" : "items-start"}`}
                 >
                   <div
                     className={`whitespace-pre-line font-mono text-[0.82rem] leading-relaxed ${
@@ -184,6 +220,11 @@ export function Chatbot() {
                   >
                     {m.text}
                   </div>
+                  {m.from === "bot" && (
+                    <div className="mt-1 px-0.5">
+                      <CopyMsg text={m.text} />
+                    </div>
+                  )}
                 </motion.div>
               ))}
 
