@@ -158,6 +158,21 @@ export const notes: Note[] = [
 
 export const projects: Project[] = [
   {
+    name: "Foodie",
+    tagline: "Restaurant POS — terminal, orders & analytics",
+    scope: "Owned the whole build — state machine, persistence, reports engine.",
+    description:
+      "Real-time restaurant POS covering the terminal, order management, 20-table layout, and a revenue dashboard — with multi-payment, discounts, tax, stock deduction, and CSV export.",
+    highlights: [
+      "POS terminal: 24 menu items across 4 categories, cart, modifiers, discounts",
+      "Multi-payment (cash/card/UPI), configurable tax, auto stock deduction",
+      "Order engine with live timers, printable receipts, quick reorder, table auto-release",
+      "Dashboard & reports: hourly sales, top items, payment split, CSV export",
+    ],
+    tags: ["React 19", "Vite", "Context API", "localStorage", "CSS3"],
+    accent: "from-orange-500 to-red-500",
+  },
+  {
     name: "ARLY",
     tagline: "AI Product Finder for Nepal",
     scope: "Full-stack product lead — architecture, scraping, ingestion, LLM layer.",

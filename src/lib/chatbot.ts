@@ -50,13 +50,19 @@ const intents: Intent[] = [
     id: "projects",
     keywords: ["project", "projects", "work", "portfolio", "built", "what has", "products", "apps", "case studies", "show me", "cool stuff"],
     reply: () =>
-      `Here are 6 things he's shipped:\n\n${list(projects.map((p) => `${p.name} — ${p.tagline}`))}\n\nAsk about any one of them by name, e.g. "tell me about ARLY".`,
+      `Here are 7 things he's shipped:\n\n${list(projects.map((p) => `${p.name} — ${p.tagline}`))}\n\nAsk about any one of them by name, e.g. "tell me about ARLY".`,
   },
   {
     id: "arly",
     keywords: ["arly", "product finder", "scraping", "scrape", "price compare", "marketplace"],
     reply: () =>
       `ARLY is his biggest one — an AI product finder for Nepal.\n\n• Scrapes & compares prices across 10+ Nepali marketplaces\n• LLM-powered extraction pipelines\n• React 19 + TypeScript + Supabase (auth, admin dashboards, subscriptions)\n• Express.js microservices for query scraping & comparison`,
+  },
+  {
+    id: "foodie",
+    keywords: ["foodie", "restaurant pos", "pos", "point of sale"],
+    reply: () =>
+      `Foodie is his restaurant POS — a full point-of-sale system (v2.12).\n\n• POS terminal: 24 menu items, cart, modifiers, discounts, multi-payment (cash/card/UPI)\n• Order engine: live timers, printable receipts, quick reorder, table auto-release\n• 20-table management with color-coded status\n• Dashboard & reports: hourly sales, top items, payment split, CSV export\n\nBuilt in React 19 + Vite with localStorage persistence and zero UI libraries.`,
   },
   {
     id: "documind",

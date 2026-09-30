@@ -12,6 +12,7 @@ const accents: Record<string, string> = {
   "from-emerald-400 to-teal-600": "bg-acid",
   "from-rose-400 to-red-600": "bg-vermilion",
   "from-lime-400 to-green-600": "bg-sky",
+  "from-orange-500 to-red-500": "bg-vermilion",
 };
 
 export function ProjectModal({
