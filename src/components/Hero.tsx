@@ -336,13 +336,6 @@ export function Hero() {
                   </span>
                 </button>
               </TiltCard>
-              <div className="shikiji-frame mt-3 flex items-center justify-between border border-line bg-carbon-2 px-3 py-2 font-mono text-[0.65rem] text-muted">
-                <span>
-                  <span className="text-acid">file:</span>{" "}
-                  DJI_20260706173539_0152_D
-                </span>
-                <span className="text-muted">pokhara · 2026</span>
-              </div>
             </div>
           </motion.div>
         </div>
@@ -431,10 +424,7 @@ export function Hero() {
                 </span>
               </div>
               <figcaption className="flex items-center justify-between border-x border-b border-line bg-carbon-2 px-3 py-2 font-mono text-[0.65rem] text-muted">
-                <span>
-                  <span className="text-acid">file:</span>{" "}
-                  DJI_20260706173539_0152_D
-                </span>
+                <span className="text-acid">pokhara · 2026</span>
                 <span className="flex items-center gap-3">
                   <span className="text-acid">esc</span> close
                 </span>
