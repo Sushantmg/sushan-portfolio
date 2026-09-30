@@ -1,7 +1,8 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { type ReactNode, useRef } from "react";
+import { Link2 } from "lucide-react";
+import { type ReactNode, useRef, useState } from "react";
 
 export function Reveal({
   children,
@@ -79,18 +80,47 @@ export function StaggerItem({
 const KANJI = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
 const KANJI_READING = ["いち", "に", "さん", "よん", "ご", "ろく", "しち", "はち", "きゅう", "じゅう"];
 
+function CopyAnchor({ target }: { target: string }) {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    try {
+      const url = `${window.location.origin}${window.location.pathname}#${target}`;
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {}
+  };
+  return (
+    <button
+      onClick={copy}
+      aria-label={`Copy link to ${target}`}
+      title="Copy section link"
+      className={`ml-auto inline-flex items-center gap-1.5 border px-2 py-1 font-mono text-[0.6rem] transition-colors duration-200 ${
+        copied
+          ? "border-acid bg-acid text-carbon"
+          : "border-line text-muted hover:border-acid hover:text-acid"
+      }`}
+    >
+      <Link2 className="h-3 w-3" />
+      {copied ? "copied" : "link"}
+    </button>
+  );
+}
+
 export function SectionHeading({
   index,
   eyebrow,
   title,
   description,
   watermark,
+  sectionId,
 }: {
   index: string;
   eyebrow: string;
   title: ReactNode;
   description?: string;
   watermark?: string;
+  sectionId?: string;
 }) {
   const n = parseInt(index, 10);
   const kanji = KANJI[(n || 1) - 1] ?? index;
@@ -118,6 +148,7 @@ export function SectionHeading({
             <span aria-hidden className="kanji text-[0.7rem] text-vermilion/70">
               ◯
             </span>
+            {sectionId && <CopyAnchor target={sectionId} />}
           </div>
         </Reveal>
         <Reveal delay={0.08}>

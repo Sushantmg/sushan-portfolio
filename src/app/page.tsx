@@ -8,6 +8,7 @@ import { EducationCertifications } from "@/components/EducationCertifications";
 import { Experience } from "@/components/Experience";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
+import { Journal } from "@/components/Journal";
 import { Karesansui } from "@/components/Karesansui";
 import { MobileDock } from "@/components/MobileDock";
 import { Navbar } from "@/components/Navbar";
@@ -61,6 +62,7 @@ export default function Home() {
         <Experience />
         <Skills />
         <Projects />
+        <Journal />
         <EducationCertifications />
         <Contact />
       </main>

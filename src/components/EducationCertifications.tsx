@@ -48,6 +48,7 @@ export function EducationCertifications() {
           index="05"
           eyebrow="Education & Certifications"
           watermark="学"
+          sectionId="education"
           title={
             <>
               The paperwork behind the{" "}

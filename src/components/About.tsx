@@ -25,6 +25,7 @@ export function About() {
           index="01"
           eyebrow="About"
           watermark="心"
+          sectionId="about"
           title={
             <>
               Software that has{" "}

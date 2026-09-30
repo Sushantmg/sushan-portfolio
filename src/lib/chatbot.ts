@@ -203,9 +203,53 @@ const brandMap: Record<string, string> = {
   "college management system": "cms",
 };
 
+const helpText = () =>
+  `I can run a few commands, and answer anything about Sushan.\n\nCommands:\n${list([
+    "/help — this list",
+    "/sections — jump points on the page",
+    "/who — about the bot",
+    "/skills — full toolkit",
+    "ping — is anyone home?",
+    "sudo — try it, see what happens",
+  ])}\n\nOtherwise just ask naturally: "tell me about ARLY", "what do you build?", "email".`;
+
+const whoMadeText = () =>
+  `I'm ?sushan — a small knowledge bot hand-built by ${profile.name}, living inside this portfolio. I only know what's in his data, and I'm terrible at everything else.`;
+
+const sudoText = () =>
+  `permission denied. ?sushan only talks — he doesn't execute. try "sudo whoami" for what that's worth.`;
+
+const sectionsText = () =>
+  `Jump points on this page:\n\n${list([
+    "/about 一 — who he is",
+    "/experience 二 — shipped work",
+    "/skills 三 — the toolkit",
+    "/projects 四 — case files",
+    "/journal 六 — field notes",
+    "/education 五 — certs & degrees",
+    "/contact 七 — reach out",
+  ])}`;
+
 export function getReply(input: string): string {
   const text = normalize(input);
   if (!text) return fallbacks[0];
+
+  const raw = input.trim().toLowerCase();
+  if (/^(help|\/help|what can you do|what can you say)$/.test(raw)) {
+    return helpText();
+  }
+  if (/^who (made|created|built|wrote) (you|this|you)$/.test(raw)) {
+    return whoMadeText();
+  }
+  if (/^sudo/.test(raw)) {
+    return sudoText();
+  }
+  if (/^(ping|\/ping)$/.test(raw)) {
+    return `pong · round-trip felt instant`;
+  }
+  if (/\/sections|jump points|sections$/.test(raw)) {
+    return sectionsText();
+  }
 
   for (const [word, id] of Object.entries(brandMap)) {
     if (matchText(text, word)) {

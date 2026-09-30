@@ -13,7 +13,8 @@ const links = [
   { label: "Skills", href: "#skills", index: "03" },
   { label: "Projects", href: "#projects", index: "04" },
   { label: "Education", href: "#education", index: "05" },
-  { label: "Contact", href: "#contact", index: "06" },
+  { label: "Journal", href: "#journal", index: "06" },
+  { label: "Contact", href: "#contact", index: "07" },
 ];
 
 const KANJI = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];

@@ -118,6 +118,44 @@ export type Project = {
   featured?: boolean;
 };
 
+export type Note = {
+  date: string;
+  title: string;
+  excerpt: string;
+  tags: string[];
+};
+
+export const notes: Note[] = [
+  {
+    date: "2026-08-14",
+    title: "Shipping the ARLY price engine, end to end",
+    excerpt:
+      "Wired the marketplace scrapers into a normalized comparison service — dedup, currency handling, and an LLM extraction layer that reads messy product pages into structured data.",
+    tags: ["ARLY", "Express.js", "LLM"],
+  },
+  {
+    date: "2026-06-02",
+    title: "Why MCP makes tooling composable",
+    excerpt:
+      "Notes from building an MCP sampling workspace — server-delegated inference, progress notifications, and root-based file boundaries. When tools speak one protocol, agents get boringly reliable.",
+    tags: ["MCP", "Python", "Anthropic"],
+  },
+  {
+    date: "2026-03-19",
+    title: "RAG that stays grounded",
+    excerpt:
+      "Documentation trail on DocuMind — MongoDB Atlas Vector Search plus a retrieval pipeline that cites what it reads. The lesson: retrieval quality beats prompt size every time.",
+    tags: ["RAG", "MongoDB", "MERN"],
+  },
+  {
+    date: "2026-01-11",
+    title: "Field notes: auth done properly",
+    excerpt:
+      "JWT sessions, role-scoped access, and the mistakes I stopped making — short log from hardening the college management backend with Prisma.",
+    tags: ["Auth", "Prisma", "TypeScript"],
+  },
+];
+
 export const projects: Project[] = [
   {
     name: "ARLY",

@@ -9,6 +9,7 @@ export function Experience() {
           index="02"
           eyebrow="Experience"
           watermark="行"
+          sectionId="experience"
           title={
             <>
               Shipped work,{" "}

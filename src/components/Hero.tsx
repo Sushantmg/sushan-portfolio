@@ -7,6 +7,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { profile, roles } from "@/lib/data";
 import { GitHubIcon, LinkedInIcon } from "./BrandIcons";
 import { Kamon } from "./Kamon";
+import { DayProgress } from "./DayProgress";
 import { LiveClock } from "./LiveClock";
 import { Magnetic } from "./Magnetic";
 import { SkillIcon } from "./SkillIcon";
@@ -305,6 +306,7 @@ export function Hero() {
                 <LiveClock timeZone="Asia/Kathmandu" />
                 <span className="text-muted/70">:: NPT</span>
               </span>
+              <DayProgress />
             </motion.div>
           </div>
 

@@ -13,9 +13,10 @@ export function Contact() {
         <div className="grid gap-12 lg:grid-cols-2">
           <div>
             <SectionHeading
-              index="06"
+              index="07"
               eyebrow="Contact"
               watermark="縁"
+              sectionId="contact"
               title={
                 <>
                   Got a build in mind?{" "}

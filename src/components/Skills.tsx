@@ -10,6 +10,7 @@ export function Skills() {
           index="03"
           eyebrow="Skills"
           watermark="道"
+          sectionId="skills"
           title={
             <>
               The toolkit I{" "}

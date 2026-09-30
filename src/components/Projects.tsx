@@ -25,6 +25,7 @@ export function Projects() {
           index="04"
           eyebrow="Projects"
           watermark="作"
+          sectionId="projects"
           title={
             <>
               Things I&apos;ve{" "}

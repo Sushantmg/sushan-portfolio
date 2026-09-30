@@ -11,13 +11,31 @@ type Message = {
   text: string;
 };
 
+type StoredMessage = { from: "user" | "bot"; text: string };
+
+const STORAGE_KEY = "sushan-chat";
+
 const welcome: Message = {
   id: 0,
   from: "bot",
-  text: `Hey — I'm ${botMeta.name}, a little knowledge bot built into this portfolio.\n\nAsk me anything about Sushan: projects, skills, experience, contact.`,
+  text: `Hey — I'm ${botMeta.name}, a little knowledge bot built into this portfolio.\n\nAsk me anything about Sushan: projects, skills, experience, contact. Type /help for commands.`,
 };
 
 let nextId = 1;
+
+function loadHistory(): Message[] {
+  if (typeof window === "undefined") return [welcome];
+  try {
+    const raw = window.sessionStorage.getItem(STORAGE_KEY);
+    if (!raw) return [welcome];
+    const parsed = JSON.parse(raw) as StoredMessage[];
+    if (!Array.isArray(parsed) || parsed.length === 0) return [welcome];
+    nextId = parsed.length + 1;
+    return parsed.map((m, i) => ({ id: i, from: m.from, text: m.text }));
+  } catch {
+    return [welcome];
+  }
+}
 
 function CopyMsg({ text }: { text: string }) {
   const [ok, setOk] = useState(false);
@@ -42,11 +60,20 @@ function CopyMsg({ text }: { text: string }) {
 export function Chatbot() {
   const [open, setOpen] = useState(false);
   const [hint, setHint] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([welcome]);
+  const [messages, setMessages] = useState<Message[]>(loadHistory);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    try {
+      window.sessionStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(messages.map(({ from, text }) => ({ from, text }))),
+      );
+    } catch {}
+  }, [messages]);
 
   useEffect(() => {
     const t = setTimeout(() => setHint(true), 1800);
@@ -83,6 +110,9 @@ export function Chatbot() {
     nextId = 1;
     setMessages([welcome]);
     setTyping(false);
+    try {
+      window.sessionStorage.removeItem(STORAGE_KEY);
+    } catch {}
   };
 
   const openPanel = () => {
