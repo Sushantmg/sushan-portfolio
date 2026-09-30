@@ -4,8 +4,21 @@ import { LiveClock } from "./LiveClock";
 
 export function Footer() {
   return (
-    <footer className="border-t border-line bg-carbon py-8 lg:pl-16">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 font-mono text-xs text-muted sm:flex-row sm:px-8 lg:px-14">
+    <footer className="bg-carbon lg:pl-16">
+      <div aria-hidden className="w-full">
+        <svg
+          className="block h-2 w-full"
+          viewBox="0 0 32 8"
+          preserveAspectRatio="none"
+        >
+          <polygon
+            points="0,8 4,0 8,8 12,0 16,8 20,0 24,8 28,0 32,8"
+            fill="#1a1e17"
+          />
+        </svg>
+      </div>
+      <div className="border-t border-line py-8">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 font-mono text-xs text-muted sm:flex-row sm:px-8 lg:px-14">
         <p>
           © {new Date().getFullYear()} {profile.name}
           <span className="ml-2 inline-block align-middle">
@@ -28,6 +41,7 @@ export function Footer() {
         >
           <span className="text-acid">↑</span> back to top
         </a>
+        </div>
       </div>
 
       <div className="mx-auto mt-8 flex max-w-6xl items-center justify-center gap-4 px-5 sm:px-8 lg:px-14">

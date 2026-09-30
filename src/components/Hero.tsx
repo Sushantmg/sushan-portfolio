@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowUpRight, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { profile, roles } from "@/lib/data";
@@ -118,6 +118,7 @@ export function Hero() {
   });
   const yText = useTransform(scrollYProgress, [0, 1], [0, 60]);
   const opacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
+  const [photoOpen, setPhotoOpen] = useState(false);
 
   return (
     <section
@@ -316,7 +317,12 @@ export function Hero() {
             <div className="mx-auto w-full max-w-[340px] lg:max-w-[380px]">
               <TiltCard className="group relative rotate-2 transition-transform duration-500 hover:rotate-0">
                 <div className="pointer-events-none absolute -inset-2 -z-10 border border-acid/60" />
-                <div className="relative aspect-[9/16] overflow-hidden border border-line bg-carbon-2">
+                <button
+                  type="button"
+                  onClick={() => setPhotoOpen(true)}
+                  aria-label="View full photo"
+                  className="relative block aspect-[9/16] w-full cursor-zoom-in overflow-hidden border border-line bg-carbon-2"
+                >
                   <Image
                     src="/images/drone.jpg"
                     alt="Aerial shot of Sushan from above, captured with a DJI drone"
@@ -325,7 +331,10 @@ export function Hero() {
                     sizes="(min-width: 1024px) 40vw, 340px"
                     className="object-cover grayscale contrast-105 transition-all duration-700 group-hover:grayscale-0"
                   />
-                </div>
+                  <span className="absolute bottom-3 right-3 grid place-items-center border border-acid bg-carbon/90 px-2 py-1 font-mono text-[0.6rem] text-acid opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    view full
+                  </span>
+                </button>
               </TiltCard>
               <div className="shikiji-frame mt-3 flex items-center justify-between border border-line bg-carbon-2 px-3 py-2 font-mono text-[0.65rem] text-muted">
                 <span>
@@ -390,6 +399,57 @@ export function Hero() {
           </div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {photoOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[80] flex items-center justify-center bg-carbon/95 p-4 backdrop-blur-sm sm:p-8"
+            onClick={() => setPhotoOpen(false)}
+          >
+            <motion.figure
+              initial={{ scale: 0.94, y: 16 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.94, y: 16 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+              className="relative max-h-full w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="relative aspect-[9/16] overflow-hidden border border-line">
+                <Image
+                  src="/images/drone.jpg"
+                  alt="Full-size aerial shot of Sushan from above, captured with a DJI drone"
+                  fill
+                  sizes="(min-width: 768px) 28vw, 90vw"
+                  className="object-cover"
+                />
+                <span aria-hidden className="kanji pointer-events-none absolute right-3 top-3 text-2xl text-acid/40">
+                  飛
+                </span>
+              </div>
+              <figcaption className="flex items-center justify-between border-x border-b border-line bg-carbon-2 px-3 py-2 font-mono text-[0.65rem] text-muted">
+                <span>
+                  <span className="text-acid">file:</span>{" "}
+                  DJI_20260706173539_0152_D
+                </span>
+                <span className="flex items-center gap-3">
+                  <span className="text-acid">esc</span> close
+                </span>
+              </figcaption>
+              <button
+                onClick={() => setPhotoOpen(false)}
+                aria-label="Close photo"
+                className="absolute -top-3 -right-3 grid h-8 w-8 place-items-center border border-line bg-carbon text-muted transition-colors hover:border-acid hover:text-acid"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </motion.figure>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

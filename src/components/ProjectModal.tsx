@@ -1,8 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { X } from "lucide-react";
-import { useEffect } from "react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useEffect, useRef } from "react";
 import type { Project } from "@/lib/data";
 
 const accents: Record<string, string> = {
@@ -17,18 +17,27 @@ const accents: Record<string, string> = {
 export function ProjectModal({
   project,
   onClose,
+  onPrev,
+  onNext,
 }: {
   project: Project | null;
   onClose: () => void;
+  onPrev?: () => void;
+  onNext?: () => void;
 }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!project) return;
+    scrollRef.current?.scrollTo({ top: 0 });
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft") onPrev?.();
+      if (e.key === "ArrowRight") onNext?.();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [project, onClose]);
+  }, [project, onClose, onPrev, onNext]);
 
   return (
     <AnimatePresence>
@@ -66,16 +75,36 @@ export function ProjectModal({
                 </h3>
                 <p className="label mt-1 text-muted">{project.tagline}</p>
               </div>
-              <button
-                onClick={onClose}
-                aria-label="Close project details"
-                className="grid h-9 w-9 shrink-0 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
-              >
-                <X className="h-4 w-4" />
-              </button>
+              <div className="flex items-center gap-2">
+                {onPrev && (
+                  <button
+                    onClick={onPrev}
+                    aria-label="Previous project"
+                    className="grid h-9 w-9 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                )}
+                {onNext && (
+                  <button
+                    onClick={onNext}
+                    aria-label="Next project"
+                    className="grid h-9 w-9 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                )}
+                <button
+                  onClick={onClose}
+                  aria-label="Close project details"
+                  className="grid h-9 w-9 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
             </div>
 
-            <div className="max-h-[60vh] overflow-y-auto px-6 py-5">
+            <div ref={scrollRef} className="max-h-[60vh] overflow-y-auto px-6 py-5">
               <p className="text-sm leading-relaxed text-muted">
                 {project.description}
               </p>
@@ -122,7 +151,9 @@ export function ProjectModal({
                 {project.name.toLowerCase().replace(/\s+/g, "-")} ·
                 case file
               </span>
-              <span className="text-acid">esc to close</span>
+              <span className="text-acid">
+                {onPrev || onNext ? "← → navigate · " : ""}esc close
+              </span>
             </div>
           </motion.div>
         </motion.div>

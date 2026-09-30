@@ -95,7 +95,22 @@ export function Projects() {
         </StaggerGroup>
       </div>
 
-      <ProjectModal project={active} onClose={() => setActive(null)} />
+      <ProjectModal
+        project={active}
+        onClose={() => setActive(null)}
+        onPrev={() =>
+          setActive(
+            (prev) =>
+              projects[(projects.findIndex((p) => p.name === prev?.name) - 1 + projects.length) % projects.length],
+          )
+        }
+        onNext={() =>
+          setActive(
+            (prev) =>
+              projects[(projects.findIndex((p) => p.name === prev?.name) + 1) % projects.length],
+          )
+        }
+      />
     </section>
   );
 }
