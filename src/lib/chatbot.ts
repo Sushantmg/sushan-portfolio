@@ -1,4 +1,4 @@
-import { certifications, experience, profile, projects, skillGroups } from "./data";
+import { certifications, experience, profile, projects, skillGroups, type Project } from "./data";
 
 type Intent = {
   id: string;
@@ -12,6 +12,39 @@ const speaker =
 function list(items: string[]) {
   return items.map((i) => `› ${i}`).join("\n");
 }
+
+function projectDetails(p: Project) {
+  return `${p.name} — ${p.tagline}${p.featured ? "  ·  ★ featured" : ""}\n\n${p.description}\n\nScope:\n${list([p.scope])}\n\nHighlights:\n${list(p.highlights)}\n\nStack: ${p.tags.join(", ")}`;
+}
+
+const projectNameKeys: Record<string, string[]> = {
+  ARLY: ["arly"],
+  Foodie: ["foodie"],
+  "DocuMind AI": ["documind", "documind ai"],
+  "MCP Chat & Sampling": ["mcp chat", "mcp"],
+  "College Management System": ["college management system", "college management"],
+  FitGurkha: ["fitgurkha"],
+  "Hamro Mart": ["hamro mart"],
+};
+
+const projectAliases: Record<string, string[]> = {
+  ARLY: ["product finder", "scraping", "scrape", "price compare", "marketplace"],
+  Foodie: ["restaurant pos", "point of sale", "billing"],
+  "DocuMind AI": ["rag", "retrieval", "vector search", "document ai", "documents"],
+  "MCP Chat & Sampling": ["model context protocol", "sampling", "anthropic", "cli"],
+  "College Management System": ["cms", "academic", "university system"],
+  FitGurkha: ["fitness"],
+  "Hamro Mart": ["ecommerce", "e-commerce", "storefront", "vercel"],
+};
+
+const projectIntents: Intent[] = projects.map((p) => ({
+  id: `proj_${p.name}`,
+  keywords: [
+    ...(projectNameKeys[p.name] ?? [p.name.toLowerCase()]),
+    ...(projectAliases[p.name] ?? []),
+  ],
+  reply: () => projectDetails(p),
+}));
 
 const intents: Intent[] = [
   {
@@ -50,49 +83,13 @@ const intents: Intent[] = [
     id: "projects",
     keywords: ["project", "projects", "work", "portfolio", "built", "what has", "products", "apps", "case studies", "show me", "cool stuff"],
     reply: () =>
-      `Here are 7 things he's shipped:\n\n${list(projects.map((p) => `${p.name} — ${p.tagline}`))}\n\nAsk about any one of them by name, e.g. "tell me about ARLY".`,
-  },
-  {
-    id: "arly",
-    keywords: ["arly", "product finder", "scraping", "scrape", "price compare", "marketplace"],
-    reply: () =>
-      `ARLY is his biggest one — an AI product finder for Nepal.\n\n• Scrapes & compares prices across 10+ Nepali marketplaces\n• LLM-powered extraction pipelines\n• React 19 + TypeScript + Supabase (auth, admin dashboards, subscriptions)\n• Express.js microservices for query scraping & comparison`,
-  },
-  {
-    id: "foodie",
-    keywords: ["foodie", "restaurant pos", "pos", "point of sale"],
-    reply: () =>
-      `Foodie is his restaurant POS — a full point-of-sale system (v2.12).\n\n• POS terminal: 24 menu items, cart, modifiers, discounts, multi-payment (cash/card/UPI)\n• Order engine: live timers, printable receipts, quick reorder, table auto-release\n• 20-table management with color-coded status\n• Dashboard & reports: hourly sales, top items, payment split, CSV export\n\nBuilt in React 19 + Vite with localStorage persistence and zero UI libraries.`,
-  },
-  {
-    id: "documind",
-    keywords: ["documind", "rag", "retrieval", "vector search", "document ai", "documents"],
-    reply: () =>
-      `DocuMind AI is a RAG platform he built on the MERN stack:\n\n• Intelligent querying over your own documents\n• MongoDB Atlas Vector Search + embeddings for accurate answers\n• JWT-based sessions & data protection\n\nLarge language model, small toolkit, sharp results.`,
-  },
-  {
-    id: "mcp",
-    keywords: ["mcp", "model context protocol", "sampling", "anthropic", "cli"],
-    reply: () =>
-      `The MCP work covers two things:\n\n1. A CLI AI chat in Python using Anthropic API + MCP for document retrieval and command-based prompts.\n2. A sampling workspace demoing server-delegated LLM inference, logging, progress notifications, and root-based file security.\n\nHe even holds 3 Anthropic MCP certs.`,
-  },
-  {
-    id: "cms",
-    keywords: ["college", "management", "cms", "academic", "prisma", "university system"],
-    reply: () =>
-      `The College Management System:\n\n• TypeScript + Prisma ORM backend for schema & data ops\n• An AI conversational module that automates academic workflows\n\nSolid example of backend discipline plus AI where it matters.`,
-  },
-  {
-    id: "frontend_projects",
-    keywords: ["fitgurkha", "hamro mart", "fitness", "ecommerce", "e-commerce", "storefront", "vercel"],
-    reply: () =>
-      `Two Next.js storefronts:\n\n• ${projects[4].name} — a fitness platform.\n• ${projects[5].name} — an e-commerce storefront.\n\nBoth TypeScript + Tailwind, production-deployed on Vercel.`,
+      `Here are ${projects.length} things he's shipped:\n\n${list(projects.map((p) => `${p.name} — ${p.tagline}`))}\n\nAsk about any one of them by name, e.g. "tell me about ARLY".`,
   },
   {
     id: "experience",
     keywords: ["experience", "worked", "intern", "internship", "job", "career", "role", "history", "where has"],
     reply: () =>
-      `Experience highlights:\n\n${list(experience.map((e) => `${e.role} @ ${e.company}`))}\n\nWant details on a specific role? Ask about ARLY, DocuMind, MCP, the college system, or the storefronts.`,
+      `Experience highlights:\n\n${list(experience.map((e) => `${e.role} @ ${e.company}`))}\n\nWant details on a specific role? Ask about any project by name — ARLY, Foodie, DocuMind, or the others.`,
   },
   {
     id: "education",
@@ -156,6 +153,7 @@ const intents: Intent[] = [
     reply: () =>
       `Anytime! Anything else you want to know about ${profile.name}?`,
   },
+  ...projectIntents,
 ];
 
 const fallbacks = [
@@ -198,16 +196,11 @@ function matchText(text: string, keyword: string): boolean {
   return false;
 }
 
-const brandMap: Record<string, string> = {
-  arly: "arly",
-  documind: "documind",
-  "model context protocol": "mcp",
-  "mcp chat": "mcp",
-  fitgurkha: "frontend_projects",
-  "hamro mart": "frontend_projects",
-  "college management": "cms",
-  "college management system": "cms",
-};
+const brandMap: Record<string, string> = Object.fromEntries(
+  projects.flatMap((p) =>
+    (projectNameKeys[p.name] ?? [p.name.toLowerCase()]).map((k) => [k, `proj_${p.name}`]),
+  ),
+);
 
 const helpText = () =>
   `I can run a few commands, and answer anything about Sushan.\n\nCommands:\n${list([
