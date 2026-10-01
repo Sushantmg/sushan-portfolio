@@ -1,79 +1,102 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { Bot, RotateCcw, Send, Terminal, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { botMeta, getReply, quickPrompts } from "@/lib/chatbot";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import {
+  ArrowDown,
+  Bot,
+  ClipboardCopy,
+  RotateCcw,
+  Search,
+  Send,
+  Terminal,
+  X,
+} from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { botMeta, quickPrompts } from "@/lib/chatbot";
+import { followupsFor } from "./chat/followups";
+import { MessageText } from "./chat/MessageText";
+import { useChat } from "./chat/useChat";
 
-type Message = {
-  id: number;
-  from: "user" | "bot";
-  text: string;
-};
-
-type StoredMessage = { from: "user" | "bot"; text: string };
-
-const STORAGE_KEY = "sushan-chat";
-
-const welcome: Message = {
-  id: 0,
-  from: "bot",
-  text: `Hey — I'm ${botMeta.name}, a little knowledge bot built into this portfolio.\n\nAsk me anything about Sushan: projects, skills, experience, contact. Type /help for commands.`,
-};
-
-let nextId = 1;
-
-function loadHistory(): Message[] {
-  if (typeof window === "undefined") return [welcome];
-  try {
-    const raw = window.sessionStorage.getItem(STORAGE_KEY);
-    if (!raw) return [welcome];
-    const parsed = JSON.parse(raw) as StoredMessage[];
-    if (!Array.isArray(parsed) || parsed.length === 0) return [welcome];
-    nextId = parsed.length + 1;
-    return parsed.map((m, i) => ({ id: i, from: m.from, text: m.text }));
-  } catch {
-    return [welcome];
-  }
-}
+const timeFmt = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Asia/Kathmandu",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+});
 
 function CopyMsg({ text }: { text: string }) {
   const [ok, setOk] = useState(false);
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(text);
+      setOk(true);
+      setTimeout(() => setOk(false), 1500);
     } catch {}
-    setOk(true);
-    setTimeout(() => setOk(false), 1500);
   };
   return (
     <button
       onClick={copy}
       aria-label="Copy message"
-      className="font-mono text-[0.6rem] text-muted/50 transition-colors hover:text-acid"
+      className="font-mono text-[0.58rem] text-muted/50 transition-colors hover:text-acid"
     >
       {ok ? "✓ copied" : "[ copy ]"}
     </button>
   );
 }
 
-export function Chatbot() {
-  const [open, setOpen] = useState(false);
-  const [hint, setHint] = useState(false);
-  const [messages, setMessages] = useState<Message[]>(loadHistory);
-  const [input, setInput] = useState("");
-  const [typing, setTyping] = useState(false);
-  const endRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+function Chip({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="border border-line bg-carbon-2 px-2.5 py-1 text-left font-mono text-[0.68rem] text-muted transition-all duration-200 hover:border-acid hover:text-acid"
+    >
+      {label}
+    </button>
+  );
+}
 
-  useEffect(() => {
-    try {
-      window.sessionStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(messages.map(({ from, text }) => ({ from, text }))),
-      );
-    } catch {}
-  }, [messages]);
+export function Chatbot() {
+  const reduced = useReducedMotion();
+  const {
+    open,
+    messages,
+    typing,
+    unread,
+    reveal,
+    streamId,
+    send,
+    skipStream,
+    reset,
+    openPanel,
+    close,
+    toggle,
+    recall,
+    copyAll,
+  } = useChat(!reduced);
+
+  const [input, setInput] = useState("");
+  const [hint, setHint] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [showJump, setShowJump] = useState(false);
+  const [copiedAll, setCopiedAll] = useState(false);
+
+  const listRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const stickRef = useRef(true);
+
+  const q = query.trim().toLowerCase();
+  const shown = q
+    ? messages.filter((m) => m.text.toLowerCase().includes(q))
+    : messages;
+
+  const botCount = messages.filter((m) => m.from === "bot").length;
+  const lastBot = [...messages].reverse().find((m) => m.from === "bot");
+  const chips =
+    lastBot && !typing && !q && streamId === null
+      ? followupsFor(lastBot.text, botCount)
+      : [];
 
   useEffect(() => {
     const t = setTimeout(() => setHint(true), 1800);
@@ -85,51 +108,123 @@ export function Chatbot() {
   }, []);
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, typing, open]);
-
-  const send = (raw?: string) => {
-    const text = (raw ?? input).trim();
-    if (!text || typing) return;
-
-    setMessages((m) => [...m, { id: nextId++, from: "user", text }]);
-    setInput("");
-    setTyping(true);
-
-    const delay = 600 + ((text.length * 13) % 500);
-    setTimeout(() => {
-      setMessages((m) => [
-        ...m,
-        { id: nextId++, from: "bot", text: getReply(text) },
-      ]);
-      setTyping(false);
-    }, delay);
-  };
-
-  const resetChat = () => {
-    nextId = 1;
-    setMessages([welcome]);
-    setTyping(false);
-    try {
-      window.sessionStorage.removeItem(STORAGE_KEY);
-    } catch {}
-  };
-
-  const openPanel = () => {
-    setOpen(true);
-    setTimeout(() => inputRef.current?.focus(), 150);
-  };
-
-  useEffect(() => {
     const onAsk = (e: Event) => {
       const detail = (e as CustomEvent<string>).detail;
-      setOpen(true);
+      openPanel();
       setTimeout(() => send(detail), 120);
     };
     window.addEventListener("sushan:ask", onAsk);
     return () => window.removeEventListener("sushan:ask", onAsk);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [openPanel, send]);
+
+  useEffect(() => {
+    if (!stickRef.current) return;
+    const el = listRef.current;
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+  }, [messages, typing, open]);
+
+  useEffect(() => {
+    if (streamId === null) return;
+    const el = listRef.current;
+    if (el && stickRef.current) el.scrollTop = el.scrollHeight;
+  }, [reveal, streamId]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      const inField =
+        !!target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable);
+
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        openPanel();
+        setTimeout(() => inputRef.current?.focus(), 60);
+        return;
+      }
+      if (e.key === "Escape") {
+        if (searchOpen) {
+          setSearchOpen(false);
+          setQuery("");
+          return;
+        }
+        if (open) close();
+        return;
+      }
+      if (open && e.key === "/" && !inField) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, searchOpen, openPanel, close]);
+
+  const onScroll = () => {
+    const el = listRef.current;
+    if (!el) return;
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 48;
+    stickRef.current = atBottom;
+    setShowJump(!atBottom);
+  };
+
+  const jumpToLatest = () => {
+    stickRef.current = true;
+    setShowJump(false);
+    const el = listRef.current;
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+  };
+
+  const submit = (raw?: string) => {
+    const text = (raw ?? input).trim();
+    if (!text) return;
+    stickRef.current = true;
+    setShowJump(false);
+    send(text);
+    if (raw === undefined) {
+      setInput("");
+      const el = inputRef.current;
+      if (el) el.style.height = "auto";
+    }
+  };
+
+  const onComposerChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(e.target.value);
+    const el = e.target;
+    el.style.height = "auto";
+    el.style.height = `${Math.min(el.scrollHeight, 112)}px`;
+  };
+
+  const onComposerKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      submit();
+      return;
+    }
+    if (e.key === "ArrowUp" && !e.shiftKey) {
+      const prev = recall(-1);
+      if (prev !== null) {
+        e.preventDefault();
+        setInput(prev);
+      }
+      return;
+    }
+    if (e.key === "ArrowDown" && !e.shiftKey) {
+      const next = recall(1);
+      if (next !== null) {
+        e.preventDefault();
+        setInput(next);
+      }
+    }
+  };
+
+  const onCopyAll = useCallback(async () => {
+    await copyAll();
+    setCopiedAll(true);
+    setTimeout(() => setCopiedAll(false), 1500);
+  }, [copyAll]);
 
   return (
     <>
@@ -158,8 +253,8 @@ export function Chatbot() {
         transition={{ delay: 1.1 }}
         onClick={() => {
           setHint(false);
-          if (open) setOpen(false);
-          else openPanel();
+          toggle();
+          if (!open) setTimeout(() => inputRef.current?.focus(), 200);
         }}
         aria-label={open ? "Close chat" : "Chat with the Sushan bot"}
         className={`fixed bottom-5 right-5 z-50 flex h-14 items-center gap-2.5 border px-4 font-mono text-xs font-bold uppercase tracking-widest transition-all duration-200 ${
@@ -185,6 +280,11 @@ export function Chatbot() {
                 an AI bot · online
               </span>
             </span>
+            {unread > 0 && (
+              <span className="absolute -right-1.5 -top-1.5 grid h-5 min-w-5 place-items-center bg-vermilion px-1 text-[0.6rem] font-bold tracking-normal text-carbon">
+                {unread}
+              </span>
+            )}
           </>
         )}
       </motion.button>
@@ -196,7 +296,7 @@ export function Chatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.96 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed bottom-24 right-4 z-50 flex h-[min(32rem,calc(100dvh-8rem))] w-[calc(100vw-2rem)] max-w-sm flex-col overflow-hidden border border-line bg-carbon shadow-2xl sm:right-6"
+            className="fixed bottom-24 right-4 z-50 flex h-[min(34rem,calc(100dvh-7.5rem))] w-[calc(100vw-2rem)] max-w-sm flex-col overflow-hidden border border-line bg-carbon shadow-2xl sm:right-6"
           >
             <div className="flex items-center justify-between border-b border-line bg-carbon-2 px-4 py-3">
               <div className="flex items-center gap-2.5">
@@ -213,106 +313,199 @@ export function Chatbot() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <button
-                  onClick={resetChat}
+                  onClick={() => {
+                    setSearchOpen((s) => !s);
+                    setTimeout(() => searchRef.current?.focus(), 40);
+                  }}
+                  aria-label="Search transcript"
+                  title="search (esc to close)"
+                  className={`grid h-7 w-7 place-items-center border transition-colors ${
+                    searchOpen
+                      ? "border-acid text-acid"
+                      : "border-line text-muted hover:border-acid hover:text-acid"
+                  }`}
+                >
+                  <Search className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  onClick={onCopyAll}
+                  aria-label="Copy whole transcript"
+                  title="copy transcript"
+                  className="grid h-7 w-7 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
+                >
+                  {copiedAll ? (
+                    <span className="font-mono text-[0.5rem] text-acid">✓</span>
+                  ) : (
+                    <ClipboardCopy className="h-3.5 w-3.5" />
+                  )}
+                </button>
+                <button
+                  onClick={reset}
                   aria-label="Start new chat"
                   title="new chat"
-                  className="font-mono grid h-7 w-7 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
+                  className="grid h-7 w-7 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
                 </button>
                 <button
-                  onClick={() => setOpen(false)}
+                  onClick={close}
                   aria-label="Close chat"
-                  className="font-mono grid h-7 w-7 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
+                  className="grid h-7 w-7 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
                 >
-                  ×
+                  <X className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
 
-            <div className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain px-4 py-4">
-              {messages.map((m) => (
-                <motion.div
-                  key={m.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className={`flex flex-col ${m.from === "user" ? "items-end" : "items-start"}`}
-                >
-                  <div
-                    className={`whitespace-pre-line font-mono text-[0.82rem] leading-relaxed ${
-                      m.from === "user"
-                        ? "border border-acid/60 bg-acid/10 px-3 py-2 text-acid"
-                        : "border border-line bg-carbon-2 px-3 py-2 text-ink"
-                    }`}
-                  >
-                    {m.text}
-                  </div>
-                  {m.from === "bot" && (
-                    <div className="mt-1 px-0.5">
-                      <CopyMsg text={m.text} />
-                    </div>
-                  )}
-                </motion.div>
-              ))}
+            {searchOpen && (
+              <div className="flex items-center gap-2 border-b border-line bg-carbon-2 px-3 py-2">
+                <Search className="h-3.5 w-3.5 shrink-0 text-muted" />
+                <input
+                  ref={searchRef}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="search transcript…"
+                  aria-label="Search transcript"
+                  className="w-full bg-transparent font-mono text-xs text-ink placeholder:text-muted focus:outline-none"
+                />
+                <span className="font-mono text-[0.6rem] text-muted">
+                  {shown.length}/{messages.length}
+                </span>
+              </div>
+            )}
 
-              {typing && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex justify-start"
-                >
-                  <div className="flex items-center gap-1 border border-line bg-carbon-2 px-3 py-2.5">
-                    {[0, 1, 2].map((i) => (
-                      <motion.span
-                        key={i}
-                        className="h-1.5 w-1.5 bg-acid"
-                        animate={{ opacity: [0.2, 1, 0.2] }}
-                        transition={{ repeat: Infinity, duration: 1, delay: i * 0.18 }}
-                      />
+            <div className="relative flex min-h-0 flex-1 flex-col">
+              <div
+                ref={listRef}
+                onScroll={onScroll}
+                role="log"
+                aria-live="polite"
+                aria-label="Chat transcript"
+                className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain px-4 py-4"
+              >
+                {shown.length === 0 && (
+                  <p className="font-mono text-[0.7rem] text-muted">
+                    no messages match “{query}”
+                  </p>
+                )}
+
+                {shown.map((m) => {
+                  const streaming = m.id === streamId;
+                  return (
+                    <motion.div
+                      key={m.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className={`flex flex-col ${
+                        m.from === "user" ? "items-end" : "items-start"
+                      }`}
+                    >
+                      <div
+                        onClick={streaming ? skipStream : undefined}
+                        title={streaming ? "click to finish" : undefined}
+                        className={`max-w-[92%] whitespace-pre-line font-mono text-[0.82rem] leading-relaxed ${
+                          m.from === "user"
+                            ? "border border-acid/60 bg-acid/10 px-3 py-2 text-acid"
+                            : "border border-line bg-carbon-2 px-3 py-2 text-ink"
+                        } ${streaming ? "cursor-pointer" : ""}`}
+                      >
+                        <MessageText
+                          text={
+                            streaming ? m.text.slice(0, reveal) : m.text
+                          }
+                        />
+                        {streaming && (
+                          <span className="ml-0.5 inline-block h-3 w-1.5 animate-pulse bg-acid align-middle" />
+                        )}
+                      </div>
+                      <div className="mt-1 flex items-center gap-2 px-0.5">
+                        {m.from === "bot" && <CopyMsg text={m.text} />}
+                        {m.ts && (
+                          <span className="font-mono text-[0.55rem] text-muted/40">
+                            {timeFmt.format(m.ts)}
+                          </span>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+
+                {typing && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="flex justify-start"
+                  >
+                    <div className="flex items-center gap-1 border border-line bg-carbon-2 px-3 py-2.5">
+                      {[0, 1, 2].map((i) => (
+                        <motion.span
+                          key={i}
+                          className="h-1.5 w-1.5 bg-acid"
+                          animate={{ opacity: [0.2, 1, 0.2] }}
+                          transition={{ repeat: Infinity, duration: 1, delay: i * 0.18 }}
+                        />
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+
+                {messages.length === 1 && !typing && (
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    {quickPrompts().map((p) => (
+                      <Chip key={p} label={p} onClick={() => submit(p)} />
                     ))}
                   </div>
-                </motion.div>
-              )}
+                )}
 
-              {messages.length === 1 && !typing && (
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {quickPrompts().map((q) => (
-                    <button
-                      key={q}
-                      onClick={() => send(q)}
-                      className="border border-line bg-carbon-2 px-3 py-1.5 text-left font-mono text-[0.72rem] text-muted transition-all duration-200 hover:border-acid hover:text-acid"
-                    >
-                      {q}
-                    </button>
-                  ))}
-                </div>
+                {chips.length > 0 && (
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    {chips.map((c) => (
+                      <Chip key={c} label={c} onClick={() => submit(c)} />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {showJump && (
+                <button
+                  onClick={jumpToLatest}
+                  className="absolute bottom-3 left-1/2 z-10 inline-flex -translate-x-1/2 items-center gap-1.5 border border-line bg-carbon-2 px-3 py-1 font-mono text-[0.6rem] text-acid transition-colors hover:border-acid"
+                >
+                  <ArrowDown className="h-3 w-3" /> latest
+                </button>
               )}
-              <div ref={endRef} />
+            </div>
+
+            <div className="flex items-center justify-between gap-2 border-t border-line bg-carbon-2 px-3 pt-2 pb-1 font-mono text-[0.55rem] text-muted/60">
+              <span>↵ send · ⇧↵ newline</span>
+              <span>↑↓ history · ⌘K chat · esc close</span>
             </div>
 
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                send();
+                submit();
               }}
-              className="flex items-center gap-2 border-t border-line bg-carbon-2 p-3"
+              className="flex items-start gap-2 bg-carbon-2 px-3 pb-3 pt-1"
             >
-              <span className="font-mono text-sm text-acid">❯</span>
-              <input
+              <span className="font-mono pt-1.5 text-sm text-acid">❯</span>
+              <textarea
                 ref={inputRef}
+                rows={1}
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={onComposerChange}
+                onKeyDown={onComposerKey}
                 placeholder="ask about  sushan…"
-                className="w-full bg-transparent font-mono text-sm text-ink placeholder:text-muted focus:outline-none"
                 aria-label="Chat message"
+                className="max-h-28 w-full resize-none bg-transparent py-1.5 font-mono text-sm leading-snug text-ink placeholder:text-muted focus:outline-none"
               />
               <button
                 type="submit"
                 aria-label="Send message"
-                className="grid h-8 w-8 shrink-0 place-items-center bg-acid text-carbon transition-transform duration-200 hover:scale-105 disabled:opacity-40"
+                className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center bg-acid text-carbon transition-transform duration-200 hover:scale-105 disabled:opacity-40"
                 disabled={!input.trim() || typing}
               >
                 <Send className="h-3.5 w-3.5" />
