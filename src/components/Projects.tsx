@@ -1,8 +1,8 @@
 "use client";
 
 import { ArrowUpRight } from "lucide-react";
-import { useState } from "react";
-import { projects, type Project } from "@/lib/data";
+import { useEffect, useState } from "react";
+import { projects, slugify, type Project } from "@/lib/data";
 import { ProjectModal } from "./ProjectModal";
 import { SectionHeading, StaggerGroup, StaggerItem } from "./Reveal";
 import { TiltCard } from "./TiltCard";
@@ -17,8 +17,90 @@ const accents: Record<string, string> = {
   "from-orange-500 to-red-500": "bg-vermilion",
 };
 
+const caseHash = (slug: string) => `#case/${slug}`;
+
+function readHash(): string | null {
+  if (typeof window === "undefined") return null;
+  const match = window.location.hash.match(/^#case\/([\w-]+)$/);
+  return match ? match[1] : null;
+}
+
+function writeHash(slug: string | null, replace: boolean) {
+  const url = `${window.location.pathname}${window.location.search}${
+    slug ? caseHash(slug) : ""
+  }`;
+  if (replace) window.history.replaceState(null, "", url);
+  else window.history.pushState(null, "", url);
+}
+
 export function Projects() {
   const [active, setActive] = useState<Project | null>(null);
+  const [tag, setTag] = useState<string | null>(null);
+
+  const tagCounts = projects
+    .flatMap((p) => p.tags)
+    .reduce<Record<string, number>>((acc, t) => {
+      acc[t] = (acc[t] ?? 0) + 1;
+      return acc;
+    }, {});
+  const topTags = Object.entries(tagCounts)
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, 7);
+
+  const visible = tag ? projects.filter((p) => p.tags.includes(tag)) : projects;
+
+  useEffect(() => {
+    const slug = readHash();
+    if (!slug) return;
+    const found = projects.find((p) => slugify(p.name) === slug);
+    if (!found) return;
+    const id = setTimeout(() => {
+      setActive(found);
+      document
+        .getElementById("projects")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 0);
+    return () => clearTimeout(id);
+  }, []);
+
+  useEffect(() => {
+    const sync = () => {
+      const slug = readHash();
+      setActive(
+        slug ? (projects.find((p) => slugify(p.name) === slug) ?? null) : null,
+      );
+    };
+    window.addEventListener("hashchange", sync);
+    window.addEventListener("popstate", sync);
+    return () => {
+      window.removeEventListener("hashchange", sync);
+      window.removeEventListener("popstate", sync);
+    };
+  }, []);
+
+  const open = (project: Project) => {
+    setActive(project);
+    writeHash(slugify(project.name), false);
+  };
+
+  const close = () => {
+    setActive(null);
+    writeHash(null, true);
+  };
+
+  const step = (dir: -1 | 1) => {
+    setActive((prev) => {
+      if (!prev) return prev;
+      const next =
+        projects[
+          (projects.findIndex((p) => p.name === prev.name) + dir + projects.length) %
+            projects.length
+        ];
+      writeHash(slugify(next.name), true);
+      return next;
+    });
+  };
+
   return (
     <section id="projects" className="relative scroll-mt-20 border-t border-line bg-carbon-2 py-24 sm:py-32 lg:pl-16">
       <div className="mx-auto max-w-6xl px-5 sm:px-8 lg:px-14">
@@ -36,13 +118,42 @@ export function Projects() {
           description="Production platforms and experiments across AI, e-commerce, and infrastructure."
         />
 
-        <StaggerGroup className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project, i) => (
+        <div className="mb-8 flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => setTag(null)}
+            className={`border px-3 py-1.5 font-mono text-[0.68rem] transition-colors duration-200 ${
+              tag === null
+                ? "border-acid bg-acid text-carbon"
+                : "border-line text-muted hover:border-acid hover:text-acid"
+            }`}
+          >
+            all · {projects.length}
+          </button>
+          {topTags.map(([t, count]) => (
+            <button
+              key={t}
+              onClick={() => setTag(tag === t ? null : t)}
+              className={`border px-3 py-1.5 font-mono text-[0.68rem] transition-colors duration-200 ${
+                tag === t
+                  ? "border-acid bg-acid text-carbon"
+                  : "border-line text-muted hover:border-acid hover:text-acid"
+              }`}
+            >
+              {t.toLowerCase()} · {count}
+            </button>
+          ))}
+        </div>
+
+        <StaggerGroup
+          key={tag ?? "all"}
+          className="grid gap-5 md:grid-cols-2 lg:grid-cols-3"
+        >
+          {visible.map((project, i) => (
             <StaggerItem key={project.name}>
               <TiltCard intensity={6} className="h-full">
                 <button
                   type="button"
-                  onClick={() => setActive(project)}
+                  onClick={() => open(project)}
                   className="shine group relative flex h-full w-full cursor-pointer flex-col border border-line bg-carbon text-left transition-all duration-300 hover:-translate-y-1 hover:hard-shadow-sm hover:border-transparent"
                 >
                   <span className="pointer-events-none absolute right-0 top-0 h-0 w-0 border-l-[16px] border-t-[16px] border-l-transparent border-t-vermilion/90 transition-colors duration-300 group-hover:border-t-vermilion" />
@@ -71,12 +182,12 @@ export function Projects() {
                     </p>
 
                     <div className="mt-6 flex flex-wrap gap-2 border-t border-line pt-4">
-                      {project.tags.map((tag) => (
+                      {project.tags.map((t) => (
                         <span
-                          key={tag}
+                          key={t}
                           className="font-mono text-[0.65rem] uppercase tracking-wider text-muted transition-colors duration-300 group-hover:text-acid"
                         >
-                          {tag}
+                          {t}
                         </span>
                       ))}
                     </div>
@@ -95,23 +206,19 @@ export function Projects() {
             </StaggerItem>
           ))}
         </StaggerGroup>
+
+        {visible.length === 0 && (
+          <p className="font-mono text-sm text-muted">
+            nothing tagged “{tag}” yet.
+          </p>
+        )}
       </div>
 
       <ProjectModal
         project={active}
-        onClose={() => setActive(null)}
-        onPrev={() =>
-          setActive(
-            (prev) =>
-              projects[(projects.findIndex((p) => p.name === prev?.name) - 1 + projects.length) % projects.length],
-          )
-        }
-        onNext={() =>
-          setActive(
-            (prev) =>
-              projects[(projects.findIndex((p) => p.name === prev?.name) + 1) % projects.length],
-          )
-        }
+        onClose={close}
+        onPrev={() => step(-1)}
+        onNext={() => step(1)}
       />
     </section>
   );

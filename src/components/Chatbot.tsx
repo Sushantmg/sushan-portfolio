@@ -53,6 +53,14 @@ function hasSpeech() {
   return speechCtor() !== null;
 }
 
+function hasVoices() {
+  return (
+    typeof window !== "undefined" &&
+    "speechSynthesis" in window &&
+    typeof window.speechSynthesis.speak === "function"
+  );
+}
+
 const noopSubscribe = () => () => {};
 
 const timeFmt = new Intl.DateTimeFormat("en-GB", {
@@ -78,6 +86,49 @@ function CopyMsg({ text }: { text: string }) {
       className="font-mono text-[0.58rem] text-muted/50 transition-colors hover:text-acid"
     >
       {ok ? "✓ copied" : "[ copy ]"}
+    </button>
+  );
+}
+
+function SpeakButton({ text }: { text: string }) {
+  const [speaking, setSpeaking] = useState(false);
+  const canSpeak = useSyncExternalStore(noopSubscribe, hasVoices, () => false);
+
+  if (!canSpeak) return null;
+
+  const toggle = () => {
+    const synth = window.speechSynthesis;
+    if (speaking) {
+      synth.cancel();
+      setSpeaking(false);
+      return;
+    }
+    const spoken = text
+      .replace(/https?:\/\/\S+/g, "")
+      .replace(/[`*_>#]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (!spoken) return;
+    synth.cancel();
+    const utterance = new SpeechSynthesisUtterance(spoken);
+    utterance.rate = 1.02;
+    utterance.pitch = 1;
+    utterance.onend = () => setSpeaking(false);
+    utterance.onerror = () => setSpeaking(false);
+    synth.speak(utterance);
+    setSpeaking(true);
+  };
+
+  return (
+    <button
+      onClick={toggle}
+      aria-label={speaking ? "Stop reading aloud" : "Read aloud"}
+      title={speaking ? "stop" : "read aloud"}
+      className={`font-mono text-[0.58rem] transition-colors ${
+        speaking ? "text-acid" : "text-muted/50 hover:text-acid"
+      }`}
+    >
+      {speaking ? "[ stop ]" : "[ hear ]"}
     </button>
   );
 }
@@ -181,7 +232,7 @@ export function Chatbot() {
           target.tagName === "TEXTAREA" ||
           target.isContentEditable);
 
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "j") {
         e.preventDefault();
         openPanel();
         setTimeout(() => inputRef.current?.focus(), 60);
@@ -489,7 +540,12 @@ export function Chatbot() {
                         )}
                       </div>
                       <div className="mt-1 flex items-center gap-2 px-0.5">
-                        {m.from === "bot" && <CopyMsg text={m.text} />}
+                        {m.from === "bot" && (
+                          <>
+                            <CopyMsg text={m.text} />
+                            <SpeakButton text={m.text} />
+                          </>
+                        )}
                         {m.ts && (
                           <span className="font-mono text-[0.55rem] text-muted/40">
                             {timeFmt.format(m.ts)}
@@ -567,7 +623,7 @@ export function Chatbot() {
 
             <div className="flex items-center justify-between gap-2 border-t border-line bg-carbon-2 px-3 pt-2 pb-1 font-mono text-[0.55rem] text-muted/60">
               <span>↵ send · ⇧↵ newline</span>
-              <span>↑↓ history · ⌘K chat · esc close</span>
+              <span>↑↓ history · ⌘J chat · esc close</span>
             </div>
 
             <form

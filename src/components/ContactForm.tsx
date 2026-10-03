@@ -10,31 +10,44 @@ export function ContactForm() {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [error, setError] = useState("");
 
-  const submit = async (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!message.trim() || status === "sending") return;
 
     setStatus("sending");
+    setError("");
     try {
+      const form = e.currentTarget;
+      const honeypot = new FormData(form).get("company")?.toString() ?? "";
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, message }),
+        body: JSON.stringify({ name, message, company: honeypot }),
       });
       const data = (await res.json().catch(() => ({ ok: false }))) as {
         ok: boolean;
         error?: string;
       };
-      if (!data.ok) {
-        if (data.error === "mail_not_configured") {
-          fallbackMailto();
-          return;
-        }
-        throw new Error(data.error ?? "send_failed");
+
+      if (data.ok) {
+        setStatus("sent");
+        setMessage("");
+        return;
       }
-      setStatus("sent");
-      setMessage("");
+
+      if (data.error === "mail_not_configured" || data.error === "send_failed") {
+        fallbackMailto();
+        return;
+      }
+
+      setError(
+        data.error === "too_many"
+          ? "too many messages from this device — email me directly"
+          : "give it a few more words, then send again",
+      );
+      setStatus("error");
     } catch {
       fallbackMailto();
     }
@@ -60,6 +73,17 @@ export function ContactForm() {
         maxLength={80}
         className="mt-2 w-full border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted/60 focus:border-acid focus:outline-none"
       />
+      <span className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden" aria-hidden>
+        <label htmlFor="cn-company">Company (leave blank)</label>
+        <input
+          id="cn-company"
+          name="company"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          defaultValue=""
+        />
+      </span>
       <label htmlFor="cn-message" className="label mt-4 block text-muted">
         / message
       </label>
@@ -68,7 +92,10 @@ export function ContactForm() {
         value={message}
         onChange={(e) => {
           setMessage(e.target.value);
-          if (status === "sent") setStatus("idle");
+          if (status === "sent" || status === "error") {
+            setStatus("idle");
+            setError("");
+          }
         }}
         placeholder="195 — what are we building?"
         rows={3}
@@ -80,8 +107,10 @@ export function ContactForm() {
           {status === "sending"
             ? "sending…"
             : status === "sent"
-              ? "✓ sent — lost replies within a day"
-              : `${message.length}/${MAX}`}
+              ? "✓ sent — replies within a day"
+              : status === "error"
+                ? error
+                : `${message.length}/${MAX}`}
         </span>
         <button
           type="submit"

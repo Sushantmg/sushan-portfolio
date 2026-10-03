@@ -1,9 +1,9 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { useEffect, useRef } from "react";
-import type { Project } from "@/lib/data";
+import { ChevronLeft, ChevronRight, Link2, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { slugify, type Project } from "@/lib/data";
 
 const accents: Record<string, string> = {
   "from-violet-500 to-fuchsia-500": "bg-acid",
@@ -27,18 +27,36 @@ export function ProjectModal({
   onNext?: () => void;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
 
   useEffect(() => {
     if (!project) return;
     scrollRef.current?.scrollTo({ top: 0 });
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowLeft") onPrev?.();
       if (e.key === "ArrowRight") onNext?.();
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKey);
+    };
   }, [project, onClose, onPrev, onNext]);
+
+  const copyLink = async () => {
+    const slug = slugify(project?.name ?? "");
+    const url = `${window.location.origin}${window.location.pathname}#case/${slug}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopiedSlug(slug);
+      setTimeout(() => setCopiedSlug((cur) => (cur === slug ? null : cur)), 1600);
+    } catch {}
+  };
 
   return (
     <AnimatePresence>
@@ -149,11 +167,19 @@ export function ProjectModal({
 
             <div className="flex items-center justify-between border-t border-line px-6 py-3 font-mono text-[0.65rem] text-muted">
               <span>
-                {project.name.toLowerCase().replace(/\s+/g, "-")} ·
-                case file
+                {slugify(project.name)} · case file
               </span>
-              <span className="text-acid">
-                {onPrev || onNext ? "← → navigate · " : ""}esc close
+              <span className="flex items-center gap-3">
+                <button
+                  onClick={copyLink}
+                  className="inline-flex items-center gap-1.5 text-muted transition-colors hover:text-acid"
+                >
+                  <Link2 className="h-3 w-3" />
+                  {copiedSlug === slugify(project.name) ? "copied" : "copy link"}
+                </button>
+                <span className="text-acid">
+                  {onPrev || onNext ? "← → navigate · " : ""}esc close
+                </span>
               </span>
             </div>
           </motion.div>

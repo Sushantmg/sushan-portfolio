@@ -1,8 +1,19 @@
+"use client";
+
 import { ArrowUpRight } from "lucide-react";
+import { useState } from "react";
 import { notes } from "@/lib/data";
 import { Reveal, SectionHeading } from "./Reveal";
 
+const readTime = (text: string) =>
+  Math.max(1, Math.round(text.trim().split(/\s+/).length / 200));
+
 export function Journal() {
+  const [tag, setTag] = useState<string | null>(null);
+
+  const tags = Array.from(new Set(notes.flatMap((n) => n.tags)));
+  const visible = tag ? notes.filter((n) => n.tags.includes(tag)) : notes;
+
   return (
     <section id="journal" className="relative scroll-mt-20 border-t border-line py-24 sm:py-32 lg:pl-16">
       <div className="mx-auto max-w-6xl px-5 sm:px-8 lg:px-14">
@@ -20,8 +31,34 @@ export function Journal() {
           description="Short entries written while shipping — what worked, what didn't, and why."
         />
 
+        <div className="mb-8 flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => setTag(null)}
+            className={`border px-3 py-1.5 font-mono text-[0.68rem] transition-colors duration-200 ${
+              tag === null
+                ? "border-acid bg-acid text-carbon"
+                : "border-line text-muted hover:border-acid hover:text-acid"
+            }`}
+          >
+            all · {notes.length}
+          </button>
+          {tags.map((t) => (
+            <button
+              key={t}
+              onClick={() => setTag(tag === t ? null : t)}
+              className={`border px-3 py-1.5 font-mono text-[0.68rem] transition-colors duration-200 ${
+                tag === t
+                  ? "border-acid bg-acid text-carbon"
+                  : "border-line text-muted hover:border-acid hover:text-acid"
+              }`}
+            >
+              {t.toLowerCase()}
+            </button>
+          ))}
+        </div>
+
         <div className="border-t border-line">
-          {notes.map((note, i) => (
+          {visible.map((note, i) => (
             <Reveal key={note.title} delay={0.04 * i}>
               <article className="group grid gap-3 border-b border-line py-8 transition-colors duration-300 hover:bg-carbon/60 sm:grid-cols-12 sm:gap-6 sm:px-4">
                 <div className="font-mono text-xs text-acid sm:col-span-2 sm:pt-1.5">
@@ -37,15 +74,19 @@ export function Journal() {
                   <p className="mt-3 text-sm leading-relaxed text-muted transition-colors duration-300 group-hover:text-ink">
                     {note.excerpt}
                   </p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {note.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="font-mono border border-line bg-carbon px-2.5 py-1 text-[0.68rem] uppercase tracking-wider text-muted"
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
+                    {note.tags.map((t) => (
+                      <button
+                        key={t}
+                        onClick={() => setTag(t)}
+                        className="font-mono border border-line bg-carbon px-2.5 py-1 text-[0.68rem] uppercase tracking-wider text-muted transition-colors hover:border-acid hover:text-acid"
                       >
-                        {tag}
-                      </span>
+                        {t}
+                      </button>
                     ))}
+                    <span className="font-mono text-[0.62rem] text-muted/60">
+                      {readTime(note.excerpt)} min read
+                    </span>
                   </div>
                 </div>
               </article>

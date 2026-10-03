@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { profile } from "@/lib/data";
 import { GitHubIcon, LinkedInIcon } from "./BrandIcons";
 import { Kamon } from "./Kamon";
+import { Shortcuts } from "./Shortcuts";
 
 const links = [
   { label: "About", href: "#about", index: "01" },
@@ -122,6 +123,7 @@ export function Navbar() {
           </nav>
 
           <div className="flex flex-col items-center gap-3">
+            <Shortcuts trigger={<span aria-hidden>?</span>} />
             <span className="select-none border border-line px-1.5 py-1 font-mono text-[0.6rem] text-muted">
               ⌘k
             </span>
