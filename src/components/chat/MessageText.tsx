@@ -7,14 +7,32 @@ const INLINE =
 
 const LABEL = /^(scope|highlights|stack|commands|jump points.*|sections|projects)$/i;
 
-function inline(text: string): ReactNode[] {
+function withMark(text: string, mark?: string): ReactNode[] {
+  if (!mark) return [<Fragment key="t">{text}</Fragment>];
+  const escaped = mark.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return text
+    .split(new RegExp(`(${escaped})`, "ig"))
+    .map((part, i) =>
+      part.toLowerCase() === mark.toLowerCase() ? (
+        <mark key={i} className="bg-acid/25 text-ink">
+          {part}
+        </mark>
+      ) : (
+        <Fragment key={i}>{part}</Fragment>
+      ),
+    );
+}
+
+function inline(text: string, mark?: string): ReactNode[] {
   const nodes: ReactNode[] = [];
   let last = 0;
   let key = 0;
   for (const match of text.matchAll(INLINE)) {
     const at = match.index ?? 0;
     if (at > last) {
-      nodes.push(<Fragment key={key++}>{text.slice(last, at)}</Fragment>);
+      for (const node of withMark(text.slice(last, at), mark)) {
+        nodes.push(<Fragment key={key++}>{node}</Fragment>);
+      }
     }
     const token = match[0];
     if (token.startsWith("**")) {
@@ -59,12 +77,14 @@ function inline(text: string): ReactNode[] {
     last = at + token.length;
   }
   if (last < text.length) {
-    nodes.push(<Fragment key={key++}>{text.slice(last)}</Fragment>);
+    for (const node of withMark(text.slice(last), mark)) {
+      nodes.push(<Fragment key={key++}>{node}</Fragment>);
+    }
   }
   return nodes;
 }
 
-function Line({ line, first }: { line: string; first: boolean }) {
+function Line({ line, first, mark }: { line: string; first: boolean; mark?: string }) {
   const t = line.trim();
 
   if (!t) return <div className="h-2" />;
@@ -73,7 +93,7 @@ function Line({ line, first }: { line: string; first: boolean }) {
   if (t.startsWith("//")) {
     return (
       <p className="font-mono text-[0.76rem] italic text-acid/85">
-        {inline(t.replace(/^\/\/\s*/, ""))}
+        {inline(t.replace(/^\/\/\s*/, ""), mark)}
       </p>
     );
   }
@@ -84,7 +104,7 @@ function Line({ line, first }: { line: string; first: boolean }) {
         <span aria-hidden className="text-acid">
           ›
         </span>
-        <span className="min-w-0 flex-1">{inline(t.replace(/^[›•]\s*/, ""))}</span>
+        <span className="min-w-0 flex-1">{inline(t.replace(/^[›•]\s*/, ""), mark)}</span>
       </p>
     );
   }
@@ -96,7 +116,7 @@ function Line({ line, first }: { line: string; first: boolean }) {
         <span className="font-mono text-[0.58rem] uppercase tracking-[0.2em] text-acid/80">
           {bracket[1]}
         </span>
-        <span className="min-w-0 flex-1">{inline(bracket[2])}</span>
+        <span className="min-w-0 flex-1">{inline(bracket[2], mark)}</span>
       </p>
     );
   }
@@ -110,11 +130,11 @@ function Line({ line, first }: { line: string; first: boolean }) {
   }
 
   if (t.startsWith("✓")) {
-    return <p className="text-acid/90">{inline(t)}</p>;
+    return <p className="text-acid/90">{inline(t, mark)}</p>;
   }
 
   if (/^\d+[.)]\s/.test(t)) {
-    return <p className="tabular-nums text-ink/90">{inline(t)}</p>;
+    return <p className="tabular-nums text-ink/90">{inline(t, mark)}</p>;
   }
 
   if (first) {
@@ -123,27 +143,27 @@ function Line({ line, first }: { line: string; first: boolean }) {
     const [head, ...rest] = cleaned.split(" — ");
     return (
       <p className="font-mono text-[0.8rem] leading-snug">
-        <span className="font-semibold text-acid">{inline(head)}</span>
+        <span className="font-semibold text-acid">{inline(head, mark)}</span>
         {featured && (
           <span className="ml-2 border border-acid/50 px-1 py-px align-middle text-[0.52rem] uppercase tracking-[0.18em] text-acid/80">
             featured
           </span>
         )}
         {rest.length > 0 && (
-          <span className="text-muted"> — {inline(rest.join(" — "))}</span>
+          <span className="text-muted"> — {inline(rest.join(" — "), mark)}</span>
         )}
       </p>
     );
   }
 
-  return <p className="text-ink/90">{inline(t)}</p>;
+  return <p className="text-ink/90">{inline(t, mark)}</p>;
 }
 
-export function MessageText({ text }: { text: string }) {
+export function MessageText({ text, highlight }: { text: string; highlight?: string }) {
   return (
     <div className="space-y-1">
       {text.split("\n").map((line, i) => (
-        <Line key={i} line={line} first={i === 0} />
+        <Line key={i} line={line} first={i === 0} mark={highlight} />
       ))}
     </div>
   );

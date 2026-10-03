@@ -147,6 +147,51 @@ const intents: Intent[] = [
     reply: () =>
       `He's got a printable resume — the fastest way to grab it is emailing ${profile.email}. I'd point you to a PDF if one were wired up here.`,
   },
+{
+    id: "favorite",
+    keywords: ["best project", "favorite project", "favourite project", "which project", "should i see", "showcase project", "proud of", "most impressive", "highlight reel"],
+    reply: () =>
+      `If he only gets one demo, it's ARLY — an AI product finder for Nepal scraping 10+ marketplaces. The other stand-out is Foodie, a complete restaurant POS (terminal, orders, 20 tables, reports) built in React 19 + Vite.\n\nAsk "tell me about ARLY" or "tell me about Foodie" for the full breakdown.`,
+  },
+  {
+    id: "compare",
+    keywords: ["compare", "difference between", "versus", " vs ", "which is better", "how are they different"],
+    reply: () => compareReply(""),
+  },
+  {
+    id: "hire",
+    keywords: ["why hire", "why should i hire", "why you", "worth hiring", "what can you bring", "best candidate", "why are you good", "sell me", "what makes you different"],
+    reply: () =>
+      `Three honest reasons:\n\n${list([
+        "He ships — seven projects, most of them deployed, not tutorial clones",
+        "He works across the whole stack: React 19, Next.js, Express, Prisma, MongoDB, Supabase",
+        "He pairs it with AI that actually functions — RAG pipelines, MCP tooling, LLM extraction",
+      ])}\n\nBest next step: email ${profile.email} and ask for a 15-minute call.`,
+  },
+  {
+    id: "now",
+    keywords: ["currently", "working on now", "current project", "right now", "these days", "latest", "recently", "now a days"],
+    reply: () =>
+      `Right now he's polishing ARLY's price-comparison engine and this very portfolio — including the bot you're talking to.\n\nHe also writes short field notes in the Journal section about RAG, MCP, and auth.`,
+  },
+  {
+    id: "remote",
+    keywords: ["remote", "work remotely", "relocate", "abroad", "outside nepal", "timezone", "hybrid", "office"],
+    reply: () =>
+      `He's in Pokhara, Nepal (GMT+5:45) — a 5:45 timezone advantage for Europe/US teams, which means early mornings and late evenings work for him.\n\nHe works remote-friendly; relocation or hybrid setups are on the table if the role is right.`,
+  },
+  {
+    id: "rate",
+    keywords: ["salary", "pay", "rate", "charge", "cost", "budget", "invoice", "expensive", "affordable"],
+    reply: () =>
+      `He doesn't publish a rate — it depends on scope, stack, and timeline. For internships, freelance builds, or a part-time role, email ${profile.email} with the scope and he'll send a straight answer.`,
+  },
+  {
+    id: "open_source",
+    keywords: ["open source", "contribute", "github activity", "commits", "repositories", "repo"],
+    reply: () =>
+      `Many of his builds are public on GitHub — ARLY's frontend, the college management backend, this portfolio, and Foodie.\n\nGitHub → github.com/Sushantmg. Commit history is the honest résumé.`,
+  },
   {
     id: "thanks",
     keywords: ["thank", "thanks", "thx", "awesome", "great", "cool", "nice", "perfect", "love it"],
@@ -165,8 +210,9 @@ const fallbacks = [
 export function quickPrompts() {
   return [
     "What do you build?",
-    "Tell me about ARLY",
+    "Which project should I see first?",
     "What are your skills?",
+    "Are you available?",
     "How can I contact you?",
   ];
 }
@@ -229,6 +275,71 @@ const sectionsText = () =>
     "/contact 七 — reach out",
   ])}`;
 
+function levenshtein(a: string, b: string): number {
+  if (a === b) return 0;
+  if (Math.abs(a.length - b.length) > 3) return 99;
+  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    const row = [i];
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      row[j] = Math.min(row[j - 1] + 1, prev[j] + 1, prev[j - 1] + cost);
+    }
+    prev = row;
+  }
+  return prev[b.length];
+}
+
+const tolerance = (word: string) => (word.length >= 8 ? 2 : 1);
+
+function fuzzyMatch(text: string) {
+  const tokens = text.split(" ").filter((t) => t.length >= 4);
+  let best: { keyword: string; reply: string; distance: number } | null = null;
+
+  for (const token of tokens) {
+    for (const intent of intents) {
+      for (const keyword of intent.keywords) {
+        const words = normalize(keyword).split(" ");
+        if (words.length !== 1 || words[0].length < 4) continue;
+        if (Math.abs(words[0].length - token.length) > 2) continue;
+        const distance = levenshtein(token, words[0]);
+        if (distance === 0 || distance > tolerance(words[0])) continue;
+        if (!best || distance < best.distance) {
+          best = { keyword: keyword, reply: intent.reply(), distance };
+        }
+      }
+    }
+  }
+  return best;
+}
+
+function compareReply(raw: string) {
+  const text = normalize(raw);
+  const mentioned = projects.filter((p) =>
+    (projectNameKeys[p.name] ?? [p.name.toLowerCase()]).some((k) =>
+      matchText(text, k),
+    ),
+  );
+
+  const a =
+    mentioned[0] ??
+    projects.find((p) => p.featured) ??
+    projects[0];
+  const b =
+    mentioned.find((p) => p !== a) ??
+    projects[(projects.indexOf(a) + 1) % projects.length];
+
+  const shared = a.tags.filter((t) => b.tags.includes(t));
+  const stack =
+    shared.length > 0 ? shared.join(", ") : "they run on different stacks";
+
+  return `${a.name} vs ${b.name}\n\n${list([
+    `${a.name} — ${a.tagline}`,
+    `${b.name} — ${b.tagline}`,
+    `Shared in the stack: ${stack}`,
+  ])}\n\n${a.description}\n\n${b.description}\n\nAsk "tell me about ${a.name}" for the full breakdown.`;
+}
+
 export function getReply(input: string): string {
   const text = normalize(input);
   if (!text) return fallbacks[0];
@@ -248,6 +359,15 @@ export function getReply(input: string): string {
   }
   if (/\/sections|jump points|sections$/.test(raw)) {
     return sectionsText();
+  }
+
+  const cmp = intents.find((i) => i.id === "compare");
+  if (
+    cmp &&
+    (raw.includes(" vs ") ||
+      /\b(compare|versus|difference between|which is better)\b/.test(raw))
+  ) {
+    return compareReply(raw);
   }
 
   for (const [word, id] of Object.entries(brandMap)) {
@@ -272,6 +392,13 @@ export function getReply(input: string): string {
   }
 
   if (best && best.score >= 1) return best.reply;
+
+  const near = fuzzyMatch(text);
+  if (near) {
+    if (near.distance === 1) return near.reply;
+    return `Did you mean "${near.keyword}"?\n\n${near.reply}`;
+  }
+
   return fallbacks[Math.floor(Math.random() * fallbacks.length)];
 }
 

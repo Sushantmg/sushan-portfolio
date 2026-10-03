@@ -5,17 +5,55 @@ import {
   ArrowDown,
   Bot,
   ClipboardCopy,
+  Mic,
   RotateCcw,
   Search,
   Send,
   Terminal,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { botMeta, quickPrompts } from "@/lib/chatbot";
-import { followupsFor } from "./chat/followups";
+import { followupsFor, jumpsFor } from "./chat/followups";
 import { MessageText } from "./chat/MessageText";
 import { useChat } from "./chat/useChat";
+
+interface SpeechResultLike {
+  readonly isFinal: boolean;
+  readonly 0: { readonly transcript: string };
+}
+
+interface SpeechEventLike {
+  readonly results: { readonly length: number; readonly [i: number]: SpeechResultLike };
+}
+
+interface RecognitionLike {
+  lang: string;
+  interimResults: boolean;
+  continuous: boolean;
+  start(): void;
+  stop(): void;
+  onresult: ((e: SpeechEventLike) => void) | null;
+  onend: (() => void) | null;
+  onerror: (() => void) | null;
+}
+
+type SpeechWindow = typeof window & {
+  SpeechRecognition?: new () => RecognitionLike;
+  webkitSpeechRecognition?: new () => RecognitionLike;
+};
+
+function speechCtor() {
+  if (typeof window === "undefined") return null;
+  const w = window as SpeechWindow;
+  return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
+}
+
+function hasSpeech() {
+  return speechCtor() !== null;
+}
+
+const noopSubscribe = () => () => {};
 
 const timeFmt = new Intl.DateTimeFormat("en-GB", {
   timeZone: "Asia/Kathmandu",
@@ -80,11 +118,15 @@ export function Chatbot() {
   const [query, setQuery] = useState("");
   const [showJump, setShowJump] = useState(false);
   const [copiedAll, setCopiedAll] = useState(false);
+  const [listening, setListening] = useState(false);
 
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const stickRef = useRef(true);
+  const recRef = useRef<RecognitionLike | null>(null);
+
+  const canVoice = useSyncExternalStore(noopSubscribe, hasSpeech, () => false);
 
   const q = query.trim().toLowerCase();
   const shown = q
@@ -97,6 +139,7 @@ export function Chatbot() {
     lastBot && !typing && !q && streamId === null
       ? followupsFor(lastBot.text, botCount)
       : [];
+  const jumps = lastBot && !typing && !q && streamId === null ? jumpsFor(lastBot.text) : [];
 
   useEffect(() => {
     const t = setTimeout(() => setHint(true), 1800);
@@ -225,6 +268,29 @@ export function Chatbot() {
     setCopiedAll(true);
     setTimeout(() => setCopiedAll(false), 1500);
   }, [copyAll]);
+
+  const toggleVoice = () => {
+    if (listening) {
+      recRef.current?.stop();
+      setListening(false);
+      return;
+    }
+    const Ctor = speechCtor();
+    if (!Ctor) return;
+    const rec = new Ctor();
+    rec.lang = "en-US";
+    rec.interimResults = true;
+    rec.continuous = false;
+    rec.onresult = (e) => {
+      const last = e.results[e.results.length - 1];
+      if (last?.[0]?.transcript) setInput(last[0].transcript);
+    };
+    rec.onend = () => setListening(false);
+    rec.onerror = () => setListening(false);
+    recRef.current = rec;
+    rec.start();
+    setListening(true);
+  };
 
   return (
     <>
@@ -416,6 +482,7 @@ export function Chatbot() {
                           text={
                             streaming ? m.text.slice(0, reveal) : m.text
                           }
+                          highlight={q || undefined}
                         />
                         {streaming && (
                           <span className="ml-0.5 inline-block h-3 w-1.5 animate-pulse bg-acid align-middle" />
@@ -460,6 +527,25 @@ export function Chatbot() {
                   </div>
                 )}
 
+                {jumps.length > 0 && (
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    {jumps.map((j) => (
+                      <button
+                        key={j.href}
+                        onClick={() => {
+                          document
+                            .querySelector(j.href)
+                            ?.scrollIntoView({ behavior: "smooth" });
+                          close();
+                        }}
+                        className="border border-line px-2.5 py-1 font-mono text-[0.68rem] text-muted transition-colors hover:border-acid hover:text-acid"
+                      >
+                        {j.label} →
+                      </button>
+                    ))}
+                  </div>
+                )}
+
                 {chips.length > 0 && (
                   <div className="flex flex-wrap gap-2 pt-1">
                     {chips.map((c) => (
@@ -498,10 +584,25 @@ export function Chatbot() {
                 value={input}
                 onChange={onComposerChange}
                 onKeyDown={onComposerKey}
-                placeholder="ask about  sushan…"
+                placeholder={listening ? "listening…" : "ask about  sushan…"}
                 aria-label="Chat message"
                 className="max-h-28 w-full resize-none bg-transparent py-1.5 font-mono text-sm leading-snug text-ink placeholder:text-muted focus:outline-none"
               />
+              {canVoice && (
+                <button
+                  type="button"
+                  onClick={toggleVoice}
+                  aria-label={listening ? "Stop voice input" : "Start voice input"}
+                  title="voice input"
+                  className={`mt-0.5 grid h-8 w-8 shrink-0 place-items-center border transition-colors ${
+                    listening
+                      ? "animate-pulse border-acid bg-acid/15 text-acid"
+                      : "border-line text-muted hover:border-acid hover:text-acid"
+                  }`}
+                >
+                  <Mic className="h-3.5 w-3.5" />
+                </button>
+              )}
               <button
                 type="submit"
                 aria-label="Send message"

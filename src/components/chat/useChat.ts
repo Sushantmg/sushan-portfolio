@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { botMeta, getReply } from "@/lib/chatbot";
+import { profile } from "@/lib/data";
 
 export type Message = {
   id: number;
@@ -111,7 +112,12 @@ export function useChat(streaming: boolean) {
       setTyping(true);
       const delay = 380 + ((text.length * 11) % 340);
       replyTimer.current = setTimeout(() => {
-        const reply = getReply(text);
+        let reply: string;
+        try {
+          reply = getReply(text);
+        } catch {
+          reply = `Something broke on my end. Try rephrasing — or just email ${profile.email} directly.`;
+        }
         const id = nextId++;
         streamTextRef.current = reply;
         setMessages((m) => [...m, { id, from: "bot", text: reply, ts: Date.now() }]);
