@@ -1,4 +1,5 @@
-import { experience } from "@/lib/data";
+import { experience, projectsForCompany, slugify } from "@/lib/data";
+import { ArrowUpRight } from "lucide-react";
 import { Reveal, SectionHeading } from "./Reveal";
 
 export function Experience() {
@@ -19,7 +20,9 @@ export function Experience() {
         />
 
         <div className="border-t border-line">
-          {experience.map((item, i) => (
+          {experience.map((item, i) => {
+            const cases = projectsForCompany(item.company);
+            return (
             <Reveal key={item.company} delay={0.04 * i}>
               <div className="group grid gap-2 border-b border-line py-8 transition-colors duration-300 hover:bg-carbon/60 sm:grid-cols-12 sm:gap-6 sm:px-4">
                 <div className="font-mono text-xs text-acid sm:col-span-1 sm:pt-1.5">
@@ -54,7 +57,7 @@ export function Experience() {
                       </li>
                     ))}
                   </ul>
-                  <div className="mt-4 flex flex-wrap gap-2">
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
                     {item.tags.map((tag) => (
                       <span
                         key={tag}
@@ -63,11 +66,22 @@ export function Experience() {
                         {tag}
                       </span>
                     ))}
+                    {cases.map((c) => (
+                      <a
+                        key={c.name}
+                        href={`#case/${slugify(c.name)}`}
+                        className="font-mono inline-flex items-center gap-1 border border-acid/40 px-2.5 py-1 text-[0.68rem] uppercase tracking-wider text-acid transition-colors duration-200 hover:bg-acid hover:text-carbon"
+                      >
+                        {c.name} case
+                        <ArrowUpRight className="h-3 w-3" />
+                      </a>
+                    ))}
                   </div>
                 </div>
               </div>
             </Reveal>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

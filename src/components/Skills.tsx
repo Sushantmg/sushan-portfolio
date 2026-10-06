@@ -1,4 +1,5 @@
-import { skillGroups } from "@/lib/data";
+import { projectsUsingSkill, skillGroups, slugify } from "@/lib/data";
+import { ArrowUpRight } from "lucide-react";
 import { Reveal, SectionHeading } from "./Reveal";
 import { SkillIcon } from "./SkillIcon";
 
@@ -21,9 +22,17 @@ export function Skills() {
         />
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {skillGroups.map((group, i) => (
+          {skillGroups.map((group, i) => {
+            const proof = Array.from(
+              new Map(
+                group.skills
+                  .flatMap((skill) => projectsUsingSkill(skill))
+                  .map((p) => [p.name, p]),
+              ).values(),
+            );
+            return (
             <Reveal key={group.label} delay={0.05 * i}>
-              <div className="group border border-line bg-carbon-2 p-6 transition-colors duration-300 hover:border-acid">
+              <div className="group flex h-full flex-col border border-line bg-carbon-2 p-6 transition-colors duration-300 hover:border-acid">
                 <div className="flex items-baseline justify-between">
                   <h3 className="label text-acid">{group.label}</h3>
                   <span className="font-mono text-xs text-muted">
@@ -41,9 +50,25 @@ export function Skills() {
                     </span>
                   ))}
                 </div>
+                {proof.length > 0 && (
+                  <p className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-line pt-3 font-mono text-[0.62rem] uppercase tracking-wider text-muted/70">
+                    <span>in the wild</span>
+                    {proof.map((p) => (
+                      <a
+                        key={p.name}
+                        href={`#case/${slugify(p.name)}`}
+                        className="inline-flex items-center gap-0.5 text-acid transition-colors hover:text-ink"
+                      >
+                        {p.name}
+                        <ArrowUpRight className="h-2.5 w-2.5" />
+                      </a>
+                    ))}
+                  </p>
+                )}
               </div>
             </Reveal>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

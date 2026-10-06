@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -42,6 +42,10 @@ export const metadata: Metadata = {
   ],
   creator: "Sushan Tamang",
   authors: [{ name: "Sushan Tamang", url: "https://github.com/Sushantmg" }],
+  alternates: {
+    canonical: "/",
+    types: { "application/rss+xml": "/feed.xml" },
+  },
   openGraph: {
     title: "Sushan Tamang — Full-Stack & AI Developer",
     description:
@@ -50,23 +54,17 @@ export const metadata: Metadata = {
     url: "https://github.com/Sushantmg/sushan-portfolio",
     siteName: "Sushan Tamang",
     locale: "en_US",
-    images: [
-      {
-        url: "/images/drone.jpg",
-        width: 1400,
-        height: 2489,
-        alt: "Aerial photo of Sushan Tamang taken by drone",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Sushan Tamang — Full-Stack & AI Developer",
     description:
       "Building production-grade AI-powered applications, scalable web platforms, and multi-service architectures.",
-    images: ["/images/drone.jpg"],
   },
   robots: { index: true, follow: true },
+};
+
+export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#10120f" },
     { media: "(prefers-color-scheme: dark)", color: "#10120f" },

@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Link2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { slugify, type Project } from "@/lib/data";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 
 const accents: Record<string, string> = {
   "from-violet-500 to-fuchsia-500": "bg-acid",
@@ -27,7 +28,10 @@ export function ProjectModal({
   onNext?: () => void;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
+
+  useFocusTrap(project !== null, panelRef);
 
   useEffect(() => {
     if (!project) return;
@@ -76,6 +80,10 @@ export function ProjectModal({
             transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
             className="relative max-h-full w-full max-w-2xl overflow-hidden border border-line bg-carbon-2 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
+            ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${project.name} case file`}
           >
             <div className={`h-1.5 ${accents[project.accent] ?? "bg-acid"}`} />
             <div className="flex items-start justify-between border-b border-line px-6 py-5">

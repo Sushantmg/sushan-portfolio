@@ -357,3 +357,22 @@ export const slugify = (value: string) =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+
+export const normKey = (value: string) =>
+  value.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+const sharesName = (a: string, b: string) => {
+  const x = normKey(a);
+  const y = normKey(b);
+  return x.length > 2 && y.length > 2 && (x.includes(y) || y.includes(x));
+};
+
+export function projectsForCompany(company: string) {
+  return projects.filter((p) => sharesName(company, p.name));
+}
+
+export function projectsUsingSkill(skill: string) {
+  return projects.filter(
+    (p) => p.tags.some((t) => sharesName(t, skill)) || sharesName(p.description, skill),
+  );
+}

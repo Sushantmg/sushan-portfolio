@@ -2,7 +2,8 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 
 const groups: { kanji: string; label: string; items: [string, string][] }[] = [
   {
@@ -10,8 +11,9 @@ const groups: { kanji: string; label: string; items: [string, string][] }[] = [
     label: "global",
     items: [
       ["⌘K", "command palette — jump anywhere"],
-      ["⌘J", "chat with ?sushan"],
+      ["⌘J", "open chat"],
       ["?", "this cheatsheet"],
+      ["esc", "close any overlay"],
     ],
   },
   {
@@ -22,7 +24,7 @@ const groups: { kanji: string; label: string; items: [string, string][] }[] = [
       ["⇧↵", "new line"],
       ["↑ ↓", "recall past questions"],
       ["/", "focus the input"],
-      ["esc", "close chat / search"],
+      ["mic", "voice input (tap to talk)"],
     ],
   },
   {
@@ -34,17 +36,20 @@ const groups: { kanji: string; label: string; items: [string, string][] }[] = [
     ],
   },
   {
-    kanji: "頁",
-    label: "on the page",
+    kanji: "写",
+    label: "copy anywhere",
     items: [
-      ["1 – 7", "copy a section link (see headings)"],
-      ["link", "copy deep link to any case file"],
+      ["copy link", "on a section heading — shares that section"],
+      ["copy link", "inside a case — shares that project"],
+      ["copy email", "in the command palette"],
     ],
   },
 ];
 
 export function Shortcuts({ trigger }: { trigger?: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(open, panelRef);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -95,6 +100,10 @@ export function Shortcuts({ trigger }: { trigger?: ReactNode }) {
               exit={{ y: 20, opacity: 0 }}
               transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
               onClick={(e) => e.stopPropagation()}
+              ref={panelRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Keyboard shortcuts"
               className="w-full max-w-lg border border-line bg-carbon-2 shadow-2xl"
             >
               <div className="flex items-center justify-between border-b border-line px-5 py-4">

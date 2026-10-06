@@ -1,19 +1,21 @@
 import { About } from "@/components/About";
 import { BackToTop } from "@/components/BackToTop";
-import { Chatbot } from "@/components/Chatbot";
-import { CommandPalette } from "@/components/CommandPalette";
 import { Contact } from "@/components/Contact";
-import { CustomCursor } from "@/components/CustomCursor";
 import { EducationCertifications } from "@/components/EducationCertifications";
 import { Experience } from "@/components/Experience";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { Journal } from "@/components/Journal";
 import { Karesansui } from "@/components/Karesansui";
+import {
+  Chatbot,
+  CommandPalette,
+  CustomCursor,
+  Preloader,
+} from "@/components/LazyWidgets";
 import { MobileDock } from "@/components/MobileDock";
 import { Navbar } from "@/components/Navbar";
 import { Petals, SakuraBranch } from "@/components/Petals";
-import { Preloader } from "@/components/Preloader";
 import { Projects } from "@/components/Projects";
 import { Skills } from "@/components/Skills";
 import { SmoothScroll } from "@/components/SmoothScroll";

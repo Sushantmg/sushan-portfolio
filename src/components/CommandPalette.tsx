@@ -6,19 +6,23 @@ import {
   Bot,
   Copy,
   CornerDownLeft,
+  FolderOpen,
   Mail,
   NotebookPen,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { projects, slugify } from "@/lib/data";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 import { GitHubIcon, LinkedInIcon } from "./BrandIcons";
 
 type Action = {
   id: string;
   label: string;
   hint: string;
-  kind: "nav" | "ask" | "do" | "open";
+  kind: "nav" | "ask" | "do" | "open" | "case";
   href?: string;
   query?: string;
+  slug?: string;
 };
 
 const navActions: Action[] = [
@@ -45,6 +49,8 @@ export function CommandPalette() {
   const [index, setIndex] = useState(0);
   const [copied, setCopied] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(open, panelRef);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -74,6 +80,23 @@ export function CommandPalette() {
     const dos = doActions.filter(
       (a) => match(a.label) || match(a.hint),
     );
+    const cases: Action[] = q
+      ? projects
+          .filter(
+            (p) =>
+              match(p.name) ||
+              match(p.tagline) ||
+              p.tags.some(match) ||
+              match(p.description),
+          )
+          .map((p) => ({
+            id: `case-${slugify(p.name)}`,
+            label: p.name,
+            hint: `open case — ${p.tagline}`,
+            kind: "case",
+            slug: slugify(p.name),
+          }))
+      : [];
     const asks: Action[] = q
       ? [
           {
@@ -85,12 +108,14 @@ export function CommandPalette() {
           },
         ]
       : [];
-    return [...navs, ...dos, ...asks];
+    return [...cases, ...navs, ...dos, ...asks];
   }, [query]);
 
   const run = (action: Action) => {
     if (action.kind === "nav" && action.href) {
       document.querySelector(action.href)?.scrollIntoView({ behavior: "smooth" });
+    } else if (action.kind === "case" && action.slug) {
+      window.location.hash = `#case/${action.slug}`;
     } else if (action.kind === "ask" && action.query) {
       window.dispatchEvent(
         new CustomEvent("sushan:ask", { detail: action.query }),
@@ -126,8 +151,12 @@ export function CommandPalette() {
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.97, y: -10 }}
             transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-            className="w-full max-w-lg overflow-hidden border border-line bg-carbon-2 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
+className="w-full max-w-lg overflow-hidden border border-line bg-carbon-2 shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+          ref={panelRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Command palette"
           >
             <div className="flex items-center gap-3 border-b border-line px-4 py-3">
               <span className="font-mono text-sm text-acid">❯</span>
@@ -178,6 +207,8 @@ export function CommandPalette() {
 <span className="flex min-w-0 items-center gap-3">
   {action.kind === "nav" ? (
     <NotebookPen className="h-4 w-4 shrink-0 text-acid" />
+  ) : action.kind === "case" ? (
+    <FolderOpen className="h-4 w-4 shrink-0 text-acid" />
   ) : action.kind === "ask" ? (
     <Bot className="h-4 w-4 shrink-0 text-vermilion" />
   ) : action.kind === "do" && action.id === "email" ? (
@@ -198,7 +229,8 @@ export function CommandPalette() {
                         {action.hint}
                       </span>
                       {action.kind === "nav" ||
-                      action.kind === "open" ? (
+                      action.kind === "open" ||
+                      action.kind === "case" ? (
                         <ArrowUpRight className="h-3.5 w-3.5 text-muted" />
                       ) : action.kind === "ask" ? (
                         <CornerDownLeft className="h-3.5 w-3.5 text-muted" />
