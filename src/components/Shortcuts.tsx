@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
+import { projects, slugify } from "@/lib/data";
 import { useFocusTrap } from "@/lib/useFocusTrap";
 
 const groups: { kanji: string; label: string; items: [string, string][] }[] = [
@@ -31,6 +32,7 @@ const groups: { kanji: string; label: string; items: [string, string][] }[] = [
     kanji: "案",
     label: "in case files",
     items: [
+      ["1 – 7", "open case file 1–7 instantly"],
       ["← →", "previous / next project"],
       ["esc", "close the case"],
     ],
@@ -66,6 +68,17 @@ export function Shortcuts({ trigger }: { trigger?: ReactNode }) {
         setOpen((v) => !v);
       }
       if (e.key === "Escape") setOpen(false);
+
+      if (/^[1-9]$/.test(e.key)) {
+        const target = projects[Number(e.key) - 1];
+        const overlayOpen =
+          document.querySelector('[role="dialog"]') !== null ||
+          document.querySelector("[data-chat-panel]") !== null;
+        if (target && !overlayOpen) {
+          e.preventDefault();
+          window.location.hash = `#case/${slugify(target.name)}`;
+        }
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);

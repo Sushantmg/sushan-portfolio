@@ -357,4 +357,22 @@ html {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+  .cv-main {
+    background: #ffffff !important;
+    min-height: auto !important;
+    padding: 0 !important;
+  }
+  .cv-sheet {
+    border: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    max-width: none !important;
+    padding: 0 !important;
+  }
+  .cv-toolbar {
+    display: none !important;
+  }
+  .cv-block {
+    break-inside: avoid;
+  }
 }

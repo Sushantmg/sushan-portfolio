@@ -5,16 +5,30 @@ import { useState } from "react";
 import { profile } from "@/lib/data";
 
 const MAX = 600;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export function ContactForm() {
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [error, setError] = useState("");
 
+  const reset = () => {
+    setStatus("idle");
+    setError("");
+  };
+
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!message.trim() || status === "sending") return;
+
+    const trimmedEmail = email.trim();
+    if (trimmedEmail && !EMAIL_RE.test(trimmedEmail)) {
+      setStatus("error");
+      setError("that email doesn't look right — check it or leave it blank");
+      return;
+    }
 
     setStatus("sending");
     setError("");
@@ -24,7 +38,12 @@ export function ContactForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, message, company: honeypot }),
+        body: JSON.stringify({
+          name,
+          email: trimmedEmail,
+          message,
+          company: honeypot,
+        }),
       });
       const data = (await res.json().catch(() => ({ ok: false }))) as {
         ok: boolean;
@@ -55,7 +74,9 @@ export function ContactForm() {
 
   const fallbackMailto = () => {
     const subject = encodeURIComponent(`Hello from ${name || "your site"}`);
-    const body = encodeURIComponent(`${message}\n\n— ${name || "anonymous"}`);
+    const body = encodeURIComponent(
+      `${message}\n\n— ${name || "anonymous"}${email.trim() ? `\nreply to: ${email.trim()}` : ""}`,
+    );
     window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
     setStatus("idle");
   };
@@ -84,6 +105,22 @@ export function ContactForm() {
           defaultValue=""
         />
       </span>
+      <label htmlFor="cn-email" className="label mt-4 block text-muted">
+        / reply-to <span className="text-muted/50">(optional)</span>
+      </label>
+      <input
+        id="cn-email"
+        type="email"
+        value={email}
+        onChange={(e) => {
+          setEmail(e.target.value);
+          if (status === "error") reset();
+        }}
+        placeholder="you@company.com"
+        maxLength={120}
+        autoComplete="email"
+        className="mt-2 w-full border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted/60 focus:border-acid focus:outline-none"
+      />
       <label htmlFor="cn-message" className="label mt-4 block text-muted">
         / message
       </label>
@@ -92,10 +129,7 @@ export function ContactForm() {
         value={message}
         onChange={(e) => {
           setMessage(e.target.value);
-          if (status === "sent" || status === "error") {
-            setStatus("idle");
-            setError("");
-          }
+          if (status === "sent" || status === "error") reset();
         }}
         placeholder="195 — what are we building?"
         rows={3}

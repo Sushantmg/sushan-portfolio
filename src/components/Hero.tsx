@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, ArrowUpRight, X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { profile, roles } from "@/lib/data";
 import { GitHubIcon, LinkedInIcon } from "./BrandIcons";
@@ -252,6 +253,13 @@ export function Hero() {
               >
                 Get in touch
               </a>
+              <Link
+                href="/cv"
+                className="inline-flex items-center gap-2 border border-line bg-carbon-2 px-6 py-3 text-sm font-semibold text-ink transition-colors duration-200 hover:border-acid hover:text-acid"
+              >
+                Résumé
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
               <div className="ml-1 hidden items-center gap-3 sm:flex">
                 <a
                   href={profile.github}

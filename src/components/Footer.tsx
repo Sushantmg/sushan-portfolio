@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { profile } from "@/lib/data";
 import { Kamon } from "./Kamon";
 import { LiveClock } from "./LiveClock";
@@ -41,6 +42,36 @@ export function Footer() {
         >
           <span className="text-acid">↑</span> back to top
         </a>
+        </div>
+        <div className="mx-auto mt-5 flex max-w-6xl flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-line pt-4 font-mono text-[0.65rem] uppercase tracking-wider sm:justify-between">
+          <Link href="/cv" className="transition-colors hover:text-acid">
+            résumé
+          </Link>
+          <Link href="/feed.xml" className="transition-colors hover:text-acid">
+            rss
+          </Link>
+          <a
+            href={profile.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-acid"
+          >
+            github
+          </a>
+          <a
+            href={profile.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-acid"
+          >
+            linkedin
+          </a>
+          <a
+            href={`mailto:${profile.email}`}
+            className="transition-colors hover:text-acid"
+          >
+            {profile.email}
+          </a>
         </div>
       </div>
 

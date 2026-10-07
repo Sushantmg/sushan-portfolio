@@ -3,12 +3,19 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-type Payload = { name?: string; message?: string; company?: string };
+type Payload = {
+  name?: string;
+  message?: string;
+  email?: string;
+  company?: string;
+};
 
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_PER_WINDOW = 5;
 const MAX_NAME = 80;
+const MAX_EMAIL = 120;
 const MAX_MESSAGE = 600;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 const buckets = new Map<string, { count: number; reset: number }>();
 
@@ -35,6 +42,7 @@ export async function POST(req: Request) {
   const body: Payload = await req.json().catch(() => ({}));
 
   const name = (body.name ?? "").toString().trim().slice(0, MAX_NAME);
+  const email = (body.email ?? "").toString().trim().slice(0, MAX_EMAIL);
   const message = (body.message ?? "").toString().trim().slice(0, MAX_MESSAGE);
   const honeypot = (body.company ?? "").toString().trim();
 
@@ -44,6 +52,10 @@ export async function POST(req: Request) {
 
   if (message.length < 5) {
     return NextResponse.json({ ok: false, error: "too_short" }, { status: 400 });
+  }
+
+  if (email && !EMAIL_RE.test(email)) {
+    return NextResponse.json({ ok: false, error: "bad_email" }, { status: 400 });
   }
 
   if (rateLimited(clientIp(req))) {
@@ -73,8 +85,9 @@ export async function POST(req: Request) {
     body: JSON.stringify({
       from,
       to: [to],
+      ...(email ? { reply_to: email } : {}),
       subject: `portfolio contact · ${name || "anonymous"}`,
-      text: `From: ${name || "anonymous"}\n\n${message}`,
+      text: `${message}\n\n— ${name || "anonymous"}${email ? `\nreply to: ${email}` : ""}`,
     }),
   });
 

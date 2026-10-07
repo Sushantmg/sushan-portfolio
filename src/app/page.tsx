@@ -1,3 +1,4 @@
+import { MotionConfig } from "framer-motion";
 import { About } from "@/components/About";
 import { BackToTop } from "@/components/BackToTop";
 import { Contact } from "@/components/Contact";
@@ -19,23 +20,61 @@ import { Petals, SakuraBranch } from "@/components/Petals";
 import { Projects } from "@/components/Projects";
 import { Skills } from "@/components/Skills";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { profile, projects, slugify } from "@/lib/data";
+
+const SITE = "https://github.com/Sushantmg/sushan-portfolio";
+const LANGUAGES = new Set(["TypeScript", "Python", "JavaScript"]);
 
 export default function Home() {
-  const personJsonLd = {
-    "@context": "https://schema.org",
+  const person = {
     "@type": "Person",
-    name: "Sushan Tamang",
-    url: "https://github.com/Sushantmg/sushan-portfolio",
-    jobTitle: "Full-Stack & AI Developer",
-    address: { "@type": "PostalAddress", addressLocality: "Pokhara", addressCountry: "NP" },
-    email: "mailto:sushantmg2004@gmail.com",
-    sameAs: [
-      "https://github.com/Sushantmg",
-      "https://www.linkedin.com/in/sushan-tamang-9406712b1/",
+    name: profile.name,
+    url: SITE,
+    jobTitle: profile.role,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Pokhara",
+      addressCountry: "NP",
+    },
+    email: `mailto:${profile.email}`,
+    sameAs: [profile.github, profile.linkedin],
+  };
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      person,
+      {
+        "@type": "WebSite",
+        name: profile.name,
+        description:
+          "Portfolio of Sushan Tamang — full-stack & AI developer building production-grade AI applications, scalable web platforms, and multi-service architectures.",
+        url: SITE,
+        inLanguage: "en",
+        author: person,
+      },
+      ...projects.map((project) => {
+        const programmingLanguage = project.tags.filter((tag) =>
+          LANGUAGES.has(tag),
+        );
+        return {
+          "@type": "SoftwareApplication",
+          name: project.name,
+          headline: project.tagline,
+          description: project.description,
+          applicationCategory: "WebApplication",
+          operatingSystem: "Web",
+          url: `${SITE}/#case/${slugify(project.name)}`,
+          keywords: project.tags.join(", "),
+          author: person,
+          ...(programmingLanguage.length > 0 ? { programmingLanguage } : {}),
+        };
+      }),
     ],
   };
 
   return (
+    <MotionConfig reducedMotion="user">
     <div className="grain relative min-h-screen">
       <a
         href="#top"
@@ -45,7 +84,7 @@ export default function Home() {
       </a>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <SmoothScroll />
       <div aria-hidden className="seigaiha fixed inset-0 z-0 opacity-[0.045]" />
@@ -75,5 +114,6 @@ export default function Home() {
       <CommandPalette />
       <CustomCursor />
     </div>
+    </MotionConfig>
   );
 }

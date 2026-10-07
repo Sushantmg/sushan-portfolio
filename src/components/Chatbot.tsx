@@ -414,6 +414,7 @@ export function Chatbot() {
             exit={{ opacity: 0, y: 24, scale: 0.96 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             className="fixed bottom-24 right-4 z-50 flex h-[min(34rem,calc(100dvh-7.5rem))] w-[calc(100vw-2rem)] max-w-sm flex-col overflow-hidden border border-line bg-carbon shadow-2xl sm:right-6"
+            data-chat-panel="true"
           >
             <div className="flex items-center justify-between border-b border-line bg-carbon-2 px-4 py-3">
               <div className="flex items-center gap-2.5">
