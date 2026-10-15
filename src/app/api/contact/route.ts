@@ -38,12 +38,23 @@ function clientIp(req: Request) {
   return req.headers.get("x-real-ip") ?? "local";
 }
 
+function sanitizeHeader(value: string, max: number) {
+  return value.replace(/[\r\n]+/g, " ").trim().slice(0, max);
+}
+
 export async function POST(req: Request) {
   const body: Payload = await req.json().catch(() => ({}));
 
-  const name = (body.name ?? "").toString().trim().slice(0, MAX_NAME);
-  const email = (body.email ?? "").toString().trim().slice(0, MAX_EMAIL);
-  const message = (body.message ?? "").toString().trim().slice(0, MAX_MESSAGE);
+  const rawName = (body.name ?? "").toString();
+  const rawEmail = (body.email ?? "").toString();
+  const rawMessage = (body.message ?? "").toString();
+  if (rawName.trim().length > MAX_NAME || rawEmail.trim().length > MAX_EMAIL || rawMessage.trim().length > MAX_MESSAGE) {
+    return NextResponse.json({ ok: false, error: "too_long" }, { status: 400 });
+  }
+
+  const name = sanitizeHeader(rawName, MAX_NAME);
+  const email = sanitizeHeader(rawEmail, MAX_EMAIL);
+  const message = rawMessage.trim().slice(0, MAX_MESSAGE);
   const honeypot = (body.company ?? "").toString().trim();
 
   if (honeypot) {
@@ -61,7 +72,7 @@ export async function POST(req: Request) {
   if (rateLimited(clientIp(req))) {
     return NextResponse.json(
       { ok: false, error: "too_many" },
-      { status: 429 },
+      { status: 429, headers: { "Retry-After": "600" } },
     );
   }
 
@@ -85,7 +96,7 @@ export async function POST(req: Request) {
     body: JSON.stringify({
       from,
       to: [to],
-      ...(email ? { reply_to: email } : {}),
+      ...(email ? { reply_to: email, replyTo: email } : {}),
       subject: `portfolio contact · ${name || "anonymous"}`,
       text: `${message}\n\n— ${name || "anonymous"}${email ? `\nreply to: ${email}` : ""}`,
     }),

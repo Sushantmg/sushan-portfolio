@@ -118,9 +118,10 @@ export function Projects() {
           description="Production platforms and experiments across AI, e-commerce, and infrastructure."
         />
 
-        <div className="mb-8 flex flex-wrap items-center gap-2">
+        <div className="mb-8 flex flex-wrap items-center gap-2" role="group" aria-label="Filter projects by tag">
           <button
             onClick={() => setTag(null)}
+            aria-pressed={tag === null}
             className={`border px-3 py-1.5 font-mono text-[0.68rem] transition-colors duration-200 ${
               tag === null
                 ? "border-acid bg-acid text-carbon"
@@ -133,6 +134,7 @@ export function Projects() {
             <button
               key={t}
               onClick={() => setTag(tag === t ? null : t)}
+              aria-pressed={tag === t}
               className={`border px-3 py-1.5 font-mono text-[0.68rem] transition-colors duration-200 ${
                 tag === t
                   ? "border-acid bg-acid text-carbon"
@@ -143,12 +145,18 @@ export function Projects() {
             </button>
           ))}
         </div>
+        <p aria-live="polite" className="mb-6 font-mono text-[0.68rem] text-muted">
+          showing {visible.length} of {projects.length} builds
+          {tag ? ` tagged “${tag}”` : ""}
+        </p>
 
         <StaggerGroup
           key={tag ?? "all"}
           className="grid gap-5 md:grid-cols-2 lg:grid-cols-3"
         >
-          {visible.map((project, i) => (
+          {visible.map((project) => {
+            const i = projects.findIndex((p) => p.name === project.name);
+            return (
             <StaggerItem key={project.name}>
               <TiltCard intensity={6} className="h-full">
                 <button
@@ -204,7 +212,8 @@ export function Projects() {
                 </button>
               </TiltCard>
             </StaggerItem>
-          ))}
+            );
+          })}
         </StaggerGroup>
 
         {visible.length === 0 && (

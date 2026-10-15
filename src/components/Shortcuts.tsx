@@ -32,7 +32,7 @@ const groups: { kanji: string; label: string; items: [string, string][] }[] = [
     kanji: "案",
     label: "in case files",
     items: [
-      ["1 – 7", "open case file 1–7 instantly"],
+      [`1 – ${projects.length}`, `open case file 1–${projects.length} instantly`],
       ["← →", "previous / next project"],
       ["esc", "close the case"],
     ],

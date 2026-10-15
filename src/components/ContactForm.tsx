@@ -64,7 +64,9 @@ export function ContactForm() {
       setError(
         data.error === "too_many"
           ? "too many messages from this device — email me directly"
-          : "give it a few more words, then send again",
+          : data.error === "too_long"
+            ? "that message is too long — shorten it and send again"
+            : "give it a few more words, then send again",
       );
       setStatus("error");
     } catch {
@@ -131,7 +133,7 @@ export function ContactForm() {
           setMessage(e.target.value);
           if (status === "sent" || status === "error") reset();
         }}
-        placeholder="195 — what are we building?"
+        placeholder="what are we building? — timelines, goals, links welcome"
         rows={3}
         maxLength={MAX}
         className="mt-2 w-full resize-none border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted/60 focus:border-acid focus:outline-none"

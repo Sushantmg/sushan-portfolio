@@ -172,9 +172,19 @@ className="w-full max-w-lg overflow-hidden border border-line bg-carbon-2 shadow
                 className="w-full bg-transparent font-mono text-sm text-ink placeholder:text-muted focus:outline-none"
                 aria-label="Command palette"
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && results[0]) run(results[0]);
-                  if (e.key === "ArrowDown") setIndex((i) => Math.min(i + 1, results.length - 1));
-                  if (e.key === "ArrowUp") setIndex((i) => Math.max(i - 1, 0));
+                  if (e.key === "Enter" && results.length > 0) {
+                    e.preventDefault();
+                    run(results[index] ?? results[0]);
+                  }
+                  if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    setIndex((i) => Math.min(i + 1, results.length - 1));
+                  }
+                  if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    setIndex((i) => Math.max(i - 1, 0));
+                  }
+                  if (e.key === "Escape") setOpen(false);
                 }}
               />
               <button
