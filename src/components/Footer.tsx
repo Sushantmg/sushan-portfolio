@@ -36,6 +36,10 @@ export function Footer() {
             <LiveClock timeZone="Asia/Kathmandu" />
           </span>
         </p>
+        <p className="flex items-center gap-2 font-mono text-[0.65rem] text-muted">
+          <span className="text-acid">updated</span>
+          <time dateTime="2026-10">october 2026</time>
+        </p>
         <a
           href="#top"
           className="flex items-center gap-2 transition-colors hover:text-acid"

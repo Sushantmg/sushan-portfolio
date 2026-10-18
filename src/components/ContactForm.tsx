@@ -136,10 +136,16 @@ export function ContactForm() {
         placeholder="what are we building? — timelines, goals, links welcome"
         rows={3}
         maxLength={MAX}
+        aria-describedby="cn-status"
+        aria-invalid={status === "error"}
         className="mt-2 w-full resize-none border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted/60 focus:border-acid focus:outline-none"
       />
       <div className="mt-3 flex items-center justify-between gap-3">
-        <span className="font-mono text-[0.65rem] text-muted">
+        <span
+          id="cn-status"
+          aria-live="polite"
+          className="font-mono text-[0.65rem] text-muted"
+        >
           {status === "sending"
             ? "sending…"
             : status === "sent"

@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Link2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Link2, Share2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { slugify, type Project } from "@/lib/data";
 import { useFocusTrap } from "@/lib/useFocusTrap";
@@ -60,6 +60,19 @@ export function ProjectModal({
       setCopiedSlug(slug);
       setTimeout(() => setCopiedSlug((cur) => (cur === slug ? null : cur)), 1600);
     } catch {}
+  };
+
+  const shareLink = async () => {
+    const slug = slugify(project?.name ?? "");
+    const url = `${window.location.origin}${window.location.pathname}#case/${slug}`;
+    const title = `${project?.name ?? ""} · case file`;
+    try {
+      if (typeof navigator.share === "function") {
+        await navigator.share({ title, text: project?.tagline ?? "", url });
+        return;
+      }
+    } catch {}
+    await copyLink();
   };
 
   return (
@@ -184,6 +197,13 @@ export function ProjectModal({
                 >
                   <Link2 className="h-3 w-3" />
                   {copiedSlug === slugify(project.name) ? "copied" : "copy link"}
+                </button>
+                <button
+                  onClick={shareLink}
+                  className="inline-flex items-center gap-1.5 text-muted transition-colors hover:text-acid"
+                >
+                  <Share2 className="h-3 w-3" />
+                  share
                 </button>
                 <span className="text-acid">
                   {onPrev || onNext ? "← → navigate · " : ""}esc close
