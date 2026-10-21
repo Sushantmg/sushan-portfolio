@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import { ArrowUpRight, Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { profile } from "@/lib/data";
 import { GitHubIcon, LinkedInIcon } from "./BrandIcons";
 import { Kamon } from "./Kamon";
@@ -25,6 +25,8 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("top");
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
 
@@ -61,6 +63,26 @@ export function Navbar() {
     if (link) document.title = `${kanjiOf(link.index)} ${link.label} · Sushan Tamang`;
   }, [active]);
 
+  // Mobile menu: move focus in on open, Escape closes it, and focus returns
+  // to the toggle button when it closes.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    const focusTimer = setTimeout(() => {
+      menuRef.current?.querySelector<HTMLElement>("a")?.focus();
+    }, 60);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      clearTimeout(focusTimer);
+    };
+  }, [open]);
+
   return (
     <>
       <div className="hidden lg:block">
@@ -86,7 +108,7 @@ export function Navbar() {
             </a>
           </div>
 
-          <nav className="flex flex-col items-center gap-5">
+          <nav className="flex flex-col items-center gap-5" aria-label="Section navigation">
             {links.map((link) => {
               const isActive = link.href === `#${active}`;
               return (
@@ -95,6 +117,7 @@ export function Navbar() {
                   href={link.href}
                   className="group relative flex items-center"
                   aria-label={link.label}
+                  aria-current={isActive ? "true" : undefined}
                   title={`${link.index}. ${link.label}`}
                 >
                   <span
@@ -161,7 +184,11 @@ export function Navbar() {
       >
         <div
           className={`border-b border-line transition-colors duration-300 ${
-            scrolled ? "bg-carbon/90 backdrop-blur" : "bg-transparent"
+            // The open menu needs an opaque backdrop, otherwise the hero
+            // content shows straight through the links.
+            scrolled || open
+              ? "bg-carbon/95 backdrop-blur"
+              : "bg-transparent"
           }`}
         >
           <div className="flex items-center justify-between px-5 py-3.5">
@@ -172,8 +199,11 @@ export function Navbar() {
               </span>
             </a>
             <button
+              ref={toggleRef}
               onClick={() => setOpen((v) => !v)}
-              aria-label="Toggle menu"
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="mobile-nav"
               className="grid h-9 w-9 place-items-center border border-line text-ink"
             >
               {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
@@ -194,7 +224,12 @@ export function Navbar() {
                 transition={{ duration: 0.25 }}
                 className="overflow-hidden border-t border-line"
               >
-                <nav className="flex flex-col px-5 py-2">
+                <nav
+                  id="mobile-nav"
+                  ref={menuRef}
+                  aria-label="Mobile section navigation"
+                  className="flex flex-col px-5 py-2"
+                >
                   {links.map((link) => (
                     <a
                       key={link.href}

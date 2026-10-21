@@ -174,6 +174,7 @@ export function Chatbot() {
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const announceRef = useRef<HTMLParagraphElement>(null);
   const stickRef = useRef(true);
   const recRef = useRef<RecognitionLike | null>(null);
 
@@ -223,6 +224,28 @@ export function Chatbot() {
     if (el && stickRef.current) el.scrollTop = el.scrollHeight;
   }, [reveal, streamId]);
 
+  // Announce a finished bot reply once. During streaming the transcript's
+  // live region is muted, so the completed text is read out in full exactly
+  // once instead of on every 16ms tick. The live region is updated directly
+  // rather than through state — that is the idiomatic pattern for an
+  // aria-live region.
+  useEffect(() => {
+    if (streamId !== null) return;
+    const last = messages[messages.length - 1];
+    const el = announceRef.current;
+    if (el && last && last.from === "bot" && last.text) {
+      el.textContent = last.text;
+    }
+  }, [streamId, messages]);
+
+  // Focus the composer whenever the panel opens — including when it is
+  // opened from the command palette.
+  useEffect(() => {
+    if (!open) return;
+    const t = setTimeout(() => inputRef.current?.focus(), 80);
+    return () => clearTimeout(t);
+  }, [open]);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
@@ -244,7 +267,14 @@ export function Chatbot() {
           setQuery("");
           return;
         }
-        if (open) close();
+        if (open) {
+          // Don't steal the Escape from another overlay (a case file, a
+          // certificate, the palette) — closing those is the user's intent.
+          const otherOverlay = Array.from(
+            document.querySelectorAll('[role="dialog"]'),
+          ).some((el) => !el.hasAttribute("data-chat-panel"));
+          if (!otherOverlay) close();
+        }
         return;
       }
       if (open && e.key === "/" && !inField) {
@@ -415,6 +445,8 @@ export function Chatbot() {
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             className="fixed bottom-24 right-4 z-50 flex h-[min(34rem,calc(100dvh-7.5rem))] w-[calc(100vw-2rem)] max-w-sm flex-col overflow-hidden border border-line bg-carbon shadow-2xl sm:right-6"
             data-chat-panel="true"
+            role="dialog"
+            aria-label={`Chat with ${botMeta.name}`}
           >
             <div className="flex items-center justify-between border-b border-line bg-carbon-2 px-4 py-3">
               <div className="flex items-center gap-2.5">
@@ -500,6 +532,7 @@ export function Chatbot() {
                 onScroll={onScroll}
                 role="log"
                 aria-live="polite"
+                aria-busy={streamId !== null}
                 aria-label="Chat transcript"
                 className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain px-4 py-4"
               >
@@ -517,6 +550,9 @@ export function Chatbot() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.2 }}
+                      // Suppress live announcements while the text streams in;
+                      // the completed message is announced once below.
+                      aria-live={streaming ? "off" : undefined}
                       className={`flex flex-col ${
                         m.from === "user" ? "items-end" : "items-start"
                       }`}
@@ -611,6 +647,13 @@ export function Chatbot() {
                   </div>
                 )}
               </div>
+
+              <p
+                ref={announceRef}
+                className="sr-only"
+                aria-live="polite"
+                aria-atomic="true"
+              />
 
               {showJump && (
                 <button

@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { profile, roles } from "@/lib/data";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 import { GitHubIcon, LinkedInIcon } from "./BrandIcons";
 import { Kamon } from "./Kamon";
 import { DayProgress } from "./DayProgress";
@@ -121,6 +122,23 @@ export function Hero() {
   const yText = useTransform(scrollYProgress, [0, 1], [0, 60]);
   const opacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
   const [photoOpen, setPhotoOpen] = useState(false);
+  const photoRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(photoOpen, photoRef);
+
+  useEffect(() => {
+    if (!photoOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPhotoOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [photoOpen]);
 
   return (
     <section
@@ -372,7 +390,7 @@ export function Hero() {
       <div className="relative z-10 border-t border-line bg-carbon-2 py-3.5">
         <div className="flex overflow-hidden">
           <div className="ticker flex shrink-0 items-center gap-8 pr-8">
-            {Array.from({ length: 3 }).flatMap(() =>
+            {Array.from({ length: 3 }).flatMap((_, copy) =>
               [
                 "TypeScript",
                 "React",
@@ -388,7 +406,7 @@ export function Hero() {
                 "AWS",
               ].map((item, i) => (
                 <span
-                  key={`${item}-${i}`}
+                  key={`${copy}-${item}-${i}`}
                   className="font-mono flex items-center gap-8 whitespace-nowrap text-xs uppercase tracking-[0.2em] text-muted"
                 >
                   <span className="flex items-center gap-2">
@@ -420,6 +438,10 @@ export function Hero() {
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
               className="relative max-h-full w-full max-w-md"
               onClick={(e) => e.stopPropagation()}
+              ref={photoRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Full-size photo"
             >
               <div className="relative aspect-[9/16] overflow-hidden border border-line">
                 <Image

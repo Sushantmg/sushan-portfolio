@@ -3,8 +3,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, ExternalLink, X, ZoomIn } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { certifications, education } from "@/lib/data";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 import { Reveal, SectionHeading, StaggerGroup, StaggerItem } from "./Reveal";
 import { IssuerIcon } from "./SkillIcon";
 
@@ -13,6 +14,9 @@ type Cert = (typeof certifications)[number];
 export function EducationCertifications() {
   const [active, setActive] = useState<Cert | null>(null);
   const [filter, setFilter] = useState<"all" | "anthropic" | "local">("all");
+  const lightboxRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(active !== null, lightboxRef);
 
   const visibleCerts = useMemo(
     () =>
@@ -40,6 +44,15 @@ export function EducationCertifications() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [active, visibleCerts]);
+
+  useEffect(() => {
+    if (!active) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [active]);
 
   return (
     <section id="education" className="relative scroll-mt-20 border-t border-line py-24 sm:py-32 lg:pl-16">
@@ -89,12 +102,17 @@ export function EducationCertifications() {
               <h3 className="label mb-5 text-acid">/ certifications</h3>
             </Reveal>
 
-            <div className="mb-4 flex flex-wrap gap-2">
+            <div
+              className="mb-4 flex flex-wrap gap-2"
+              role="group"
+              aria-label="Filter certifications by issuer"
+            >
               {(["all", "anthropic", "local"] as const).map((f) => (
                 <button
                   key={f}
                   type="button"
                   onClick={() => setFilter(f)}
+                  aria-pressed={filter === f}
                   className={`label border px-3 py-1.5 transition-colors duration-200 ${
                     filter === f
                       ? "border-acid bg-acid text-carbon"
@@ -206,6 +224,10 @@ export function EducationCertifications() {
               transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
               className="relative max-h-full w-full max-w-3xl overflow-hidden border border-line bg-carbon-2"
               onClick={(e) => e.stopPropagation()}
+              ref={lightboxRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label={`${active.title} certificate preview`}
             >
               <div className="flex items-center justify-between border-b border-line px-4 py-3">
                 <div>

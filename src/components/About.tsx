@@ -1,12 +1,12 @@
 import { ArrowUpRight } from "lucide-react";
-import { profile } from "@/lib/data";
+import { certifications, profile, projects } from "@/lib/data";
 import { CountUp } from "./CountUp";
 import { Reveal, SectionHeading } from "./Reveal";
 
 const stats = [
   { to: 10, pad: 0, suffix: "+", label: "marketplaces scraped" },
-  { to: 7, pad: 2, suffix: "", label: "certs & diplomas" },
-  { to: 6, pad: 2, suffix: "", label: "production projects" },
+  { to: certifications.length, pad: 2, suffix: "", label: "certs & diplomas" },
+  { to: projects.length, pad: 2, suffix: "", label: "production projects" },
   { to: 3, pad: 2, suffix: "", label: "LLM integrations" },
 ];
 

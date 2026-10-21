@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# sushan-portfolio
 
-## Getting Started
+Personal site and portfolio for **Sushan Tamang** — full-stack & AI developer from Pokhara, Nepal.
 
-First, run the development server:
+A single-page portfolio with crawlable case files and journal posts, a print-ready
+résumé, an in-page knowledge bot, and a keyboard-first command palette.
+
+**Live:** https://sushan-portfolio.vercel.app
+
+---
+
+## Stack
+
+| | |
+| --- | --- |
+| Framework | Next.js 16 (App Router, Turbopack) |
+| UI | React 19, Tailwind CSS v4 |
+| Motion | Framer Motion, Lenis (smooth scroll) |
+| Icons | lucide-react, react-icons |
+| Language | TypeScript (strict) |
+
+## Routes
+
+| Route | Type | Notes |
+| --- | --- | --- |
+| `/` | static | The one-pager — hero, about, experience, skills, projects, journal, education, contact |
+| `/case/[slug]` | SSG | One page per project (7). Also reachable as `#case/<slug>`, which opens the in-page modal |
+| `/journal/[slug]` | SSG | One page per build-log entry (4) |
+| `/cv` | static | Print-ready résumé — "save as PDF" in the toolbar |
+| `/feed.xml` | dynamic | RSS feed of the journal, one `<link>` per post |
+| `/sitemap.xml`, `/robots.txt`, `/manifest.webmanifest` | dynamic | Generated from the same data as the pages |
+| `/api/contact` | dynamic | Contact form handler (Resend, with a `mailto:` fallback) |
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # production build
+npm run lint    # eslint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Copy `.env.example` to `.env.local`. All three variables are optional — without
+`RESEND_API_KEY` the contact form falls back to opening a `mailto:` composer.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+RESEND_API_KEY=      # https://resend.com/api-keys
+CONTACT_TO=          # defaults to sushantmg2004@gmail.com
+CONTACT_FROM=        # defaults to onboarding@resend.dev
+```
 
-## Learn More
+`NEXT_PUBLIC_SITE_URL` overrides the canonical origin used for canonical links,
+OpenGraph, the sitemap, and RSS. It defaults to the Vercel deployment.
 
-To learn more about Next.js, take a look at the following resources:
+## Content
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Everything the site renders lives in `src/lib/data.ts` — profile, skills,
+experience, projects, notes, education, and certifications. `src/lib/site.ts`
+holds the canonical origin. The pages, the sitemap, the RSS feed, the bot's
+knowledge, and the JSON-LD are all generated from that one file, so adding a
+project or a journal entry is a single edit.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Accessibility & SEO notes
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Every overlay is a labelled `role="dialog"` with a focus trap, focus restore,
+  Escape handling, and a scroll lock.
+- The chat transcript is a live region, muted while text streams in so replies
+  are announced once rather than on every frame.
+- Canonicals, OpenGraph, and JSON-LD point at the live site — never the repo.
+- `SoftwareApplication`, `BlogPosting`, `Person`, `ProfilePage`, and
+  `BreadcrumbList` structured data is emitted per page.

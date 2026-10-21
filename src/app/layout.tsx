@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist, IBM_Plex_Mono } from "next/font/google";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,7 +21,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://github.com/Sushantmg/sushan-portfolio"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Sushan Tamang — Full-Stack & AI Developer",
     template: "%s · Sushan Tamang",
@@ -42,8 +43,9 @@ export const metadata: Metadata = {
   ],
   creator: "Sushan Tamang",
   authors: [{ name: "Sushan Tamang", url: "https://github.com/Sushantmg" }],
+  // `canonical` is declared per route — a root-level canonical would leak onto
+  // every child page. The RSS alternate applies site-wide.
   alternates: {
-    canonical: "/",
     types: { "application/rss+xml": "/feed.xml" },
   },
   openGraph: {
@@ -51,7 +53,7 @@ export const metadata: Metadata = {
     description:
       "Building production-grade AI-powered applications, scalable web platforms, and multi-service architectures.",
     type: "website",
-    url: "https://github.com/Sushantmg/sushan-portfolio",
+    url: "/",
     siteName: "Sushan Tamang",
     locale: "en_US",
   },

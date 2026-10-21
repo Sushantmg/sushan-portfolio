@@ -1,7 +1,14 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Link2, Share2, X } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  Link2,
+  Share2,
+  X,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { slugify, type Project } from "@/lib/data";
 import { useFocusTrap } from "@/lib/useFocusTrap";
@@ -30,8 +37,16 @@ export function ProjectModal({
   const scrollRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useFocusTrap(project !== null, panelRef);
+
+  useEffect(
+    () => () => {
+      if (copyTimer.current) clearTimeout(copyTimer.current);
+    },
+    [],
+  );
 
   useEffect(() => {
     if (!project) return;
@@ -41,6 +56,13 @@ export function ProjectModal({
     document.body.style.overflow = "hidden";
 
     const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement | null;
+      const inField =
+        !!el &&
+        (el.tagName === "INPUT" ||
+          el.tagName === "TEXTAREA" ||
+          el.isContentEditable);
+      if (inField) return;
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowLeft") onPrev?.();
       if (e.key === "ArrowRight") onNext?.();
@@ -52,23 +74,33 @@ export function ProjectModal({
     };
   }, [project, onClose, onPrev, onNext]);
 
+  // Share the canonical case page rather than the in-page fragment, so links
+  // that leave the site still land somewhere real.
+  const caseUrl = () =>
+    `${window.location.origin}/case/${slugify(project?.name ?? "")}`;
+
   const copyLink = async () => {
     const slug = slugify(project?.name ?? "");
-    const url = `${window.location.origin}${window.location.pathname}#case/${slug}`;
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(caseUrl());
       setCopiedSlug(slug);
-      setTimeout(() => setCopiedSlug((cur) => (cur === slug ? null : cur)), 1600);
+      if (copyTimer.current) clearTimeout(copyTimer.current);
+      copyTimer.current = setTimeout(
+        () => setCopiedSlug((cur) => (cur === slug ? null : cur)),
+        1600,
+      );
     } catch {}
   };
 
   const shareLink = async () => {
-    const slug = slugify(project?.name ?? "");
-    const url = `${window.location.origin}${window.location.pathname}#case/${slug}`;
     const title = `${project?.name ?? ""} · case file`;
     try {
       if (typeof navigator.share === "function") {
-        await navigator.share({ title, text: project?.tagline ?? "", url });
+        await navigator.share({
+          title,
+          text: project?.tagline ?? "",
+          url: caseUrl(),
+        });
         return;
       }
     } catch {}
@@ -186,11 +218,18 @@ export function ProjectModal({
               </div>
             </div>
 
-            <div className="flex items-center justify-between border-t border-line px-6 py-3 font-mono text-[0.65rem] text-muted">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line px-6 py-3 font-mono text-[0.65rem] text-muted">
               <span>
                 {slugify(project.name)} · case file
               </span>
-              <span className="flex items-center gap-3">
+              <span className="flex flex-wrap items-center gap-3">
+                <a
+                  href={`/case/${slugify(project.name)}`}
+                  className="inline-flex items-center gap-1.5 text-muted transition-colors hover:text-acid"
+                >
+                  <ExternalLink className="h-3 w-3" />
+                  full page
+                </a>
                 <button
                   onClick={copyLink}
                   className="inline-flex items-center gap-1.5 text-muted transition-colors hover:text-acid"

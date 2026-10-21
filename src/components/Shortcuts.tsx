@@ -41,8 +41,8 @@ const groups: { kanji: string; label: string; items: [string, string][] }[] = [
     kanji: "写",
     label: "copy anywhere",
     items: [
-      ["copy link", "on a section heading — shares that section"],
-      ["copy link", "inside a case — shares that project"],
+      ["copy", "on a section heading — shares that section"],
+      ["copy", "inside a case — shares that project"],
       ["copy email", "in the command palette"],
     ],
   },
@@ -152,7 +152,7 @@ export function Shortcuts({ trigger }: { trigger?: ReactNode }) {
                     <ul className="space-y-2">
                       {g.items.map(([key, label]) => (
                         <li
-                          key={key}
+                          key={`${key}-${label}`}
                           className="flex items-baseline justify-between gap-3"
                         >
                           <kbd className="shrink-0 border border-line bg-carbon px-1.5 py-0.5 font-mono text-[0.65rem] text-ink">

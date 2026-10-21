@@ -1,12 +1,10 @@
 "use client";
 
 import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
-import { notes } from "@/lib/data";
+import { noteReadTime, noteSlug, notes } from "@/lib/data";
 import { Reveal, SectionHeading } from "./Reveal";
-
-const readTime = (text: string) =>
-  Math.max(1, Math.round(text.trim().split(/\s+/).length / 200));
 
 export function Journal() {
   const [tag, setTag] = useState<string | null>(null);
@@ -31,9 +29,14 @@ export function Journal() {
           description="Short entries written while shipping — what worked, what didn't, and why."
         />
 
-        <div className="mb-8 flex flex-wrap items-center gap-2">
+        <div
+          className="mb-8 flex flex-wrap items-center gap-2"
+          role="group"
+          aria-label="Filter journal entries by tag"
+        >
           <button
             onClick={() => setTag(null)}
+            aria-pressed={tag === null}
             className={`border px-3 py-1.5 font-mono text-[0.68rem] transition-colors duration-200 ${
               tag === null
                 ? "border-acid bg-acid text-carbon"
@@ -46,6 +49,7 @@ export function Journal() {
             <button
               key={t}
               onClick={() => setTag(tag === t ? null : t)}
+              aria-pressed={tag === t}
               className={`border px-3 py-1.5 font-mono text-[0.68rem] transition-colors duration-200 ${
                 tag === t
                   ? "border-acid bg-acid text-carbon"
@@ -62,14 +66,22 @@ export function Journal() {
             <Reveal key={note.title} delay={0.04 * i}>
               <article className="group grid gap-3 border-b border-line py-8 transition-colors duration-300 hover:bg-carbon/60 sm:grid-cols-12 sm:gap-6 sm:px-4">
                 <div className="font-mono text-xs text-acid sm:col-span-2 sm:pt-1.5">
-                  {note.date}
+                  <time dateTime={note.date}>{note.date}</time>
                 </div>
                 <div className="sm:col-span-10">
                   <div className="flex items-start justify-between gap-4">
                     <h3 className="font-display text-xl font-semibold text-ink transition-colors duration-300 group-hover:text-acid sm:text-2xl">
-                      {note.title}
+                      <Link
+                        href={`/journal/${noteSlug(note.title)}`}
+                        className="inline-flex items-start gap-2"
+                      >
+                        {note.title}
+                        <ArrowUpRight
+                          aria-hidden
+                          className="mt-1 h-4 w-4 shrink-0 text-muted transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-acid"
+                        />
+                      </Link>
                     </h3>
-                    <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-muted transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-acid" />
                   </div>
                   <p className="mt-3 text-sm leading-relaxed text-muted transition-colors duration-300 group-hover:text-ink">
                     {note.excerpt}
@@ -85,7 +97,7 @@ export function Journal() {
                       </button>
                     ))}
                     <span className="font-mono text-[0.62rem] text-muted/60">
-                      {readTime(note.excerpt)} min read
+                      {noteReadTime(note)} min read
                     </span>
                   </div>
                 </div>

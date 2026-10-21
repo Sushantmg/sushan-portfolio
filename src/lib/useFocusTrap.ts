@@ -22,7 +22,9 @@ export function useFocusTrap(
       if (e.key !== "Tab") return;
       const items = Array.from(
         root.querySelectorAll<HTMLElement>(FOCUSABLE),
-      ).filter((el) => el.offsetParent !== null);
+        // `offsetParent` is always null for position:fixed elements, which
+        // silently drops them from the tab cycle. Client rects work for both.
+      ).filter((el) => el.getClientRects().length > 0);
       if (items.length === 0) return;
       const firstEl = items[0];
       const lastEl = items[items.length - 1];

@@ -57,6 +57,7 @@ export function MobileDock() {
               key={item.href}
               href={item.href}
               aria-label={item.label}
+              aria-current={isActive ? "true" : undefined}
               title={item.label}
               className={`grid w-12 place-items-center py-2.5 font-mono text-sm transition-colors duration-200 ${
                 isActive

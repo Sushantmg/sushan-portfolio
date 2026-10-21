@@ -63,6 +63,17 @@ html {
   color: #10120f;
 }
 
+/* The reveal animation writes an initial opacity of 0 into the SSR HTML.
+   Without scripting, nothing would ever animate it in, so the page would
+   render blank — force everything visible instead. */
+@media (scripting: none) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
 @layer utilities {
   .grain::before {
     content: "";
@@ -333,6 +344,13 @@ html {
   * {
     box-shadow: none !important;
     text-shadow: none !important;
+  }
+  /* Reveal sections sit at opacity 0 until they scroll into view, so a
+     printout taken before scrolling would be mostly blank. */
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
   }
   #projects .grid > *,
   #skills .grid > *,

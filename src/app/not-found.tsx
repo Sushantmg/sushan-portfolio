@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Kamon } from "@/components/Kamon";
+
+export const metadata: Metadata = {
+  title: "Not found",
+  robots: { index: false, follow: false },
+};
 
 export default function NotFound() {
   return (

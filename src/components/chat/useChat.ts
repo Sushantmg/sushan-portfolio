@@ -16,8 +16,6 @@ const MAX_MESSAGES = 80;
 
 export const welcomeText = `Hey — I'm ${botMeta.name}, a knowledge bot living inside this portfolio.\n\nAsk me about Sushan: projects, skills, experience, contact. Type /help for commands, or pick a prompt below.`;
 
-let nextId = 1;
-
 function freshWelcome(): Message[] {
   return [{ id: 0, from: "bot", text: welcomeText }];
 }
@@ -33,7 +31,6 @@ function loadHistory(): Message[] {
       ts?: number;
     }[];
     if (!Array.isArray(parsed) || parsed.length === 0) return freshWelcome();
-    nextId = parsed.length + 1;
     return parsed
       .slice(-MAX_MESSAGES)
       .map((m, i) => ({ id: i, from: m.from, text: m.text, ts: m.ts }));
@@ -56,6 +53,11 @@ export function useChat(streaming: boolean) {
   const streamTextRef = useRef("");
   const sentRef = useRef<string[]>([]);
   const cursorRef = useRef(0);
+  const messagesRef = useRef<Message[]>([]);
+
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
 
   useEffect(() => {
     openRef.current = open;
@@ -108,7 +110,10 @@ export function useChat(streaming: boolean) {
       busyRef.current = true;
       sentRef.current = [...sentRef.current, text].slice(-50);
       cursorRef.current = sentRef.current.length;
-      setMessages((m) => [...m, { id: nextId++, from: "user", text, ts: Date.now() }]);
+      setMessages((m) => [
+        ...m,
+        { id: m.length, from: "user", text, ts: Date.now() },
+      ]);
       setTyping(true);
       const delay = 380 + ((text.length * 11) % 340);
       replyTimer.current = setTimeout(() => {
@@ -118,9 +123,12 @@ export function useChat(streaming: boolean) {
         } catch {
           reply = `Something broke on my end. Try rephrasing — or just email ${profile.email} directly.`;
         }
-        const id = nextId++;
+        const id = messagesRef.current.length;
         streamTextRef.current = reply;
-        setMessages((m) => [...m, { id, from: "bot", text: reply, ts: Date.now() }]);
+        setMessages((m) => [
+          ...m,
+          { id: m.length, from: "bot", text: reply, ts: Date.now() },
+        ]);
         setTyping(false);
         busyRef.current = false;
         if (!openRef.current) setUnread((u) => u + 1);
@@ -140,7 +148,6 @@ export function useChat(streaming: boolean) {
 
   const reset = useCallback(() => {
     if (replyTimer.current) clearTimeout(replyTimer.current);
-    nextId = 1;
     busyRef.current = false;
     sentRef.current = [];
     cursorRef.current = 0;
@@ -178,12 +185,14 @@ export function useChat(streaming: boolean) {
       cursorRef.current -= 1;
       return list[cursorRef.current] ?? null;
     }
+    // Stepping past the newest entry returns an empty string, so the composer
+    // can return to the message that was being typed.
     if (cursorRef.current >= list.length - 1) {
       cursorRef.current = list.length;
-      return null;
+      return "";
     }
     cursorRef.current += 1;
-    return list[cursorRef.current] ?? null;
+    return list[cursorRef.current] ?? "";
   }, []);
 
   const transcript = useCallback(() => {

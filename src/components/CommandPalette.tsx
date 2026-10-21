@@ -43,6 +43,8 @@ const doActions: Action[] = [
   { id: "linkedin", label: "Open LinkedIn", hint: "linkedin.com/in/sushan-tamang-9406712b1", kind: "open", href: "https://www.linkedin.com/in/sushan-tamang-9406712b1/" },
 ];
 
+const LISTBOX_ID = "palette-listbox";
+
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -50,7 +52,15 @@ export function CommandPalette() {
   const [copied, setCopied] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useFocusTrap(open, panelRef);
+
+  useEffect(
+    () => () => {
+      if (copyTimer.current) clearTimeout(copyTimer.current);
+    },
+    [],
+  );
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -66,6 +76,20 @@ export function CommandPalette() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  // Escape must work from anywhere inside the palette, including when focus
+  // has moved into the result list.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
 
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 60);
@@ -123,9 +147,17 @@ export function CommandPalette() {
     } else if (action.kind === "do") {
       if (action.id === "email") {
         navigator.clipboard?.writeText("sushantmg2004@gmail.com").catch(() => {});
+        // Keep the palette open long enough for the confirmation to be seen.
         setCopied(true);
-        setTimeout(() => setCopied(false), 1600);
-      } else if (action.id === "chat") {
+        if (copyTimer.current) clearTimeout(copyTimer.current);
+        copyTimer.current = setTimeout(() => {
+          setCopied(false);
+          setOpen(false);
+          setQuery("");
+        }, 1600);
+        return;
+      }
+      if (action.id === "chat") {
         window.dispatchEvent(new CustomEvent("sushan:ask", { detail: "hi" }));
       }
     } else if (action.kind === "open" && action.href) {
@@ -134,6 +166,10 @@ export function CommandPalette() {
     setOpen(false);
     setQuery("");
   };
+
+  const activeId = results[index]
+    ? `palette-option-${results[index].id}`
+    : undefined;
 
   return (
     <AnimatePresence>
@@ -171,6 +207,11 @@ className="w-full max-w-lg overflow-hidden border border-line bg-carbon-2 shadow
                 placeholder="navigate or ask sushan…"
                 className="w-full bg-transparent font-mono text-sm text-ink placeholder:text-muted focus:outline-none"
                 aria-label="Command palette"
+                role="combobox"
+                aria-expanded="true"
+                aria-controls={LISTBOX_ID}
+                aria-autocomplete="list"
+                aria-activedescendant={activeId}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && results.length > 0) {
                     e.preventDefault();
@@ -184,7 +225,6 @@ className="w-full max-w-lg overflow-hidden border border-line bg-carbon-2 shadow
                     e.preventDefault();
                     setIndex((i) => Math.max(i - 1, 0));
                   }
-                  if (e.key === "Escape") setOpen(false);
                 }}
               />
               <button
@@ -196,19 +236,27 @@ className="w-full max-w-lg overflow-hidden border border-line bg-carbon-2 shadow
               </button>
             </div>
 
-            <div className="max-h-[40vh] overflow-y-auto p-2">
+            <div
+              className="max-h-[40vh] overflow-y-auto p-2"
+              id={LISTBOX_ID}
+              role="listbox"
+              aria-label="Commands"
+            >
               {results.length === 0 && (
                 <p className="px-3 py-6 text-center font-mono text-sm text-muted">
                   no matches for “{query}”
                 </p>
               )}
-              {results.map((action) => {
+              {results.map((action, i) => {
                 const active = action.id === results[index]?.id;
                 return (
                   <button
                     key={action.id + action.label}
+                    id={`palette-option-${action.id}`}
+                    role="option"
+                    aria-selected={active}
                     type="button"
-                    onMouseEnter={() => setIndex(results.indexOf(action))}
+                    onMouseEnter={() => setIndex(i)}
                     onClick={() => run(action)}
                     className={`flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition-colors ${
                       active ? "bg-acid/10" : ""
@@ -256,7 +304,9 @@ className="w-full max-w-lg overflow-hidden border border-line bg-carbon-2 shadow
             </div>
 
             <div className="flex items-center justify-between border-t border-line px-4 py-2 font-mono text-[0.65rem] text-muted">
-              <span>{copied ? "✓ email copied to clipboard" : "↑↓ navigate · ↵ run · esc close"}</span>
+              <span aria-live="polite">
+                {copied ? "✓ email copied to clipboard" : "↑↓ navigate · ↵ run · esc close"}
+              </span>
               <span className="text-acid">⌘k</span>
             </div>
           </motion.div>

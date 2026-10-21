@@ -7,16 +7,22 @@ import { profile } from "@/lib/data";
 const MAX = 600;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+type ErrorField = "email" | "message" | null;
+
 export function ContactForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "sending" | "sent" | "error" | "mailto"
+  >("idle");
   const [error, setError] = useState("");
+  const [errorField, setErrorField] = useState<ErrorField>(null);
 
   const reset = () => {
     setStatus("idle");
     setError("");
+    setErrorField(null);
   };
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,12 +32,14 @@ export function ContactForm() {
     const trimmedEmail = email.trim();
     if (trimmedEmail && !EMAIL_RE.test(trimmedEmail)) {
       setStatus("error");
+      setErrorField("email");
       setError("that email doesn't look right — check it or leave it blank");
       return;
     }
 
     setStatus("sending");
     setError("");
+    setErrorField(null);
     try {
       const form = e.currentTarget;
       const honeypot = new FormData(form).get("company")?.toString() ?? "";
@@ -61,6 +69,7 @@ export function ContactForm() {
         return;
       }
 
+      setErrorField(data.error === "too_long" ? "message" : null);
       setError(
         data.error === "too_many"
           ? "too many messages from this device — email me directly"
@@ -80,11 +89,18 @@ export function ContactForm() {
       `${message}\n\n— ${name || "anonymous"}${email.trim() ? `\nreply to: ${email.trim()}` : ""}`,
     );
     window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
-    setStatus("idle");
+    // Tell the user what actually happened — otherwise the form just resets
+    // and it looks like the message vanished.
+    setStatus("mailto");
+    setError("");
+    setErrorField(null);
   };
 
   return (
-    <form onSubmit={submit} className="border-b border-line p-5">
+    // noValidate: the browser's native constraint validation would block
+    // submission and show a raw tooltip instead of the form's own message
+    // (and would stop the custom validation from ever running).
+    <form onSubmit={submit} noValidate className="border-b border-line p-5">
       <label htmlFor="cn-name" className="label text-muted">
         / from
       </label>
@@ -116,11 +132,13 @@ export function ContactForm() {
         value={email}
         onChange={(e) => {
           setEmail(e.target.value);
-          if (status === "error") reset();
+          if (status === "error" || status === "mailto") reset();
         }}
         placeholder="you@company.com"
         maxLength={120}
         autoComplete="email"
+        aria-describedby={errorField === "email" ? "cn-status" : undefined}
+        aria-invalid={errorField === "email"}
         className="mt-2 w-full border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted/60 focus:border-acid focus:outline-none"
       />
       <label htmlFor="cn-message" className="label mt-4 block text-muted">
@@ -131,13 +149,15 @@ export function ContactForm() {
         value={message}
         onChange={(e) => {
           setMessage(e.target.value);
-          if (status === "sent" || status === "error") reset();
+          if (status === "sent" || status === "error" || status === "mailto") {
+            reset();
+          }
         }}
         placeholder="what are we building? — timelines, goals, links welcome"
         rows={3}
         maxLength={MAX}
         aria-describedby="cn-status"
-        aria-invalid={status === "error"}
+        aria-invalid={errorField === "message"}
         className="mt-2 w-full resize-none border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted/60 focus:border-acid focus:outline-none"
       />
       <div className="mt-3 flex items-center justify-between gap-3">
@@ -150,9 +170,11 @@ export function ContactForm() {
             ? "sending…"
             : status === "sent"
               ? "✓ sent — replies within a day"
-              : status === "error"
-                ? error
-                : `${message.length}/${MAX}`}
+              : status === "mailto"
+                ? "opening your mail app — hit send there"
+                : status === "error"
+                  ? error
+                  : `${message.length}/${MAX}`}
         </span>
         <button
           type="submit"

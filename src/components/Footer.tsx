@@ -1,7 +1,14 @@
 import Link from "next/link";
-import { profile } from "@/lib/data";
+import { latestNoteDate, profile } from "@/lib/data";
 import { Kamon } from "./Kamon";
 import { LiveClock } from "./LiveClock";
+
+const updated = new Date(`${latestNoteDate()}T09:00:00Z`);
+const updatedLabel = new Intl.DateTimeFormat("en-US", {
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+}).format(updated);
 
 export function Footer() {
   return (
@@ -38,7 +45,7 @@ export function Footer() {
         </p>
         <p className="flex items-center gap-2 font-mono text-[0.65rem] text-muted">
           <span className="text-acid">updated</span>
-          <time dateTime="2026-10">october 2026</time>
+          <time dateTime={latestNoteDate()}>{updatedLabel}</time>
         </p>
         <a
           href="#top"
@@ -51,9 +58,13 @@ export function Footer() {
           <Link href="/cv" className="transition-colors hover:text-acid">
             résumé
           </Link>
-          <Link href="/feed.xml" className="transition-colors hover:text-acid">
+          <a
+            href="/feed.xml"
+            type="application/rss+xml"
+            className="transition-colors hover:text-acid"
+          >
             rss
-          </Link>
+          </a>
           <a
             href={profile.github}
             target="_blank"

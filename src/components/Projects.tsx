@@ -43,9 +43,9 @@ export function Projects() {
       acc[t] = (acc[t] ?? 0) + 1;
       return acc;
     }, {});
-  const topTags = Object.entries(tagCounts)
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-    .slice(0, 7);
+  const topTags = Object.entries(tagCounts).sort(
+    (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]),
+  );
 
   const visible = tag ? projects.filter((p) => p.tags.includes(tag)) : projects;
 
@@ -66,9 +66,18 @@ export function Projects() {
   useEffect(() => {
     const sync = () => {
       const slug = readHash();
-      setActive(
-        slug ? (projects.find((p) => slugify(p.name) === slug) ?? null) : null,
-      );
+      const found = slug
+        ? (projects.find((p) => slugify(p.name) === slug) ?? null)
+        : null;
+      setActive(found);
+      // A `#case/<slug>` fragment matches no element id, so the browser scrolls
+      // to the top before the modal opens. Pull the viewport back to the
+      // projects grid so closing the modal doesn't dump the reader at the top.
+      if (found) {
+        document
+          .getElementById("projects")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     };
     window.addEventListener("hashchange", sync);
     window.addEventListener("popstate", sync);
@@ -89,16 +98,12 @@ export function Projects() {
   };
 
   const step = (dir: -1 | 1) => {
-    setActive((prev) => {
-      if (!prev) return prev;
-      const next =
-        projects[
-          (projects.findIndex((p) => p.name === prev.name) + dir + projects.length) %
-            projects.length
-        ];
-      writeHash(slugify(next.name), true);
-      return next;
-    });
+    if (!active) return;
+    const i = projects.findIndex((p) => p.name === active.name);
+    const next =
+      projects[(i + dir + projects.length) % projects.length];
+    setActive(next);
+    writeHash(slugify(next.name), true);
   };
 
   return (

@@ -39,7 +39,14 @@ import {
   Workflow,
 } from "lucide-react";
 
-type Icon = ComponentType<{ className?: string }>;
+// Icons here are always decorative — they sit beside a text label. Unlike
+// lucide-react, react-icons does not hide SVGs from assistive tech by
+// default, so `aria-hidden` is passed explicitly.
+type Icon = ComponentType<{
+  className?: string;
+  "aria-hidden"?: boolean | "true" | "false";
+  focusable?: boolean | "true" | "false";
+}>;
 
 const map: Record<string, Icon> = {
   JavaScript: SiJavascript,
@@ -98,7 +105,7 @@ export function SkillIcon({
   className?: string;
 }) {
   const Icon = map[skill] ?? fallback;
-  return <Icon className={className} />;
+  return <Icon className={className} aria-hidden={true} focusable="false" />;
 }
 
 export function IssuerIcon({
@@ -109,5 +116,5 @@ export function IssuerIcon({
   className?: string;
 }) {
   const Icon = issuerMap[issuer] ?? GraduationCap;
-  return <Icon className={className} />;
+  return <Icon className={className} aria-hidden={true} focusable="false" />;
 }

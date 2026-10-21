@@ -8,12 +8,67 @@ import {
   projects,
   skillGroups,
 } from "@/lib/data";
+import { siteUrl } from "@/lib/site";
 import { CvToolbar } from "./CvToolbar";
+
+const DESCRIPTION = `${profile.name} — ${profile.role} based in ${profile.location}. Experience, projects, skills, education, and certifications in a print-ready résumé.`;
 
 export const metadata: Metadata = {
   title: "CV",
-  description: `${profile.name} — ${profile.role} based in ${profile.location}. Experience, projects, skills, education, and certifications in a print-ready résumé.`,
-  alternates: { canonical: "/cv" },
+  description: DESCRIPTION,
+  alternates: {
+    canonical: "/cv",
+    types: { "application/rss+xml": "/feed.xml" },
+  },
+  openGraph: {
+    title: `CV — ${profile.name}`,
+    description: DESCRIPTION,
+    url: "/cv",
+    type: "profile",
+    siteName: profile.name,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `CV — ${profile.name}`,
+    description: DESCRIPTION,
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      name: profile.name,
+      jobTitle: profile.role,
+      description: profile.summary,
+      url: siteUrl("/cv"),
+      image: siteUrl("/images/drone.jpg"),
+      email: `mailto:${profile.email}`,
+      telephone: profile.phone,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Pokhara",
+        addressCountry: "NP",
+      },
+      sameAs: [profile.github, profile.linkedin],
+      knowsLanguage: languages,
+      hasCredential: certifications.map((c) => ({
+        "@type": "EducationalOccupationalCredential",
+        name: c.title,
+        credentialCategory: "certificate",
+        recognizedBy: { "@type": "Organization", name: c.issuer },
+      })),
+    },
+    {
+      "@type": "ProfilePage",
+      name: `CV — ${profile.name}`,
+      url: siteUrl("/cv"),
+      description: DESCRIPTION,
+      mainEntity: { "@type": "Person", name: profile.name },
+    },
+  ],
 };
 
 const INK = "#171a14";
@@ -53,6 +108,12 @@ export default function CvPage() {
 
   return (
     <main className="cv-main min-h-screen bg-[#eceadf] px-4 py-6 sm:px-6 sm:py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <div className="mx-auto max-w-[860px]">
         <CvToolbar />
 

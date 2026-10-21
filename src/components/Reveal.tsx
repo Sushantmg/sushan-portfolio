@@ -2,7 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { Link2 } from "lucide-react";
-import { type ReactNode, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 
 export function Reveal({
   children,
@@ -23,7 +23,7 @@ export function Reveal({
   return (
     <motion.div
       ref={ref}
-      className={className}
+      className={className ? `reveal ${className}` : "reveal"}
       initial={{ opacity: 0, y, filter: "blur(6px)" }}
       animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y, filter: "blur(6px)" }}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
@@ -82,12 +82,22 @@ const KANJI_READING = ["いち", "に", "さん", "よん", "ご", "ろく", "�
 
 function CopyAnchor({ target }: { target: string }) {
   const [copied, setCopied] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    [],
+  );
+
   const copy = async () => {
     try {
       const url = `${window.location.origin}${window.location.pathname}#${target}`;
       await navigator.clipboard.writeText(url);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1600);
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = setTimeout(() => setCopied(false), 1600);
     } catch {}
   };
   return (

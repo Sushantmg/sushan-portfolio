@@ -20,17 +20,23 @@ import { Petals, SakuraBranch } from "@/components/Petals";
 import { Projects } from "@/components/Projects";
 import { Skills } from "@/components/Skills";
 import { SmoothScroll } from "@/components/SmoothScroll";
-import { profile, projects, slugify } from "@/lib/data";
+import { notes, noteSlug, profile, projectSlug, projects } from "@/lib/data";
+import { siteUrl } from "@/lib/site";
 
-const SITE = "https://github.com/Sushantmg/sushan-portfolio";
 const LANGUAGES = new Set(["TypeScript", "Python", "JavaScript"]);
+
+export const metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default function Home() {
   const person = {
     "@type": "Person",
     name: profile.name,
-    url: SITE,
+    url: siteUrl("/"),
     jobTitle: profile.role,
+    description: profile.summary,
+    image: siteUrl("/images/drone.jpg"),
     address: {
       "@type": "PostalAddress",
       addressLocality: "Pokhara",
@@ -49,9 +55,17 @@ export default function Home() {
         name: profile.name,
         description:
           "Portfolio of Sushan Tamang — full-stack & AI developer building production-grade AI applications, scalable web platforms, and multi-service architectures.",
-        url: SITE,
+        url: siteUrl("/"),
         inLanguage: "en",
         author: person,
+      },
+      {
+        "@type": "ProfilePage",
+        name: `${profile.name} — ${profile.role}`,
+        url: siteUrl("/"),
+        description: profile.summary,
+        mainEntity: person,
+        isPartOf: { "@type": "WebSite", url: siteUrl("/") },
       },
       ...projects.map((project) => {
         const programmingLanguage = project.tags.filter((tag) =>
@@ -62,14 +76,23 @@ export default function Home() {
           name: project.name,
           headline: project.tagline,
           description: project.description,
-          applicationCategory: "WebApplication",
+          applicationCategory: "BusinessApplication",
           operatingSystem: "Web",
-          url: `${SITE}/#case/${slugify(project.name)}`,
+          url: siteUrl(`/case/${projectSlug(project.name)}`),
           keywords: project.tags.join(", "),
           author: person,
           ...(programmingLanguage.length > 0 ? { programmingLanguage } : {}),
         };
       }),
+      ...notes.map((note) => ({
+        "@type": "BlogPosting",
+        headline: note.title,
+        description: note.excerpt,
+        url: siteUrl(`/journal/${noteSlug(note.title)}`),
+        datePublished: note.date,
+        keywords: note.tags.join(", "),
+        author: person,
+      })),
     ],
   };
 
@@ -77,14 +100,16 @@ export default function Home() {
     <MotionConfig reducedMotion="user">
     <div className="grain relative min-h-screen">
       <a
-        href="#top"
+        href="#main"
         className="fixed left-4 top-4 z-[101] -translate-y-24 border border-acid bg-carbon px-4 py-2 font-mono text-xs font-bold text-acid transition-transform duration-200 focus:translate-y-0"
       >
         skip to content
       </a>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
       />
       <SmoothScroll />
       <div aria-hidden className="seigaiha fixed inset-0 z-0 opacity-[0.045]" />
@@ -96,7 +121,7 @@ export default function Home() {
       <Petals />
       <SakuraBranch />
       <Navbar />
-      <main className="relative">
+      <main id="main" tabIndex={-1} className="relative outline-none">
         <Hero />
         <Karesansui />
         <About />
