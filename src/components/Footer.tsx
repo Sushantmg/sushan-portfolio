@@ -54,7 +54,7 @@ export function Footer() {
           <span className="text-acid">↑</span> back to top
         </a>
         </div>
-        <div className="mx-auto mt-5 flex max-w-6xl flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-line pt-4 font-mono text-[0.65rem] uppercase tracking-wider sm:justify-between">
+        <div className="mx-auto mt-5 flex max-w-6xl flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-line px-5 pt-4 font-mono text-[0.65rem] uppercase tracking-wider sm:justify-between sm:px-8 lg:px-14">
           <Link href="/cv" className="transition-colors hover:text-acid">
             résumé
           </Link>

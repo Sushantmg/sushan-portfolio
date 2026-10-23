@@ -123,7 +123,7 @@ function Line({ line, first, mark }: { line: string; first: boolean; mark?: stri
 
   if (LABEL.test(t.replace(/:$/, ""))) {
     return (
-      <p className="mt-1.5 font-mono text-[0.58rem] uppercase tracking-[0.22em] text-muted/70">
+      <p className="mt-1.5 font-mono text-[0.58rem] uppercase tracking-[0.22em] text-muted">
         {t.replace(/:$/, "")}
       </p>
     );

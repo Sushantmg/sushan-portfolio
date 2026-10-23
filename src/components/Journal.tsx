@@ -96,7 +96,7 @@ export function Journal() {
                         {t}
                       </button>
                     ))}
-                    <span className="font-mono text-[0.62rem] text-muted/60">
+                    <span className="font-mono text-[0.62rem] text-muted">
                       {noteReadTime(note)} min read
                     </span>
                   </div>

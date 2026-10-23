@@ -86,7 +86,7 @@ export default async function OpengraphImage() {
           }}
         >
           <div style={{ display: "flex" }}>{counts.join("   ·   ")}</div>
-          <div style={{ display: "flex", color: "#c7f542" }}>?sushan</div>
+          <div style={{ display: "flex", color: "#c7f542" }}>sushan.</div>
         </div>
       </div>
     ),

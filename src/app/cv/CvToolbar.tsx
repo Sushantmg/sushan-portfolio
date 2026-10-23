@@ -13,7 +13,7 @@ export function CvToolbar() {
         <span aria-hidden>←</span> back to site
       </Link>
       <div className="flex items-center gap-3">
-        <span className="hidden font-mono text-[0.7rem] text-[#6b7060] sm:inline">
+        <span className="hidden font-mono text-[0.7rem] text-[#5d6154] sm:inline">
           want it on paper?
         </span>
         <button

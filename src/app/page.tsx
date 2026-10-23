@@ -20,13 +20,23 @@ import { Petals, SakuraBranch } from "@/components/Petals";
 import { Projects } from "@/components/Projects";
 import { Skills } from "@/components/Skills";
 import { SmoothScroll } from "@/components/SmoothScroll";
-import { notes, noteSlug, profile, projectSlug, projects } from "@/lib/data";
-import { siteUrl } from "@/lib/site";
+import {
+  certifications,
+  education,
+  notes,
+  noteSlug,
+  profile,
+  projectSlug,
+  projects,
+  roles,
+  skillGroups,
+} from "@/lib/data";
+import { RSS_ALTERNATE, siteUrl } from "@/lib/site";
 
 const LANGUAGES = new Set(["TypeScript", "Python", "JavaScript"]);
 
 export const metadata = {
-  alternates: { canonical: "/" },
+  alternates: { canonical: "/", ...RSS_ALTERNATE },
 };
 
 export default function Home() {
@@ -44,6 +54,24 @@ export default function Home() {
     },
     email: `mailto:${profile.email}`,
     sameAs: [profile.github, profile.linkedin],
+    knowsAbout: Array.from(
+      new Set([...roles, ...skillGroups.flatMap((group) => group.skills)]),
+    ),
+    worksFor: {
+      "@type": "Organization",
+      name: "ARLY — AI Product Finder",
+    },
+    alumniOf: education.map((entry) => ({
+      "@type": "EducationalOrganization",
+      name: entry.school,
+    })),
+    hasCredential: certifications.map((cert) => ({
+      "@type": "EducationalOccupationalCredential",
+      name: cert.title,
+      credentialCategory: "certificate",
+      recognizedBy: { "@type": "Organization", name: cert.issuer },
+      ...(cert.verify ? { url: cert.verify } : {}),
+    })),
   };
 
   const jsonLd = {

@@ -9,7 +9,7 @@ import {
   projectSlug,
   slugify,
 } from "@/lib/data";
-import { siteUrl } from "@/lib/site";
+import { siteUrl, RSS_ALTERNATE } from "@/lib/site";
 import { CaseActions } from "./CaseActions";
 
 const LANGUAGES = new Set(["TypeScript", "Python", "JavaScript"]);
@@ -33,7 +33,7 @@ export async function generateMetadata({
   return {
     title,
     description,
-    alternates: { canonical: `/case/${slug}` },
+    alternates: { canonical: `/case/${slug}`, ...RSS_ALTERNATE },
     openGraph: {
       title: `${project.name} · Sushan Tamang`,
       description,
@@ -262,16 +262,26 @@ export default async function CasePage({
           className="mt-16 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6"
         >
           <Link
-            href={`/case/${slugify(projects[(index - 1 + projects.length) % projects.length].name)}`}
-            className="inline-flex items-center gap-2 font-mono text-[0.7rem] text-muted transition-colors hover:text-acid"
+            href={`/case/${projectSlug(projects[(index - 1 + projects.length) % projects.length].name)}`}
+            aria-label={`Previous case: ${projects[(index - 1 + projects.length) % projects.length].name}`}
+            className="group inline-flex max-w-[45%] items-center gap-2 font-mono text-[0.7rem] text-muted transition-colors hover:text-acid"
           >
-            <ArrowLeft className="h-3 w-3" /> prev case
+            <ArrowLeft className="h-3 w-3 shrink-0" />
+            <span className="truncate">
+              <span className="text-muted/70">prev / </span>
+              {projects[(index - 1 + projects.length) % projects.length].name}
+            </span>
           </Link>
           <Link
-            href={`/case/${slugify(projects[(index + 1) % projects.length].name)}`}
-            className="inline-flex items-center gap-2 font-mono text-[0.7rem] text-muted transition-colors hover:text-acid"
+            href={`/case/${projectSlug(projects[(index + 1) % projects.length].name)}`}
+            aria-label={`Next case: ${projects[(index + 1) % projects.length].name}`}
+            className="group inline-flex max-w-[45%] items-center gap-2 text-right font-mono text-[0.7rem] text-muted transition-colors hover:text-acid"
           >
-            next case <ArrowUpRight className="h-3 w-3" />
+            <span className="truncate">
+              <span className="text-muted/70">{projects[(index + 1) % projects.length].name} / </span>
+              next
+            </span>
+            <ArrowUpRight className="h-3 w-3 shrink-0" />
           </Link>
         </nav>
       </article>

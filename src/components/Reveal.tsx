@@ -155,7 +155,7 @@ export function SectionHeading({
             </span>
             <span className="label text-muted">{eyebrow}</span>
             <span className="h-px flex-1 bg-line" />
-            <span aria-hidden className="kanji text-[0.7rem] text-vermilion/70">
+            <span aria-hidden className="kanji text-[0.7rem] text-vermilion">
               ◯
             </span>
             {sectionId && <CopyAnchor target={sectionId} />}

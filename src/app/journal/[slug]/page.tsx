@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Kamon } from "@/components/Kamon";
+import { ReadingProgress } from "@/components/ReadingProgress";
 import {
   notes,
   noteBySlug,
@@ -10,7 +11,7 @@ import {
   noteSlug,
   slugify,
 } from "@/lib/data";
-import { siteUrl } from "@/lib/site";
+import { siteUrl, RSS_ALTERNATE } from "@/lib/site";
 
 export function generateStaticParams() {
   return notes.map((n) => ({ slug: noteSlug(n.title) }));
@@ -28,7 +29,7 @@ export async function generateMetadata({
   return {
     title: note.title,
     description: note.excerpt,
-    alternates: { canonical: `/journal/${slug}` },
+    alternates: { canonical: `/journal/${slug}`, ...RSS_ALTERNATE },
     openGraph: {
       title: `${note.title} · Sushan Tamang`,
       description: note.excerpt,
@@ -56,8 +57,11 @@ export default async function JournalPostPage({
 
   const ordered = [...notes].sort((a, b) => (a.date < b.date ? 1 : -1));
   const position = ordered.findIndex((n) => n.title === note.title);
-  const newer = ordered[(position - 1 + ordered.length) % ordered.length];
-  const older = ordered[(position + 1) % ordered.length];
+  // Chronological, so these must not wrap around: at the ends there is
+  // simply nothing newer or nothing older.
+  const newer = position > 0 ? ordered[position - 1] : undefined;
+  const older =
+    position < ordered.length - 1 ? ordered[position + 1] : undefined;
 
   const url = siteUrl(`/journal/${slug}`);
   const jsonLd = {
@@ -107,6 +111,7 @@ export default async function JournalPostPage({
 
   return (
     <main className="grain relative min-h-screen">
+      <ReadingProgress />
       <div aria-hidden className="seigaiha fixed inset-0 z-0 opacity-[0.045]" />
       <div
         aria-hidden
@@ -168,7 +173,7 @@ export default async function JournalPostPage({
               {t}
             </span>
           ))}
-          <span className="font-mono text-[0.65rem] text-muted/70">
+          <span className="font-mono text-[0.65rem] text-muted">
             {noteReadTime(note)} min read
           </span>
         </div>
@@ -188,33 +193,44 @@ export default async function JournalPostPage({
           ))}
         </div>
 
-        <nav
-          aria-label="Note navigation"
-          className="mt-16 grid gap-4 border-t border-line pt-6 sm:grid-cols-2"
-        >
-          <Link
-            href={`/journal/${slugify(newer.title)}`}
-            className="group flex flex-col border border-line bg-carbon-2 p-4 transition-colors duration-300 hover:border-acid"
+        {(newer || older) && (
+          <nav
+            aria-label="Note navigation"
+            className="mt-16 grid gap-4 border-t border-line pt-6 sm:grid-cols-2"
           >
-            <span className="label text-muted">newer</span>
-            <span className="font-display mt-2 text-lg font-semibold text-ink transition-colors group-hover:text-acid">
-              {newer.title}
-            </span>
-          </Link>
-          <Link
-            href={`/journal/${slugify(older.title)}`}
-            className="group flex flex-col border border-line bg-carbon-2 p-4 transition-colors duration-300 hover:border-acid sm:text-right"
-          >
-            <span className="label text-muted">older</span>
-            <span className="font-display mt-2 text-lg font-semibold text-ink transition-colors group-hover:text-acid">
-              {older.title}
-            </span>
-          </Link>
-        </nav>
+            {newer ? (
+              <Link
+                href={`/journal/${slugify(newer.title)}`}
+                className="group flex flex-col border border-line bg-carbon-2 p-4 transition-colors duration-300 hover:border-acid"
+              >
+                <span className="label text-muted">newer</span>
+                <span className="font-display mt-2 text-lg font-semibold text-ink transition-colors group-hover:text-acid">
+                  {newer.title}
+                </span>
+              </Link>
+            ) : (
+              <span />
+            )}
+            {older && (
+              <Link
+                href={`/journal/${slugify(older.title)}`}
+                className="group flex flex-col border border-line bg-carbon-2 p-4 transition-colors duration-300 hover:border-acid sm:text-right"
+              >
+                <span className="label text-muted">older</span>
+                <span className="font-display mt-2 text-lg font-semibold text-ink transition-colors group-hover:text-acid">
+                  {older.title}
+                </span>
+              </Link>
+            )}
+          </nav>
+        )}
 
         <p className="mt-10 font-mono text-[0.7rem] text-muted">
           <span className="text-acid">note:</span> part of the build log —{" "}
-          <Link href="/feed.xml" className="text-acid hover:text-ink">
+          <Link
+            href="/feed.xml"
+            className="text-acid underline underline-offset-2 hover:text-ink"
+          >
             subscribe via RSS
           </Link>
           .

@@ -51,7 +51,7 @@ export function Skills() {
                   ))}
                 </div>
                 {proof.length > 0 && (
-                  <p className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-line pt-3 font-mono text-[0.62rem] uppercase tracking-wider text-muted/70">
+                  <p className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-line pt-3 font-mono text-[0.62rem] uppercase tracking-wider text-muted">
                     <span>in the wild</span>
                     {proof.map((p) => (
                       <a

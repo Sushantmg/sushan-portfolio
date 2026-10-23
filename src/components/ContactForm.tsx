@@ -110,7 +110,7 @@ export function ContactForm() {
         onChange={(e) => setName(e.target.value)}
         placeholder="your name"
         maxLength={80}
-        className="mt-2 w-full border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted/60 focus:border-acid focus:outline-none"
+        className="mt-2 w-full border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted focus:border-acid focus:outline-none"
       />
       <span className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden" aria-hidden>
         <label htmlFor="cn-company">Company (leave blank)</label>
@@ -124,7 +124,7 @@ export function ContactForm() {
         />
       </span>
       <label htmlFor="cn-email" className="label mt-4 block text-muted">
-        / reply-to <span className="text-muted/50">(optional)</span>
+        / reply-to <span className="text-muted">(optional)</span>
       </label>
       <input
         id="cn-email"
@@ -139,7 +139,7 @@ export function ContactForm() {
         autoComplete="email"
         aria-describedby={errorField === "email" ? "cn-status" : undefined}
         aria-invalid={errorField === "email"}
-        className="mt-2 w-full border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted/60 focus:border-acid focus:outline-none"
+        className="mt-2 w-full border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted focus:border-acid focus:outline-none"
       />
       <label htmlFor="cn-message" className="label mt-4 block text-muted">
         / message
@@ -158,7 +158,7 @@ export function ContactForm() {
         maxLength={MAX}
         aria-describedby="cn-status"
         aria-invalid={errorField === "message"}
-        className="mt-2 w-full resize-none border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted/60 focus:border-acid focus:outline-none"
+        className="mt-2 w-full resize-none border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted focus:border-acid focus:outline-none"
       />
       <div className="mt-3 flex items-center justify-between gap-3">
         <span

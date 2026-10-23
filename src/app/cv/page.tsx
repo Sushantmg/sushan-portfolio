@@ -8,7 +8,7 @@ import {
   projects,
   skillGroups,
 } from "@/lib/data";
-import { siteUrl } from "@/lib/site";
+import { siteUrl, RSS_ALTERNATE, SOCIAL_IMAGE } from "@/lib/site";
 import { CvToolbar } from "./CvToolbar";
 
 const DESCRIPTION = `${profile.name} — ${profile.role} based in ${profile.location}. Experience, projects, skills, education, and certifications in a print-ready résumé.`;
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   alternates: {
     canonical: "/cv",
-    types: { "application/rss+xml": "/feed.xml" },
+    ...RSS_ALTERNATE,
   },
   openGraph: {
     title: `CV — ${profile.name}`,
@@ -27,11 +27,13 @@ export const metadata: Metadata = {
     type: "profile",
     siteName: profile.name,
     locale: "en_US",
+    images: SOCIAL_IMAGE,
   },
   twitter: {
     card: "summary_large_image",
     title: `CV — ${profile.name}`,
     description: DESCRIPTION,
+    images: SOCIAL_IMAGE.map((i) => i.url),
   },
 };
 
@@ -85,7 +87,7 @@ function Block({
   return (
     <section className="cv-block mt-7 break-inside-avoid">
       <div className="mb-3 flex items-center gap-3 border-b border-[#dedcd0] pb-2">
-        <span className="kanji border border-[#d94f43]/50 px-1.5 py-0.5 text-[0.62rem] text-[#d94f43]">
+        <span className="kanji border border-[#b8332a]/50 px-1.5 py-0.5 text-[0.62rem] text-[#b8332a]">
           {kanji}
         </span>
         <h2 className="font-mono text-[0.66rem] font-bold uppercase tracking-[0.22em] text-[#3d4136]">
@@ -107,7 +109,10 @@ export default function CvPage() {
   ];
 
   return (
-    <main className="cv-main min-h-screen bg-[#eceadf] px-4 py-6 sm:px-6 sm:py-10">
+    // The CV is a light document. `text-[#171a14]` is set here so headings
+    // inherit the document's ink colour instead of the dark-theme body
+    // colour, which was rendering them invisible against the cream sheet.
+    <main className="cv-main min-h-screen bg-[#eceadf] px-4 py-6 text-[#171a14] sm:px-6 sm:py-10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -123,11 +128,11 @@ export default function CvPage() {
               <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-[2.6rem]">
                 {profile.name}
               </h1>
-              <p className="mt-1 font-mono text-sm font-medium uppercase tracking-[0.18em] text-[#4f8a1f]">
+              <p className="mt-1 font-mono text-sm font-medium uppercase tracking-[0.18em] text-[#3d7418]">
                 {profile.role}
               </p>
             </div>
-            <span className="hanko grid h-12 w-12 rotate-[-6deg] place-items-center border-2 border-[#d94f43] text-lg text-[#d94f43]">
+            <span className="hanko grid h-12 w-12 rotate-[-6deg] place-items-center border-2 border-[#b8332a] text-lg text-[#b8332a]">
               履
             </span>
           </div>
@@ -151,9 +156,9 @@ export default function CvPage() {
               {experience.map((item, i) => (
                 <li key={item.company} className="grid gap-2 sm:grid-cols-12">
                   <div className="font-mono text-[0.68rem] text-[#5d6154] sm:col-span-3">
-                    <span className="text-[#d94f43]">0{i + 1}</span>
+                    <span className="text-[#b8332a]">0{i + 1}</span>
                     {"current" in item && item.current && (
-                      <span className="ml-2 border border-[#4f8a1f]/40 px-1 py-0.5 text-[0.6rem] uppercase tracking-wider text-[#4f8a1f]">
+                      <span className="ml-2 border border-[#3d7418]/40 px-1 py-0.5 text-[0.6rem] uppercase tracking-wider text-[#3d7418]">
                         current
                       </span>
                     )}
@@ -171,7 +176,7 @@ export default function CvPage() {
                           key={point}
                           className="flex gap-2 text-[0.85rem] leading-relaxed text-[#31352b]"
                         >
-                          <span className="mt-[0.55rem] h-1 w-1 shrink-0 bg-[#4f8a1f]" />
+                          <span className="mt-[0.55rem] h-1 w-1 shrink-0 bg-[#3d7418]" />
                           <span>{point}</span>
                         </li>
                       ))}
@@ -202,7 +207,7 @@ export default function CvPage() {
                       — {p.tagline}
                     </span>
                   </span>
-                  <span className="font-mono text-[0.6rem] uppercase tracking-wider text-[#7b7f6f]">
+                  <span className="font-mono text-[0.6rem] uppercase tracking-wider text-[#5d6154]">
                     {p.tags.join(" · ")}
                   </span>
                 </li>
@@ -215,7 +220,7 @@ export default function CvPage() {
               <dl className="space-y-2">
                 {skillGroups.map((group) => (
                   <div key={group.label}>
-                    <dt className="font-mono text-[0.64rem] font-bold uppercase tracking-[0.16em] text-[#4f8a1f]">
+                    <dt className="font-mono text-[0.64rem] font-bold uppercase tracking-[0.16em] text-[#3d7418]">
                       {group.label}
                     </dt>
                     <dd className="text-[0.85rem] leading-relaxed text-[#31352b]">
@@ -224,7 +229,7 @@ export default function CvPage() {
                   </div>
                 ))}
                 <div>
-                  <dt className="font-mono text-[0.64rem] font-bold uppercase tracking-[0.16em] text-[#4f8a1f]">
+                  <dt className="font-mono text-[0.64rem] font-bold uppercase tracking-[0.16em] text-[#3d7418]">
                     Languages
                   </dt>
                   <dd className="text-[0.85rem] leading-relaxed text-[#31352b]">
@@ -257,10 +262,10 @@ export default function CvPage() {
                     >
                       <span>
                         {c.title}
-                        <span className="text-[#7b7f6f]"> — {c.issuer}</span>
+                        <span className="text-[#5d6154]"> — {c.issuer}</span>
                       </span>
                       {c.verify && (
-                        <span className="shrink-0 font-mono text-[0.58rem] uppercase tracking-wider text-[#4f8a1f]">
+                        <span className="shrink-0 font-mono text-[0.58rem] uppercase tracking-wider text-[#3d7418]">
                           verified
                         </span>
                       )}
@@ -271,7 +276,7 @@ export default function CvPage() {
             </div>
           </div>
 
-          <footer className="mt-8 flex flex-wrap items-center justify-between gap-2 border-t border-[#dedcd0] pt-3 font-mono text-[0.62rem] text-[#7b7f6f]">
+          <footer className="mt-8 flex flex-wrap items-center justify-between gap-2 border-t border-[#dedcd0] pt-3 font-mono text-[0.62rem] text-[#5d6154]">
             <span>Project case files &amp; full write-ups available in the portfolio</span>
             <span style={{ color: INK }}>
               {profile.name} · {profile.role}

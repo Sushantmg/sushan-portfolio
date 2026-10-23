@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
-import { siteUrl } from "@/lib/site";
+import { SITE_URL, siteUrl } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: { userAgent: "*", allow: "/" },
     sitemap: siteUrl("/sitemap.xml"),
-    host: siteUrl("/"),
+    // The Host directive takes a bare hostname, not a URL.
+    host: new URL(SITE_URL).host,
   };
 }

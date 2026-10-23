@@ -410,7 +410,10 @@ export const noteReadTime = (note: Note) =>
 
 /** The most recent entry date, used for "last updated" stamps. */
 export const latestNoteDate = () =>
-  notes.reduce((latest, n) => (n.date > latest ? n.date : latest), notes[0].date);
+  notes.reduce(
+    (latest, n) => (n.date > latest ? n.date : latest),
+    notes[0]?.date ?? new Date().toISOString().slice(0, 10),
+  );
 
 export const normKey = (value: string) =>
   value.toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -427,6 +430,10 @@ export function projectsForCompany(company: string) {
 
 export function projectsUsingSkill(skill: string) {
   return projects.filter(
-    (p) => p.tags.some((t) => sharesName(t, skill)) || sharesName(p.description, skill),
+    (p) =>
+      p.tags.some((t) => sharesName(t, skill)) ||
+      sharesName(p.description, skill) ||
+      // A skill can also be evidenced only in the highlights.
+      p.highlights.some((h) => sharesName(h, skill)),
   );
 }

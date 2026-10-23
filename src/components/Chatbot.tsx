@@ -83,7 +83,7 @@ function CopyMsg({ text }: { text: string }) {
     <button
       onClick={copy}
       aria-label="Copy message"
-      className="font-mono text-[0.58rem] text-muted/50 transition-colors hover:text-acid"
+      className="font-mono text-[0.58rem] text-muted transition-colors hover:text-acid"
     >
       {ok ? "✓ copied" : "[ copy ]"}
     </button>
@@ -125,7 +125,7 @@ function SpeakButton({ text }: { text: string }) {
       aria-label={speaking ? "Stop reading aloud" : "Read aloud"}
       title={speaking ? "stop" : "read aloud"}
       className={`font-mono text-[0.58rem] transition-colors ${
-        speaking ? "text-acid" : "text-muted/50 hover:text-acid"
+        speaking ? "text-acid" : "text-muted hover:text-acid"
       }`}
     >
       {speaking ? "[ stop ]" : "[ hear ]"}
@@ -374,6 +374,9 @@ export function Chatbot() {
   };
 
   return (
+    // The floating chat is a complementary landmark, so assistive technology
+    // can tell it apart from the page content it sits over.
+    <aside aria-label="Chat assistant">
     <>
       <AnimatePresence>
         {!open && hint && (
@@ -584,7 +587,7 @@ export function Chatbot() {
                           </>
                         )}
                         {m.ts && (
-                          <span className="font-mono text-[0.55rem] text-muted/40">
+                          <span className="font-mono text-[0.55rem] text-muted">
                             {timeFmt.format(m.ts)}
                           </span>
                         )}
@@ -665,7 +668,7 @@ export function Chatbot() {
               )}
             </div>
 
-            <div className="flex items-center justify-between gap-2 border-t border-line bg-carbon-2 px-3 pt-2 pb-1 font-mono text-[0.55rem] text-muted/60">
+            <div className="flex items-center justify-between gap-2 border-t border-line bg-carbon-2 px-3 pt-2 pb-1 font-mono text-[0.55rem] text-muted">
               <span>↵ send · ⇧↵ newline</span>
               <span>↑↓ history · ⌘J chat · esc close</span>
             </div>
@@ -716,5 +719,6 @@ export function Chatbot() {
         )}
       </AnimatePresence>
     </>
+    </aside>
   );
 }

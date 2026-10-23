@@ -217,7 +217,7 @@ export function Hero() {
                 <span className="tategaki kanji text-[0.9rem] text-vermilion">
                   一期一会
                 </span>
-                <span className="text-muted/70">
+                <span className="text-muted">
                   every meeting, one chance — let&apos;s make it count
                 </span>
               </p>
@@ -245,7 +245,7 @@ export function Hero() {
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-acid" />
                 open to work · 2026
               </span>
-              <span className="text-muted/60">
+              <span className="text-muted">
                 合 pokhara, nepal <span className="text-acid">/</span> npt
               </span>
             </motion.div>
@@ -330,7 +330,7 @@ export function Hero() {
               <span className="flex items-center gap-2">
                 <span className="h-1 w-1 animate-pulse bg-acid" />
                 <LiveClock timeZone="Asia/Kathmandu" />
-                <span className="text-muted/70">:: NPT</span>
+                <span className="text-muted">:: NPT</span>
               </span>
               <DayProgress />
             </motion.div>
