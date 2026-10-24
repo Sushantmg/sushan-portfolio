@@ -3,6 +3,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { projects, slugify, type Project } from "@/lib/data";
+import { ExternalLink, Github } from "lucide-react";
 import { ProjectModal } from "./ProjectModal";
 import { SectionHeading, StaggerGroup, StaggerItem } from "./Reveal";
 import { TiltCard } from "./TiltCard";
@@ -205,13 +206,41 @@ export function Projects() {
                       ))}
                     </div>
 
-                    <div className="mt-4 flex items-center justify-between border-t border-line pt-3 font-mono text-[0.65rem]">
+                    <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 font-mono text-[0.65rem]">
                       <span className="text-transparent transition-colors duration-300 group-hover:text-acid">
                         詳細
                       </span>
-                      <span className="text-muted transition-colors duration-300 group-hover:text-ink">
-                        click to open case
-                      </span>
+                      <div className="flex items-center gap-3 text-muted">
+                        {"liveUrl" in project && project.liveUrl && (
+                          <a
+                            href={project.liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1.5 transition-colors hover:text-acid"
+                            aria-label={`Open ${project.name} live demo`}
+                          >
+                            <ExternalLink className="h-3 w-3" />
+                            live
+                          </a>
+                        )}
+                        {("repoUrl" in project && project.repoUrl) || ("github" in project && project.github) ? (
+                          <a
+                            href={(project.repoUrl || project.github) as string}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1.5 transition-colors hover:text-acid"
+                            aria-label={`Open ${project.name} GitHub repository`}
+                          >
+                            <Github className="h-3 w-3" />
+                            github
+                          </a>
+                        ) : null}
+                        <span className="transition-colors duration-300 group-hover:text-ink">
+                          case
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </button>

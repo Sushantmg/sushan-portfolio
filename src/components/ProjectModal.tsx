@@ -5,6 +5,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ExternalLink,
+  Github,
   Link2,
   Share2,
   X,
@@ -223,6 +224,28 @@ export function ProjectModal({
                 {slugify(project.name)} · case file
               </span>
               <span className="flex flex-wrap items-center gap-3">
+                {"liveUrl" in project && project.liveUrl && (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-muted transition-colors hover:text-acid"
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                    live
+                  </a>
+                )}
+                {(("repoUrl" in project && project.repoUrl) || ("github" in project && project.github)) && (
+                  <a
+                    href={(project.repoUrl || project.github) as string}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-muted transition-colors hover:text-acid"
+                  >
+                    <Github className="h-3 w-3" />
+                    github
+                  </a>
+                )}
                 <a
                   href={`/case/${slugify(project.name)}`}
                   className="inline-flex items-center gap-1.5 text-muted transition-colors hover:text-acid"

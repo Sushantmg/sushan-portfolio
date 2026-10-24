@@ -66,6 +66,14 @@ export function Footer() {
             rss
           </a>
           <a
+            href="https://github.com/Sushantmg/sushan-portfolio"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-acid"
+          >
+            source
+          </a>
+          <a
             href={profile.github}
             target="_blank"
             rel="noopener noreferrer"

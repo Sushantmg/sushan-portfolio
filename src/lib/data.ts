@@ -116,6 +116,10 @@ export type Project = {
   tags: string[];
   accent: string;
   featured?: boolean;
+  liveUrl?: string;
+  repoUrl?: string;
+  github?: string;
+  demoUrl?: string;
 };
 
 export type Note = {
@@ -202,6 +206,7 @@ export const projects: Project[] = [
     ],
     tags: ["React 19", "Vite", "Context API", "localStorage", "CSS3"],
     accent: "from-orange-500 to-red-500",
+    repoUrl: "https://github.com/Sushantmg",
   },
   {
     name: "ARLY",
@@ -218,6 +223,7 @@ export const projects: Project[] = [
     tags: ["React 19", "TypeScript", "Express.js", "Supabase"],
     accent: "from-violet-500 to-fuchsia-500",
     featured: true,
+    repoUrl: "https://github.com/Sushantmg",
   },
   {
     name: "DocuMind AI",
@@ -232,6 +238,7 @@ export const projects: Project[] = [
     ],
     tags: ["MERN", "RAG", "Vector Search", "JWT"],
     accent: "from-cyan-400 to-blue-600",
+    repoUrl: "https://github.com/Sushantmg",
   },
   {
     name: "MCP Chat & Sampling",
@@ -246,6 +253,7 @@ export const projects: Project[] = [
     ],
     tags: ["Python", "Anthropic API", "MCP"],
     accent: "from-amber-400 to-orange-600",
+    repoUrl: "https://github.com/Sushantmg",
   },
   {
     name: "College Management System",
@@ -260,6 +268,7 @@ export const projects: Project[] = [
     ],
     tags: ["TypeScript", "Prisma", "AI Chat"],
     accent: "from-emerald-400 to-teal-600",
+    repoUrl: "https://github.com/Sushantmg",
   },
   {
     name: "FitGurkha",
@@ -274,6 +283,8 @@ export const projects: Project[] = [
     ],
     tags: ["Next.js", "TypeScript", "Tailwind"],
     accent: "from-rose-400 to-red-600",
+    liveUrl: "https://fitgurkha.vercel.app",
+    repoUrl: "https://github.com/Sushantmg",
   },
   {
     name: "Hamro Mart",
@@ -288,6 +299,8 @@ export const projects: Project[] = [
     ],
     tags: ["Next.js", "E-Commerce", "Tailwind"],
     accent: "from-lime-400 to-green-600",
+    liveUrl: "https://hamromart.vercel.app",
+    repoUrl: "https://github.com/Sushantmg",
   },
 ];
 

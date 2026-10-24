@@ -257,9 +257,32 @@ export default async function CasePage({
           </section>
         )}
 
+        <div className="mt-10 flex flex-wrap items-center gap-3">
+          {(project.liveUrl || (project as Project & { demoUrl?: string }).demoUrl) && (
+            <a
+              href={(project.liveUrl || (project as Project & { demoUrl?: string }).demoUrl) as string}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hard-shadow-sm border border-line bg-carbon-2 px-4 py-2 font-mono text-xs text-ink transition-transform duration-200 hover:-translate-y-0.5 hover:text-acid"
+            >
+              live demo
+            </a>
+          )}
+          {(project.repoUrl || project.github || (project as Project & { repo?: string }).repo) && (
+            <a
+              href={(project.repoUrl || project.github || (project as Project & { repo?: string }).repo) as string}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hard-shadow-sm border border-line bg-carbon-2 px-4 py-2 font-mono text-xs text-ink transition-transform duration-200 hover:-translate-y-0.5 hover:text-acid"
+            >
+              github
+            </a>
+          )}
+        </div>
+
         <nav
           aria-label="Case navigation"
-          className="mt-16 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6"
+          className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6"
         >
           <Link
             href={`/case/${projectSlug(projects[(index - 1 + projects.length) % projects.length].name)}`}
