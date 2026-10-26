@@ -5,11 +5,11 @@ import {
   ChevronLeft,
   ChevronRight,
   ExternalLink,
-  Github,
   Link2,
   Share2,
   X,
 } from "lucide-react";
+import { GitHubIcon } from "./BrandIcons";
 import { useEffect, useRef, useState } from "react";
 import { slugify, type Project } from "@/lib/data";
 import { useFocusTrap } from "@/lib/useFocusTrap";
@@ -242,7 +242,7 @@ export function ProjectModal({
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-muted transition-colors hover:text-acid"
                   >
-                    <Github className="h-3 w-3" />
+                    <GitHubIcon className="h-3 w-3" />
                     github
                   </a>
                 )}

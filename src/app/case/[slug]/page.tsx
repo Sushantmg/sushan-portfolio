@@ -8,6 +8,7 @@ import {
   projectBySlug,
   projectSlug,
   slugify,
+  type Project,
 } from "@/lib/data";
 import { siteUrl, RSS_ALTERNATE } from "@/lib/site";
 import { CaseActions } from "./CaseActions";

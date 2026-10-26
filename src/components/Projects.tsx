@@ -3,7 +3,8 @@
 import { ArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { projects, slugify, type Project } from "@/lib/data";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import { GitHubIcon } from "./BrandIcons";
 import { ProjectModal } from "./ProjectModal";
 import { SectionHeading, StaggerGroup, StaggerItem } from "./Reveal";
 import { TiltCard } from "./TiltCard";
@@ -233,7 +234,7 @@ export function Projects() {
                             className="inline-flex items-center gap-1.5 transition-colors hover:text-acid"
                             aria-label={`Open ${project.name} GitHub repository`}
                           >
-                            <Github className="h-3 w-3" />
+                            <GitHubIcon className="h-3 w-3" />
                             github
                           </a>
                         ) : null}
