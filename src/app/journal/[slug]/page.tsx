@@ -96,7 +96,7 @@ export default async function JournalPostPage({
             "@type": "ListItem",
             position: 2,
             name: "Journal",
-            item: siteUrl("/#journal"),
+            item: siteUrl("/journal"),
           },
           {
             "@type": "ListItem",
@@ -134,7 +134,7 @@ export default async function JournalPostPage({
             </span>
           </Link>
           <Link
-            href="/#journal"
+            href="/journal"
             className="inline-flex items-center gap-2 border border-line px-3 py-2 font-mono text-[0.68rem] text-muted transition-colors hover:border-acid hover:text-acid"
           >
             <ArrowLeft className="h-3 w-3" /> all notes
@@ -148,7 +148,7 @@ export default async function JournalPostPage({
             home
           </Link>
           <span aria-hidden>/</span>
-          <Link href="/#journal" className="transition-colors hover:text-acid">
+          <Link href="/journal" className="transition-colors hover:text-acid">
             journal
           </Link>
         </nav>

@@ -26,6 +26,7 @@ résumé, an in-page knowledge bot, and a keyboard-first command palette.
 | `/` | static | The one-pager — hero, about, experience, skills, projects, journal, education, contact |
 | `/case/[slug]` | SSG | One page per project (7). Also reachable as `#case/<slug>`, which opens the in-page modal |
 | `/journal/[slug]` | SSG | One page per build-log entry (4) |
+| `/journal` | static | Index of every journal entry, with topics and reading times |
 | `/cv` | static | Print-ready résumé — "save as PDF" in the toolbar |
 | `/feed.xml` | dynamic | RSS feed of the journal, one `<link>` per post |
 | `/sitemap.xml`, `/robots.txt`, `/manifest.webmanifest` | dynamic | Generated from the same data as the pages |

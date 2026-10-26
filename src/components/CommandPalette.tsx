@@ -32,6 +32,7 @@ const navActions: Action[] = [
   { id: "projects", label: "Projects", hint: "live work", kind: "nav", href: "#projects" },
   { id: "education", label: "Education", hint: "certs & degrees", kind: "nav", href: "#education" },
   { id: "journal", label: "Journal", hint: "field notes / build log", kind: "nav", href: "#journal" },
+  { id: "journal-index", label: "All journal entries", hint: "every field note", kind: "open", href: "/journal" },
   { id: "contact", label: "Contact", hint: "hire / reach out", kind: "nav", href: "#contact" },
   { id: "top", label: "Back to top", hint: "scroll to hero", kind: "nav", href: "#top" },
 ];
@@ -161,7 +162,11 @@ export function CommandPalette() {
         window.dispatchEvent(new CustomEvent("sushan:ask", { detail: "hi" }));
       }
     } else if (action.kind === "open" && action.href) {
-      window.open(action.href, "_blank", "noopener,noreferrer");
+      if (action.href.startsWith("/")) {
+        window.location.href = action.href;
+      } else {
+        window.open(action.href, "_blank", "noopener,noreferrer");
+      }
     }
     setOpen(false);
     setQuery("");

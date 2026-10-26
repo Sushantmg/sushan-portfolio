@@ -1,4 +1,4 @@
-import { Mail, MapPin, Phone } from "lucide-react";
+import { FileText, Mail, MapPin, Phone } from "lucide-react";
 import { profile } from "@/lib/data";
 import { ContactForm } from "./ContactForm";
 import { CopyEmail } from "./CopyEmail";
@@ -27,16 +27,16 @@ export function Contact() {
             />
 
             <Reveal>
-<span className="flex flex-wrap items-center">
-  <a
-    href={`mailto:${profile.email}`}
-    className="font-display group inline-block text-2xl font-semibold text-ink underline decoration-acid decoration-2 underline-offset-8 transition-colors duration-300 hover:text-acid sm:text-2xl"
-  >
-    {profile.email}
-  </a>
-  <CopyEmail email={profile.email} />
-  <PrintCv />
-</span>
+              <span className="flex flex-wrap items-center gap-2">
+                <a
+                  href={`mailto:${profile.email}`}
+                  className="font-display group inline-block text-2xl font-semibold text-ink underline decoration-acid decoration-2 underline-offset-8 transition-colors duration-300 hover:text-acid sm:text-2xl"
+                >
+                  {profile.email}
+                </a>
+                <CopyEmail email={profile.email} />
+                <PrintCv />
+              </span>
             </Reveal>
 
             <Reveal delay={0.1}>
@@ -66,16 +66,24 @@ export function Contact() {
                 </p>
                 <div className="grid gap-px bg-line sm:grid-cols-2">
                   {[
-                    { label: "GitHub", icon: GitHubIcon, href: profile.github },
-                    { label: "LinkedIn", icon: LinkedInIcon, href: profile.linkedin },
+                    { label: "GitHub", icon: GitHubIcon, href: profile.github, external: true },
+                    { label: "LinkedIn", icon: LinkedInIcon, href: profile.linkedin, external: true },
+                    { label: "Source", icon: GitHubIcon, href: "https://github.com/Sushantmg/sushan-portfolio", external: true },
                     { label: "Email", icon: Mail, href: `mailto:${profile.email}` },
                     { label: "Call", icon: Phone, href: `tel:${profile.phone.replace(/\s/g, "")}` },
+                    { label: "Résumé", icon: FileText, href: "/cv" },
                   ].map((link) => (
                     <a
                       key={link.label}
                       href={link.href}
                       target={link.href.startsWith("http") ? "_blank" : undefined}
-                      rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                      rel={
+                        link.href.startsWith("http")
+                          ? link.label === "GitHub" || link.label === "LinkedIn"
+                            ? "me noopener noreferrer"
+                            : "noopener noreferrer"
+                          : undefined
+                      }
                       className="group flex flex-col items-center justify-center gap-3 bg-carbon p-5 transition-colors duration-300 hover:bg-carbon-2"
                     >
                       <link.icon className="h-6 w-6 text-muted transition-colors duration-300 group-hover:text-acid" />

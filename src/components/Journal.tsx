@@ -107,9 +107,24 @@ export function Journal() {
         </div>
 
         <Reveal delay={0.15}>
-          <p className="mt-6 font-mono text-[0.7rem] text-muted">
-            <span className="text-acid">note:</span> more entries coming — this
-            log is written between builds.
+          <p className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[0.7rem] text-muted">
+            <span>
+              <span className="text-acid">note:</span> more entries coming —
+              this log is written between builds.
+            </span>
+            <Link
+              href="/journal"
+              className="inline-flex items-center gap-1 text-acid underline underline-offset-2 transition-colors hover:text-ink"
+            >
+              all entries
+              <ArrowUpRight className="h-3 w-3" />
+            </Link>
+            <a
+              href="/feed.xml"
+              className="inline-flex items-center gap-1 text-acid underline underline-offset-2 transition-colors hover:text-ink"
+            >
+              rss
+            </a>
           </p>
         </Reveal>
       </div>

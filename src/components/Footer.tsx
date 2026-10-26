@@ -58,6 +58,9 @@ export function Footer() {
           <Link href="/cv" className="transition-colors hover:text-acid">
             résumé
           </Link>
+          <Link href="/journal" className="transition-colors hover:text-acid">
+            journal
+          </Link>
           <a
             href="/feed.xml"
             type="application/rss+xml"
