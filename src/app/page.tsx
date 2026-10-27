@@ -110,6 +110,13 @@ export default function Home() {
           keywords: project.tags.join(", "),
           author: person,
           ...(programmingLanguage.length > 0 ? { programmingLanguage } : {}),
+          ...(project.repoUrl || project.liveUrl
+            ? {
+                sameAs: [project.repoUrl, project.liveUrl].filter(
+                  (value): value is string => Boolean(value),
+                ),
+              }
+            : {}),
         };
       }),
       ...notes.map((note) => ({

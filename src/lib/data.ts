@@ -206,7 +206,8 @@ export const projects: Project[] = [
     ],
     tags: ["React 19", "Vite", "Context API", "localStorage", "CSS3"],
     accent: "from-orange-500 to-red-500",
-    repoUrl: "https://github.com/Sushantmg",
+    liveUrl: "https://foodie-seven-indol.vercel.app",
+    repoUrl: "https://github.com/Sushantmg/Foodie",
   },
   {
     name: "ARLY",
@@ -223,7 +224,7 @@ export const projects: Project[] = [
     tags: ["React 19", "TypeScript", "Express.js", "Supabase"],
     accent: "from-violet-500 to-fuchsia-500",
     featured: true,
-    repoUrl: "https://github.com/Sushantmg",
+    repoUrl: "https://github.com/Sushantmg/ARLY",
   },
   {
     name: "DocuMind AI",
@@ -238,7 +239,6 @@ export const projects: Project[] = [
     ],
     tags: ["MERN", "RAG", "Vector Search", "JWT"],
     accent: "from-cyan-400 to-blue-600",
-    repoUrl: "https://github.com/Sushantmg",
   },
   {
     name: "MCP Chat & Sampling",
@@ -253,7 +253,7 @@ export const projects: Project[] = [
     ],
     tags: ["Python", "Anthropic API", "MCP"],
     accent: "from-amber-400 to-orange-600",
-    repoUrl: "https://github.com/Sushantmg",
+    repoUrl: "https://github.com/Sushantmg/MCP-",
   },
   {
     name: "College Management System",
@@ -268,7 +268,7 @@ export const projects: Project[] = [
     ],
     tags: ["TypeScript", "Prisma", "AI Chat"],
     accent: "from-emerald-400 to-teal-600",
-    repoUrl: "https://github.com/Sushantmg",
+    repoUrl: "https://github.com/Sushantmg/college-management-system",
   },
   {
     name: "FitGurkha",
@@ -283,8 +283,8 @@ export const projects: Project[] = [
     ],
     tags: ["Next.js", "TypeScript", "Tailwind"],
     accent: "from-rose-400 to-red-600",
-    liveUrl: "https://fitgurkha.vercel.app",
-    repoUrl: "https://github.com/Sushantmg",
+    liveUrl: "https://fitgurkha-fitness.vercel.app",
+    repoUrl: "https://github.com/Sushantmg/fitgurkha",
   },
   {
     name: "Hamro Mart",
@@ -299,8 +299,8 @@ export const projects: Project[] = [
     ],
     tags: ["Next.js", "E-Commerce", "Tailwind"],
     accent: "from-lime-400 to-green-600",
-    liveUrl: "https://hamromart.vercel.app",
-    repoUrl: "https://github.com/Sushantmg",
+    liveUrl: "https://hamro-mart.vercel.app",
+    repoUrl: "https://github.com/Sushantmg/hamro-mart",
   },
 ];
 
@@ -439,6 +439,55 @@ const sharesName = (a: string, b: string) => {
 
 export function projectsForCompany(company: string) {
   return projects.filter((p) => sharesName(company, p.name));
+}
+
+/** Whole-word, case-insensitive match — avoids "ARLY" matching "particularly". */
+const mentionsTerm = (needle: string, haystack: string) => {
+  const term = needle.trim().toLowerCase();
+  if (term.length < 3) return false;
+  const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`, "i").test(
+    haystack,
+  );
+};
+
+/** Two labels that refer to the same thing, allowing "React" ↔ "React 19". */
+const sameTerm = (a: string, b: string) =>
+  a.trim().toLowerCase() === b.trim().toLowerCase() ||
+  mentionsTerm(a, b) ||
+  mentionsTerm(b, a);
+
+/**
+ * How strongly a journal entry is about a project. Naming the project is
+ * decisive; shared tags only count when there are at least two, because a
+ * lone "TypeScript" tag would otherwise link the whole site together.
+ */
+const projectNoteScore = (project: Project, note: Note) => {
+  const tagHits = note.tags.filter((t) =>
+    project.tags.some((pt) => sameTerm(pt, t)),
+  ).length;
+  const mentionsName =
+    mentionsTerm(project.name, note.excerpt) ||
+    note.body.some((p) => mentionsTerm(project.name, p));
+  return tagHits + (mentionsName ? 3 : 0);
+};
+
+/** Journal entries that touch a project — used to cross-link case files. */
+export function notesForProject(project: Project) {
+  return notes
+    .map((note) => ({ note, score: projectNoteScore(project, note) }))
+    .filter(({ score }) => score >= 2)
+    .sort((a, b) => b.score - a.score)
+    .map(({ note }) => note);
+}
+
+/** Projects a journal entry is about — the reverse of notesForProject. */
+export function projectsForNote(note: Note) {
+  return projects
+    .map((project) => ({ project, score: projectNoteScore(project, note) }))
+    .filter(({ score }) => score >= 2)
+    .sort((a, b) => b.score - a.score)
+    .map(({ project }) => project);
 }
 
 export function projectsUsingSkill(skill: string) {

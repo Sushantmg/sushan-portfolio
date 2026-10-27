@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Kamon } from "@/components/Kamon";
 import { ReadingProgress } from "@/components/ReadingProgress";
+import { ShareActions } from "@/components/ShareActions";
 import {
   notes,
   noteBySlug,
   noteReadTime,
   noteSlug,
+  projectsForNote,
+  projectSlug,
   slugify,
 } from "@/lib/data";
 import { siteUrl, RSS_ALTERNATE } from "@/lib/site";
@@ -64,6 +67,7 @@ export default async function JournalPostPage({
     position < ordered.length - 1 ? ordered[position + 1] : undefined;
 
   const url = siteUrl(`/journal/${slug}`);
+  const relatedProjects = projectsForNote(note);
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -178,6 +182,14 @@ export default async function JournalPostPage({
           </span>
         </div>
 
+        <div className="mt-5">
+          <ShareActions
+            title={`${note.title} · Sushan Tamang`}
+            text={note.excerpt}
+            url={url}
+          />
+        </div>
+
         <p className="font-display mt-10 border-l-2 border-acid pl-5 text-xl font-light italic leading-snug text-muted">
           {note.excerpt}
         </p>
@@ -223,6 +235,35 @@ export default async function JournalPostPage({
               </Link>
             )}
           </nav>
+        )}
+
+        {relatedProjects.length > 0 && (
+          <section className="mt-14">
+            <div className="flex items-center gap-3">
+              <span className="label text-acid">/ related builds</span>
+              <span className="h-px flex-1 bg-line" />
+            </div>
+            <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+              {relatedProjects.slice(0, 4).map((project) => (
+                <li key={project.name}>
+                  <Link
+                    href={`/case/${projectSlug(project.name)}`}
+                    className="group flex h-full flex-col border border-line bg-carbon-2 p-4 transition-colors duration-300 hover:border-acid"
+                  >
+                    <span className="font-display text-lg font-semibold text-ink transition-colors group-hover:text-acid">
+                      {project.name}
+                    </span>
+                    <span className="label mt-1 text-muted">
+                      {project.tagline}
+                    </span>
+                    <span className="mt-3 inline-flex items-center gap-1 font-mono text-[0.62rem] text-muted transition-colors group-hover:text-acid">
+                      open case <ArrowUpRight className="h-3 w-3" />
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
 
         <p className="mt-10 font-mono text-[0.7rem] text-muted">

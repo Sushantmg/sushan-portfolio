@@ -4,6 +4,9 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Kamon } from "@/components/Kamon";
 import {
+  notesForProject,
+  noteReadTime,
+  noteSlug,
   projects,
   projectBySlug,
   projectSlug,
@@ -72,6 +75,7 @@ export default async function CasePage({
 
   const url = siteUrl(`/case/${slug}`);
   const programmingLanguage = project.tags.filter((tag) => LANGUAGES.has(tag));
+  const relatedNotes = notesForProject(project);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -91,6 +95,13 @@ export default async function CasePage({
           url: siteUrl("/"),
         },
         ...(programmingLanguage.length > 0 ? { programmingLanguage } : {}),
+        ...(project.repoUrl || project.liveUrl
+          ? {
+              sameAs: [project.repoUrl, project.liveUrl].filter(
+                (value): value is string => Boolean(value),
+              ),
+            }
+          : {}),
       },
       {
         "@type": "BreadcrumbList",
@@ -230,6 +241,38 @@ export default async function CasePage({
             ))}
           </div>
         </section>
+
+        {relatedNotes.length > 0 && (
+          <section className="mt-14">
+            <div className="flex items-center gap-3">
+              <span className="label text-acid">/ field notes</span>
+              <span className="h-px flex-1 bg-line" />
+            </div>
+            <ul className="mt-5 space-y-3">
+              {relatedNotes.slice(0, 3).map((note) => (
+                <li key={note.title}>
+                  <Link
+                    href={`/journal/${noteSlug(note.title)}`}
+                    className="group flex flex-wrap items-baseline gap-x-3 gap-y-1 border border-line bg-carbon-2 p-4 transition-colors duration-300 hover:border-acid"
+                  >
+                    <time
+                      dateTime={note.date}
+                      className="font-mono text-[0.65rem] text-acid"
+                    >
+                      {note.date}
+                    </time>
+                    <span className="font-display text-base font-semibold text-ink transition-colors group-hover:text-acid">
+                      {note.title}
+                    </span>
+                    <span className="ml-auto font-mono text-[0.62rem] text-muted">
+                      {noteReadTime(note)} min read
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {related.length > 0 && (
           <section className="mt-16">
