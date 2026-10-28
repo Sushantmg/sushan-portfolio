@@ -31,12 +31,27 @@ import {
   roles,
   skillGroups,
 } from "@/lib/data";
-import { RSS_ALTERNATE, siteUrl } from "@/lib/site";
+import { OG_IMAGE, RSS_ALTERNATE, siteUrl } from "@/lib/site";
 
 const LANGUAGES = new Set(["TypeScript", "Python", "JavaScript"]);
 
 export const metadata = {
   alternates: { canonical: "/", ...RSS_ALTERNATE },
+  openGraph: {
+    title: "Sushan Tamang — Full-Stack & AI Developer",
+    description:
+      "Portfolio of Sushan Tamang — building production-grade AI-powered applications, scalable web platforms, and multi-service architectures.",
+    url: "/",
+    type: "website",
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sushan Tamang — Full-Stack & AI Developer",
+    description:
+      "Portfolio of Sushan Tamang — building production-grade AI-powered applications, scalable web platforms, and multi-service architectures.",
+    images: [OG_IMAGE],
+  },
 };
 
 export default function Home() {
