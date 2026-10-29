@@ -71,7 +71,7 @@ export function Footer() {
           <a
             href="https://github.com/Sushantmg/sushan-portfolio"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="me noopener noreferrer"
             className="transition-colors hover:text-acid"
           >
             source
@@ -79,7 +79,7 @@ export function Footer() {
           <a
             href={profile.github}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="me noopener noreferrer"
             className="transition-colors hover:text-acid"
           >
             github
@@ -87,7 +87,7 @@ export function Footer() {
           <a
             href={profile.linkedin}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="me noopener noreferrer"
             className="transition-colors hover:text-acid"
           >
             linkedin

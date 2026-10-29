@@ -40,6 +40,12 @@ export default function NotFound() {
         >
           see work
         </Link>
+        <Link
+          href="/journal"
+          className="inline-flex items-center gap-2 border border-line bg-carbon-2 px-6 py-3 text-sm font-semibold text-ink transition-colors duration-200 hover:border-acid hover:text-acid"
+        >
+          field notes
+        </Link>
       </div>
     </main>
   );

@@ -34,6 +34,7 @@ export const metadata: Metadata = {
     "AI Developer",
     "Next.js",
     "React",
+    "TypeScript",
     "MERN",
     "RAG",
     "MCP",
@@ -43,6 +44,7 @@ export const metadata: Metadata = {
   ],
   creator: "Sushan Tamang",
   authors: [{ name: "Sushan Tamang", url: "https://github.com/Sushantmg" }],
+  category: "technology",
   // `canonical` is declared per route — a root-level canonical would leak onto
   // every child page. The RSS alternate applies site-wide.
   alternates: {
@@ -64,6 +66,16 @@ export const metadata: Metadata = {
       "Building production-grade AI-powered applications, scalable web platforms, and multi-service architectures.",
   },
   robots: { index: true, follow: true },
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icons/icon-192.png",
+    shortcut: "/icon.svg",
+  },
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
 };
 
 export const viewport: Viewport = {
@@ -71,6 +83,7 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: light)", color: "#10120f" },
     { media: "(prefers-color-scheme: dark)", color: "#10120f" },
   ],
+  colorScheme: "dark",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -78,6 +91,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={`${geistSans.variable} ${fraunces.variable} ${ibmPlexMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full bg-[#10120f] text-[#ECE9DE]">
         {children}
