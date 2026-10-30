@@ -10,37 +10,47 @@ import { siteUrl } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const latest = latestNoteDate();
+  const now = new Date();
 
   return [
     {
       url: siteUrl("/"),
-      lastModified: new Date(`${latest}T09:00:00Z`),
+      lastModified: now,
       changeFrequency: "weekly",
       priority: 1,
     },
     {
-      url: siteUrl("/cv"),
-      lastModified: new Date(`${latest}T09:00:00Z`),
-      changeFrequency: "monthly",
-      priority: 0.8,
+      url: siteUrl("/journal"),
+      lastModified: latest ? new Date(`${latest}T09:00:00Z`) : now,
+      changeFrequency: "weekly",
+      priority: 0.9,
     },
     {
-      url: siteUrl("/journal"),
-      lastModified: new Date(`${latest}T09:00:00Z`),
+      url: siteUrl("/cv"),
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: siteUrl("/feed.xml"),
+      lastModified: latest ? new Date(`${latest}T09:00:00Z`) : now,
       changeFrequency: "weekly",
-      priority: 0.8,
+      priority: 0.5,
     },
     ...projects.map((p) => ({
       url: siteUrl(`/case/${projectSlug(p.name)}`),
-      lastModified: new Date(`${latest}T09:00:00Z`),
+      lastModified: now,
       changeFrequency: "monthly" as const,
-      priority: 0.7,
+      priority: 0.8,
     })),
-    ...notes.map((n) => ({
-      url: siteUrl(`/journal/${noteSlug(n.title)}`),
-      lastModified: new Date(`${n.date}T09:00:00Z`),
-      changeFrequency: "yearly" as const,
-      priority: 0.6,
-    })),
+    ...notes.map((n) => {
+      const d = new Date(`${n.date}T09:00:00Z`);
+      return {
+        url: siteUrl(`/journal/${noteSlug(n.title)}`),
+        lastModified: Number.isNaN(d.getTime()) ? now : d,
+        changeFrequency: "monthly" as const,
+        priority: 0.8,
+      };
+    }),
   ];
 }

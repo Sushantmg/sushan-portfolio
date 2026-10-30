@@ -73,13 +73,16 @@ export default async function JournalPostPage({
     "@graph": [
       {
         "@type": "BlogPosting",
+        "@id": `${url}#article`,
         headline: note.title,
         description: note.excerpt,
         datePublished: note.date,
         dateModified: note.date,
         url,
         keywords: note.tags.join(", "),
-        wordCount: note.body.join(" ").trim().split(/\s+/).length,
+        wordCount: note.body.join(" ").trim().split(/\s+/).filter(Boolean).length,
+        timeRequired: `PT${noteReadTime(note)}M`,
+        isPartOf: { "@type": "Blog", "@id": siteUrl("/journal#blog") },
         author: {
           "@type": "Person",
           name: "Sushan Tamang",

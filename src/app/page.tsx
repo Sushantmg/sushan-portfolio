@@ -109,6 +109,7 @@ export default function Home() {
         description: profile.summary,
         mainEntity: person,
         isPartOf: { "@type": "WebSite", url: siteUrl("/") },
+        inLanguage: "en",
       },
       ...projects.map((project) => {
         const programmingLanguage = project.tags.filter((tag) =>

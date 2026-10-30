@@ -55,6 +55,7 @@ export default function JournalIndexPage() {
     "@graph": [
       {
         "@type": "Blog",
+        "@id": siteUrl("/journal#blog"),
         name: "Journal · Sushan Tamang",
         description:
           "Field notes and build logs on AI systems, retrieval, and full-stack engineering.",

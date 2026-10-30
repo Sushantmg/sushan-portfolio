@@ -77,16 +77,18 @@ export default async function CasePage({
   const programmingLanguage = project.tags.filter((tag) => LANGUAGES.has(tag));
   const relatedNotes = notesForProject(project);
 
+  const sameAs = [project.repoUrl, project.liveUrl].filter(
+    (value): value is string => Boolean(value),
+  );
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "SoftwareApplication",
+        "@type": "SoftwareSourceCode",
+        "@id": `${url}#software`,
         name: project.name,
         headline: project.tagline,
         description: project.description,
-        applicationCategory: "BusinessApplication",
-        operatingSystem: "Web",
         url,
         keywords: project.tags.join(", "),
         author: {
@@ -95,13 +97,16 @@ export default async function CasePage({
           url: siteUrl("/"),
         },
         ...(programmingLanguage.length > 0 ? { programmingLanguage } : {}),
-        ...(project.repoUrl || project.liveUrl
-          ? {
-              sameAs: [project.repoUrl, project.liveUrl].filter(
-                (value): value is string => Boolean(value),
-              ),
-            }
-          : {}),
+        ...(project.repoUrl ? { codeRepository: project.repoUrl } : {}),
+        ...(sameAs.length > 0 ? { sameAs } : {}),
+      },
+      {
+        "@type": "CreativeWork",
+        "@id": `${url}#case-study`,
+        name: `${project.name} — case study`,
+        about: project.name,
+        url,
+        author: { "@type": "Person", name: "Sushan Tamang", url: siteUrl("/") },
       },
       {
         "@type": "BreadcrumbList",
