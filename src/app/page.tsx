@@ -37,6 +37,7 @@ const LANGUAGES = new Set(["TypeScript", "Python", "JavaScript"]);
 
 export const metadata = {
   alternates: { canonical: "/", ...RSS_ALTERNATE },
+  robots: { index: true, follow: true },
   openGraph: {
     title: "Sushan Tamang — Full-Stack & AI Developer",
     description:

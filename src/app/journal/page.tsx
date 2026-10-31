@@ -33,6 +33,7 @@ export const metadata: Metadata = {
   title: "Journal",
   description:
     "Field notes and build logs from Sushan Tamang — shipping LLM pipelines, MCP tooling, retrieval systems, and production web platforms.",
+  robots: { index: true, follow: true },
   alternates: { canonical: "/journal", ...RSS_ALTERNATE },
   openGraph: {
     title: "Journal · Sushan Tamang",
