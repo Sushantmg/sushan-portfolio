@@ -37,6 +37,7 @@ export async function generateMetadata({
   return {
     title,
     description,
+    robots: { index: true, follow: true },
     alternates: { canonical: `/case/${slug}`, ...RSS_ALTERNATE },
     openGraph: {
       title: `${project.name} · Sushan Tamang`,

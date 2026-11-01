@@ -35,6 +35,7 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     images: SOCIAL_IMAGE.map((i) => i.url),
   },
+  robots: { index: true, follow: true },
 };
 
 const jsonLd = {
