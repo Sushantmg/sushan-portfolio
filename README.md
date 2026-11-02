@@ -18,6 +18,7 @@ résumé, an in-page knowledge bot, and a keyboard-first command palette.
 | Motion | Framer Motion, Lenis (smooth scroll) |
 | Icons | lucide-react, react-icons |
 | Language | TypeScript (strict) |
+| SEO | JSON-LD, OpenGraph, Twitter Cards, Sitemap, RSS, robots |
 
 ## Routes
 
@@ -70,5 +71,6 @@ project or a journal entry is a single edit.
 - The chat transcript is a live region, muted while text streams in so replies
   are announced once rather than on every frame.
 - Canonicals, OpenGraph, and JSON-LD point at the live site — never the repo.
-- `SoftwareApplication`, `BlogPosting`, `Person`, `ProfilePage`, and
-  `BreadcrumbList` structured data is emitted per page.
+- `SoftwareSourceCode`, `CreativeWork`, `BlogPosting`, `Person`, `ProfilePage`,
+  `Blog`, and `BreadcrumbList` structured data is emitted per page.
+- Security headers and static asset caching configured via `next.config.ts`.
