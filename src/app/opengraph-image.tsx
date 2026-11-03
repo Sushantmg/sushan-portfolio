@@ -71,8 +71,8 @@ export default async function OpengraphImage() {
               lineHeight: 1.4,
             }}
           >
-            AI systems, RAG pipelines, MCP tooling, and full-stack platforms
-            built end to end.
+            Production-grade AI systems, RAG pipelines, MCP agents, and
+            full-stack platforms built end to end in Pokhara, Nepal.
           </div>
         </div>
 
