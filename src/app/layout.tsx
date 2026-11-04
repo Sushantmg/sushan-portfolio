@@ -23,11 +23,11 @@ const ibmPlexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Sushan Tamang — Full-Stack & AI Developer",
+    default: "Sushan Tamang — Full-Stack & AI Developer | RAG, MCP & Next.js",
     template: "%s · Sushan Tamang",
   },
   description:
-    "Portfolio of Sushan Tamang — software engineering student and full-stack developer building production-grade AI-powered applications, scalable web platforms, and multi-service architectures.",
+    "Portfolio of Sushan Tamang — full-stack & AI developer in Pokhara, Nepal building production-grade AI-powered apps, RAG pipelines, MCP agents, and scalable Next.js platforms.",
   keywords: [
     "Sushan Tamang",
     "Full-Stack Developer",

@@ -32,13 +32,13 @@ const formatDate = (date: string) =>
 export const metadata: Metadata = {
   title: "Journal",
   description:
-    "Field notes and build logs from Sushan Tamang — shipping LLM pipelines, MCP tooling, retrieval systems, and production web platforms.",
+    "Field notes and build logs from Sushan Tamang — shipping RAG pipelines, MCP tooling, AI agents, and production Next.js web platforms.",
   robots: { index: true, follow: true },
   alternates: { canonical: "/journal", ...RSS_ALTERNATE },
   openGraph: {
     title: "Journal · Sushan Tamang",
     description:
-      "Field notes and build logs — what actually broke, what I changed, and what I would do differently.",
+      "Field notes and build logs on AI, RAG, MCP, and full-stack engineering — what broke, what I changed, and what I learned.",
     url: "/journal",
     type: "website",
   },
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Journal · Sushan Tamang",
     description:
-      "Field notes and build logs — what actually broke, what I changed, and what I would do differently.",
+      "Field notes and build logs on AI, RAG, MCP, and full-stack engineering — what broke, what I changed, and what I learned.",
   },
 };
 

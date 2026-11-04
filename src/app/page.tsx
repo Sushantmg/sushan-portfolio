@@ -39,18 +39,18 @@ export const metadata = {
   alternates: { canonical: "/", ...RSS_ALTERNATE },
   robots: { index: true, follow: true },
   openGraph: {
-    title: "Sushan Tamang — Full-Stack & AI Developer",
+    title: "Sushan Tamang — Full-Stack & AI Developer | RAG, MCP & Next.js",
     description:
-      "Portfolio of Sushan Tamang — building production-grade AI-powered applications, scalable web platforms, and multi-service architectures.",
+      "Full-stack & AI developer in Pokhara, Nepal building production-grade AI apps, RAG pipelines, MCP agents, and scalable Next.js platforms.",
     url: "/",
     type: "website",
     images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sushan Tamang — Full-Stack & AI Developer",
+    title: "Sushan Tamang — Full-Stack & AI Developer | RAG, MCP & Next.js",
     description:
-      "Portfolio of Sushan Tamang — building production-grade AI-powered applications, scalable web platforms, and multi-service architectures.",
+      "Full-stack & AI developer in Pokhara, Nepal building production-grade AI apps, RAG pipelines, MCP agents, and scalable Next.js platforms.",
     images: [OG_IMAGE],
   },
 };
