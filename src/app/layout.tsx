@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist, IBM_Plex_Mono } from "next/font/google";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, SOCIAL_IMAGE } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -45,10 +45,17 @@ export const metadata: Metadata = {
   creator: "Sushan Tamang",
   authors: [{ name: "Sushan Tamang", url: "https://github.com/Sushantmg" }],
   category: "technology",
+  applicationName: "Sushan Tamang Portfolio",
+  referrer: "origin-when-cross-origin",
   // `canonical` is declared per route — a root-level canonical would leak onto
   // every child page. The RSS alternate applies site-wide.
   alternates: {
     types: { "application/rss+xml": "/feed.xml" },
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Sushan Tamang",
+    statusBarStyle: "black-translucent",
   },
   openGraph: {
     title: "Sushan Tamang — Full-Stack & AI Developer",
@@ -58,12 +65,14 @@ export const metadata: Metadata = {
     url: "/",
     siteName: "Sushan Tamang",
     locale: "en_US",
+    images: SOCIAL_IMAGE,
   },
   twitter: {
     card: "summary_large_image",
     title: "Sushan Tamang — Full-Stack & AI Developer",
     description:
       "Building production-grade AI-powered applications, scalable web platforms, and multi-service architectures.",
+    images: ["/twitter-image"],
   },
   robots: { index: true, follow: true },
   icons: {
@@ -80,7 +89,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#10120f" },
+    { media: "(prefers-color-scheme: light)", color: "#ece9de" },
     { media: "(prefers-color-scheme: dark)", color: "#10120f" },
   ],
   colorScheme: "dark",

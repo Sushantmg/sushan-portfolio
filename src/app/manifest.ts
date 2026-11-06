@@ -13,6 +13,13 @@ export default function manifest(): MetadataRoute.Manifest {
     background_color: "#10120f",
     theme_color: "#10120f",
     categories: ["portfolio", "developer", "productivity"],
+    dir: "ltr",
+    lang: "en",
+    shortcuts: [
+      { name: "Resume", short_name: "Résumé", url: "/cv" },
+      { name: "Journal", short_name: "Journal", url: "/journal" },
+      { name: "Projects", short_name: "Projects", url: "/#projects" },
+    ],
     icons: [
       {
         src: "/icons/icon-192.png",

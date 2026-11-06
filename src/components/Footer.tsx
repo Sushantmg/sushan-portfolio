@@ -92,8 +92,11 @@ export function Footer() {
           >
             linkedin
           </a>
-          <a href="/feed.xml" className="transition-colors hover:text-acid">
-            rss
+          <a
+            href="/sitemap.xml"
+            className="transition-colors hover:text-acid"
+          >
+            sitemap
           </a>
           <a
             href={`mailto:${profile.email}`}

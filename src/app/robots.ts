@@ -6,6 +6,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
+      disallow: "/api/",
     },
     sitemap: siteUrl("/sitemap.xml"),
     // The Host directive takes a bare hostname, not a URL.
