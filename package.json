@@ -1,6 +1,6 @@
 {
   "name": "portfolio",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "engines": {
     "node": ">=20"
@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "check": "npm run lint && npm run type-check && npm run build"
   },
   "dependencies": {
     "framer-motion": "^13.4.2",

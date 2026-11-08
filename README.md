@@ -40,11 +40,18 @@ npm install
 npm run dev     # http://localhost:3000
 npm run build   # production build
 npm run lint    # eslint
+npm run type-check  # tsc --noEmit
+npm run check   # lint + type-check + build (same as CI)
 ```
+
+Continuous integration (`.github/workflows/ci.yml`) runs lint, type-check, and
+production build on every push to `main` and every pull request, using
+Node.js 20 with npm cache.
 
 ### Environment
 
-Copy `.env.example` to `.env.local`. All three variables are optional — without
+Copy `.env.example` (tracked in git — only `.env.local` / secrets are ignored)
+to `.env.local`. All three variables are optional — without
 `RESEND_API_KEY` the contact form falls back to opening a `mailto:` composer.
 
 ```bash
@@ -74,3 +81,5 @@ project or a journal entry is a single edit.
 - `SoftwareSourceCode`, `CreativeWork`, `BlogPosting`, `Person`, `ProfilePage`,
   `Blog`, and `BreadcrumbList` structured data is emitted per page.
 - Security headers and static asset caching configured via `next.config.ts`.
+- Sitemap `lastModified` dates are derived from the newest journal entry, so
+  the sitemap stays stable between deploys until content actually changes.
