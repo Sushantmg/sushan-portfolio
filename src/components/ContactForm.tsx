@@ -9,6 +9,21 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 type ErrorField = "email" | "message" | null;
 
+function errorMessageForCode(code?: string) {
+  switch (code) {
+    case "too_many":
+      return "too many messages from this device — email me directly";
+    case "too_long":
+      return "that message is too long — shorten it and send again";
+    case "bad_email":
+      return "that email doesn't look right — check it or leave it blank";
+    case "too_short":
+      return "give it a few more words, then send again";
+    default:
+      return "give it a few more words, then send again";
+  }
+}
+
 export function ContactForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -69,14 +84,14 @@ export function ContactForm() {
         return;
       }
 
-      setErrorField(data.error === "too_long" ? "message" : null);
-      setError(
-        data.error === "too_many"
-          ? "too many messages from this device — email me directly"
-          : data.error === "too_long"
-            ? "that message is too long — shorten it and send again"
-            : "give it a few more words, then send again",
+      setErrorField(
+        data.error === "too_long" || data.error === "too_short"
+          ? "message"
+          : data.error === "bad_email"
+            ? "email"
+            : null,
       );
+      setError(errorMessageForCode(data.error));
       setStatus("error");
     } catch {
       fallbackMailto();

@@ -12,7 +12,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const latest = latestNoteDate();
   // Keep the sitemap deterministic — using `new Date()` here made every
   // deploy look like a content change to crawlers and polluted diffs.
-  const stable = latest ? new Date(`${latest}T09:00:00Z`) : new Date();
+  // The exact clock time is pinned from the latest note date string so the
+  // serialized timestamp doesn't shift across Node/runtime timezones.
+  const stable = latest ? new Date(`${latest}T00:00:00.000Z`) : new Date("2026-01-01T00:00:00.000Z");
 
   return [
     {
@@ -46,7 +48,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     })),
     ...notes.map((n) => {
-      const d = new Date(`${n.date}T09:00:00Z`);
+      const d = new Date(`${n.date}T00:00:00.000Z`);
       return {
         url: siteUrl(`/journal/${noteSlug(n.title)}`),
         lastModified: Number.isNaN(d.getTime()) ? stable : d,
