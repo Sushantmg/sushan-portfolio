@@ -229,6 +229,8 @@ export function ProjectModal({
                     href={project.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label={`Open ${project.name} live demo (opens in a new tab)`}
+                    title="Opens in a new tab"
                     className="inline-flex items-center gap-1.5 text-muted transition-colors hover:text-acid"
                   >
                     <ExternalLink className="h-3 w-3" />
@@ -240,6 +242,8 @@ export function ProjectModal({
                     href={(project.repoUrl || project.github) as string}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label={`Open ${project.name} GitHub repository (opens in a new tab)`}
+                    title="Opens in a new tab"
                     className="inline-flex items-center gap-1.5 text-muted transition-colors hover:text-acid"
                   >
                     <GitHubIcon className="h-3 w-3" />

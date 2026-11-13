@@ -3,7 +3,8 @@ import { latestNoteDate, profile } from "@/lib/data";
 import { Kamon } from "./Kamon";
 import { LiveClock } from "./LiveClock";
 
-const updated = new Date(`${latestNoteDate()}T09:00:00Z`);
+const updatedIso = `${latestNoteDate()}T00:00:00.000Z`;
+const updated = new Date(updatedIso);
 const updatedLabel = new Intl.DateTimeFormat("en-US", {
   month: "long",
   year: "numeric",
@@ -45,7 +46,7 @@ export function Footer() {
         </p>
         <p className="flex items-center gap-2 font-mono text-[0.65rem] text-muted">
           <span className="text-acid">updated</span>
-          <time dateTime={latestNoteDate()}>{updatedLabel}</time>
+          <time dateTime={updatedIso}>{updatedLabel}</time>
         </p>
         <a
           href="#top"
@@ -72,6 +73,7 @@ export function Footer() {
             href="https://github.com/Sushantmg/sushan-portfolio"
             target="_blank"
             rel="me noopener noreferrer"
+            aria-label="View site source on GitHub (opens in a new tab)"
             className="transition-colors hover:text-acid"
           >
             source
@@ -80,6 +82,7 @@ export function Footer() {
             href={profile.github}
             target="_blank"
             rel="me noopener noreferrer"
+            aria-label="Sushan Tamang on GitHub (opens in a new tab)"
             className="transition-colors hover:text-acid"
           >
             github
@@ -88,6 +91,7 @@ export function Footer() {
             href={profile.linkedin}
             target="_blank"
             rel="me noopener noreferrer"
+            aria-label="Sushan Tamang on LinkedIn (opens in a new tab)"
             className="transition-colors hover:text-acid"
           >
             linkedin

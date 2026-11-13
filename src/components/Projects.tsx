@@ -219,7 +219,8 @@ export function Projects() {
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
                             className="inline-flex items-center gap-1.5 transition-colors hover:text-acid"
-                            aria-label={`Open ${project.name} live demo`}
+                            aria-label={`Open ${project.name} live demo (opens in a new tab)`}
+                            title="Opens in a new tab"
                           >
                             <ExternalLink className="h-3 w-3" />
                             live
@@ -232,7 +233,8 @@ export function Projects() {
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
                             className="inline-flex items-center gap-1.5 transition-colors hover:text-acid"
-                            aria-label={`Open ${project.name} GitHub repository`}
+                            aria-label={`Open ${project.name} GitHub repository (opens in a new tab)`}
+                            title="Opens in a new tab"
                           >
                             <GitHubIcon className="h-3 w-3" />
                             github

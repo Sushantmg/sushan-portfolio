@@ -72,18 +72,22 @@ export function Contact() {
                     { label: "Email", icon: Mail, href: `mailto:${profile.email}` },
                     { label: "Call", icon: Phone, href: `tel:${profile.phone.replace(/\s/g, "")}` },
                     { label: "Résumé", icon: FileText, href: "/cv" },
-                  ].map((link) => (
+                  ].map((link) => {
+                    const isExternal = link.href.startsWith("http");
+                    return (
                     <a
                       key={link.label}
                       href={link.href}
-                      target={link.href.startsWith("http") ? "_blank" : undefined}
+                      target={isExternal ? "_blank" : undefined}
                       rel={
-                        link.href.startsWith("http")
+                        isExternal
                           ? link.label === "GitHub" || link.label === "LinkedIn"
                             ? "me noopener noreferrer"
                             : "noopener noreferrer"
                           : undefined
                       }
+                      aria-label={isExternal ? `${link.label} (opens in a new tab)` : undefined}
+                      title={isExternal ? "Opens in a new tab" : undefined}
                       className="group flex flex-col items-center justify-center gap-3 bg-carbon p-5 transition-colors duration-300 hover:bg-carbon-2"
                     >
                       <link.icon className="h-6 w-6 text-muted transition-colors duration-300 group-hover:text-acid" />
@@ -91,7 +95,8 @@ export function Contact() {
                         {link.label}
                       </span>
                     </a>
-                  ))}
+                  );
+                  })}
                 </div>
               </div>
             </div>

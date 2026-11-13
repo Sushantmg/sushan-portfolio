@@ -283,7 +283,8 @@ export function Hero() {
                   href={profile.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="GitHub"
+                  aria-label="GitHub (opens in a new tab)"
+                  title="GitHub — opens in a new tab"
                   className="grid h-11 w-11 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
                 >
                   <GitHubIcon className="h-4 w-4" />
@@ -292,7 +293,8 @@ export function Hero() {
                   href={profile.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="LinkedIn"
+                  aria-label="LinkedIn (opens in a new tab)"
+                  title="LinkedIn — opens in a new tab"
                   className="grid h-11 w-11 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
                 >
                   <LinkedInIcon className="h-4 w-4" />

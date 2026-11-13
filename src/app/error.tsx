@@ -29,10 +29,10 @@ export default function Error({
           An unexpected error hit this page — the seal broke. Try again, and if
           it keeps happening, email{" "}
           <a
-            href="mailto:sushantmg2004@gmail.com"
+            href={`mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "sushantmg2004@gmail.com"}`}
             className="text-acid underline decoration-acid/40 underline-offset-2 hover:decoration-acid"
           >
-            sushantmg2004@gmail.com
+            {process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "sushantmg2004@gmail.com"}
           </a>
           .
         </p>
