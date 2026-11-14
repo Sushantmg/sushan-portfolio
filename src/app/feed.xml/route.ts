@@ -18,17 +18,21 @@ export async function GET() {
       const categories = note.tags
         .map((t) => `<category>${escape(t)}</category>`)
         .join("");
+      const pubDate = new Date(`${note.date}T00:00:00.000Z`);
       return `    <item>
       <title>${escape(note.title)}</title>
       <link>${link}</link>
       <guid isPermaLink="true">${link}</guid>
-      <pubDate>${new Date(`${note.date}T09:00:00Z`).toUTCString()}</pubDate>
+      <pubDate>${(Number.isNaN(pubDate.getTime()) ? new Date() : pubDate).toUTCString()}</pubDate>
       <description>${escape(note.excerpt)}</description>
       ${categories}
     </item>`;
     })
     .join("\n");
 
+  const lastBuild = ordered[0]
+    ? new Date(`${ordered[0].date}T00:00:00.000Z`)
+    : new Date();
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
@@ -36,7 +40,7 @@ export async function GET() {
     <link>${siteUrl("/#journal")}</link>
     <description>Field notes from the build log of Sushan Tamang, full-stack &amp; AI developer.</description>
     <language>en-us</language>
-    <lastBuildDate>${new Date(`${ordered[0].date}T09:00:00Z`).toUTCString()}</lastBuildDate>
+    <lastBuildDate>${(Number.isNaN(lastBuild.getTime()) ? new Date() : lastBuild).toUTCString()}</lastBuildDate>
     <atom:link href="${siteUrl("/feed.xml")}" rel="self" type="application/rss+xml" />
 ${items}
   </channel>

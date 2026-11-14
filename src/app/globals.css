@@ -223,6 +223,9 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   .petal,
   .petal svg,
   .branch {
@@ -232,6 +235,9 @@ html {
   .caret,
   .drift {
     animation: none;
+  }
+  .shine::before {
+    transition: none;
   }
 }
 

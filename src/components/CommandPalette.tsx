@@ -136,6 +136,11 @@ export function CommandPalette() {
     return [...cases, ...navs, ...dos, ...asks];
   }, [query]);
 
+  const activeIndex = results.length === 0 ? 0 : Math.min(index, results.length - 1);
+  const activeId = results[activeIndex]
+    ? `palette-option-${results[activeIndex].id}`
+    : undefined;
+
   const run = (action: Action) => {
     if (action.kind === "nav" && action.href) {
       document.querySelector(action.href)?.scrollIntoView({ behavior: "smooth" });
@@ -171,10 +176,6 @@ export function CommandPalette() {
     setOpen(false);
     setQuery("");
   };
-
-  const activeId = results[index]
-    ? `palette-option-${results[index].id}`
-    : undefined;
 
   return (
     <AnimatePresence>
@@ -253,7 +254,7 @@ className="w-full max-w-lg overflow-hidden border border-line bg-carbon-2 shadow
                 </p>
               )}
               {results.map((action, i) => {
-                const active = action.id === results[index]?.id;
+                const active = i === activeIndex;
                 return (
                   <button
                     key={action.id + action.label}
