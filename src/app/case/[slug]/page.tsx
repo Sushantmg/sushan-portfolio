@@ -313,6 +313,8 @@ export default async function CasePage({
               href={(project.liveUrl || (project as Project & { demoUrl?: string }).demoUrl) as string}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={`Open ${project.name} live demo (opens in a new tab)`}
+              title="Opens in a new tab"
               className="hard-shadow-sm border border-line bg-carbon-2 px-4 py-2 font-mono text-xs text-ink transition-transform duration-200 hover:-translate-y-0.5 hover:text-acid"
             >
               live demo
@@ -323,6 +325,8 @@ export default async function CasePage({
               href={(project.repoUrl || project.github || (project as Project & { repo?: string }).repo) as string}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={`Open ${project.name} GitHub repository (opens in a new tab)`}
+              title="Opens in a new tab"
               className="hard-shadow-sm border border-line bg-carbon-2 px-4 py-2 font-mono text-xs text-ink transition-transform duration-200 hover:-translate-y-0.5 hover:text-acid"
             >
               github

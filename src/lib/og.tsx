@@ -106,7 +106,7 @@ export function ogCard({ eyebrow, title, subtitle, tags = [], footer }: OgCard) 
             ))}
           </div>
           <div style={{ display: "flex", fontSize: 22, color: "#8f9385" }}>
-            {footer ?? "Portfolio / 2026"}
+            {footer ?? "sushan.dev"}
           </div>
         </div>
 
