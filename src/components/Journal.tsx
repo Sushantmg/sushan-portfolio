@@ -121,6 +121,7 @@ export function Journal() {
             </Link>
             <a
               href="/feed.xml"
+              type="application/rss+xml"
               className="inline-flex items-center gap-1 text-acid underline underline-offset-2 transition-colors hover:text-ink"
             >
               rss
