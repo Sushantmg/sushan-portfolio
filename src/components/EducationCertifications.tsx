@@ -185,7 +185,8 @@ export function EducationCertifications() {
                           href={cert.verify}
                           target="_blank"
                           rel="noopener noreferrer"
-                          aria-label={`Verify ${cert.title}`}
+                          aria-label={`Verify ${cert.title} (opens in a new tab)`}
+                          title="Verify certificate — opens in a new tab"
                           className="grid h-8 w-8 shrink-0 place-items-center border border-line text-muted transition-colors duration-300 group-hover:border-acid group-hover:text-acid"
                         >
                           <ExternalLink className="h-3.5 w-3.5" />
@@ -266,6 +267,8 @@ export function EducationCertifications() {
                       href={active.verify}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={`Verify ${active.title} certificate (opens in a new tab)`}
+                      title="Opens in a new tab"
                       className="flex items-center gap-1.5 border border-line px-3 py-1.5 font-mono text-xs text-acid transition-colors hover:border-acid"
                     >
                       verify <ExternalLink className="h-3 w-3" />

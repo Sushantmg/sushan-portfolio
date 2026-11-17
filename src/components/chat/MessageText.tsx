@@ -68,6 +68,8 @@ function inline(text: string, mark?: string): ReactNode[] {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label={`${token} (opens in a new tab)`}
+          title="Opens in a new tab"
           className="break-all text-acid underline decoration-acid/40 underline-offset-2 hover:decoration-acid"
         >
           {token}

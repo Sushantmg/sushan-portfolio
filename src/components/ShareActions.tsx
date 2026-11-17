@@ -51,6 +51,8 @@ export function ShareActions({
         type="button"
         onClick={copy}
         aria-live="polite"
+        aria-label={copied ? "Link copied to clipboard" : "Copy link to clipboard"}
+        title={copied ? "Copied" : "Copy link"}
         className="inline-flex items-center gap-1.5 border border-line px-3 py-2 font-mono text-[0.68rem] text-muted transition-colors hover:border-acid hover:text-acid"
       >
         {copied ? <Check className="h-3 w-3" /> : <Link2 className="h-3 w-3" />}
@@ -59,6 +61,8 @@ export function ShareActions({
       <button
         type="button"
         onClick={share}
+        aria-label="Share this page"
+        title="Share"
         className="inline-flex items-center gap-1.5 border border-line px-3 py-2 font-mono text-[0.68rem] text-muted transition-colors hover:border-acid hover:text-acid"
       >
         <Share2 className="h-3 w-3" /> share
