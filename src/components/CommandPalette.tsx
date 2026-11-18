@@ -34,6 +34,7 @@ const navActions: Action[] = [
   { id: "journal", label: "Journal", hint: "field notes / build log", kind: "nav", href: "#journal" },
   { id: "journal-index", label: "All journal entries", hint: "every field note", kind: "open", href: "/journal" },
   { id: "contact", label: "Contact", hint: "hire / reach out", kind: "nav", href: "#contact" },
+  { id: "cv", label: "Résumé / CV", hint: "print-ready résumé", kind: "open", href: "/cv" },
   { id: "top", label: "Back to top", hint: "scroll to hero", kind: "nav", href: "#top" },
 ];
 

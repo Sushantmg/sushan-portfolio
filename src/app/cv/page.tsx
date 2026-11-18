@@ -102,11 +102,11 @@ function Block({
 
 export default function CvPage() {
   const contact = [
-    profile.email,
-    profile.phone,
-    profile.location,
-    "github.com/Sushantmg",
-    "linkedin.com/in/sushan-tamang-9406712b1",
+    { label: profile.email, href: `mailto:${profile.email}` },
+    { label: profile.phone, href: `tel:${profile.phone.replace(/\s/g, "")}` },
+    { label: profile.location },
+    { label: "github.com/Sushantmg", href: profile.github },
+    { label: "linkedin.com/in/sushan-tamang-9406712b1", href: profile.linkedin },
   ];
 
   return (
@@ -140,8 +140,19 @@ export default function CvPage() {
 
           <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[0.72rem] text-[#5d6154]">
             {contact.map((item) => (
-              <li key={item} className="after:ml-5 after:text-[#c9c7ba] last:after:content-['']">
-                {item}
+              <li key={item.label} className="after:ml-5 after:text-[#c9c7ba] last:after:content-['']">
+                {item.href ? (
+                  <a
+                    href={item.href}
+                    target={item.href.startsWith("http") ? "_blank" : undefined}
+                    rel={item.href.startsWith("http") ? "me noopener noreferrer" : undefined}
+                    className="underline decoration-[#c9c7ba] underline-offset-2 transition-colors hover:text-[#3d7418]"
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  item.label
+                )}
               </li>
             ))}
           </ul>
@@ -259,17 +270,25 @@ export default function CvPage() {
                   {certifications.map((c) => (
                     <li
                       key={c.title}
-                      className="flex items-baseline justify-between gap-3 text-[0.82rem] text-[#31352b]"
+                      className="text-[0.8rem] leading-snug text-[#31352b]"
                     >
-                      <span>
-                        {c.title}
-                        <span className="text-[#5d6154]"> — {c.issuer}</span>
+                      <span className="font-medium">{c.title}</span>
+                      <span className="block font-mono text-[0.62rem] uppercase tracking-wider text-[#5d6154]">
+                        {c.issuer}
+                        {c.verify ? (
+                          <>
+                            {" · "}
+                            <a
+                              href={c.verify}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="underline decoration-[#c9c7ba] underline-offset-2 transition-colors hover:text-[#3d7418]"
+                            >
+                              verify
+                            </a>
+                          </>
+                        ) : null}
                       </span>
-                      {c.verify && (
-                        <span className="shrink-0 font-mono text-[0.58rem] uppercase tracking-wider text-[#3d7418]">
-                          verified
-                        </span>
-                      )}
                     </li>
                   ))}
                 </ul>
