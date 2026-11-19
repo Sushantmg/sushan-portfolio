@@ -121,10 +121,12 @@ export function ContactForm() {
       </label>
       <input
         id="cn-name"
+        name="name"
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="your name"
         maxLength={80}
+        autoComplete="name"
         className="mt-2 w-full border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted focus:border-acid focus:outline-none"
       />
       <span className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden" aria-hidden>
@@ -143,6 +145,7 @@ export function ContactForm() {
       </label>
       <input
         id="cn-email"
+        name="email"
         type="email"
         value={email}
         onChange={(e) => {
@@ -152,6 +155,8 @@ export function ContactForm() {
         placeholder="you@company.com"
         maxLength={120}
         autoComplete="email"
+        spellCheck={false}
+        inputMode="email"
         aria-describedby={errorField === "email" ? "cn-status" : undefined}
         aria-invalid={errorField === "email"}
         className="mt-2 w-full border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted focus:border-acid focus:outline-none"
@@ -161,6 +166,7 @@ export function ContactForm() {
       </label>
       <textarea
         id="cn-message"
+        name="message"
         value={message}
         onChange={(e) => {
           setMessage(e.target.value);
@@ -171,6 +177,7 @@ export function ContactForm() {
         placeholder="what are we building? — timelines, goals, links welcome"
         rows={3}
         maxLength={MAX}
+        required
         aria-describedby="cn-status"
         aria-invalid={errorField === "message"}
         className="mt-2 w-full resize-none border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted focus:border-acid focus:outline-none"

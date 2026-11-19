@@ -274,6 +274,7 @@ export default async function JournalPostPage({
           <span className="text-acid">note:</span> part of the build log —{" "}
           <Link
             href="/feed.xml"
+            type="application/rss+xml"
             className="text-acid underline underline-offset-2 hover:text-ink"
           >
             subscribe via RSS
