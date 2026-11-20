@@ -88,8 +88,9 @@ export function Contact() {
                       }
                       aria-label={isExternal ? `${link.label} (opens in a new tab)` : undefined}
                       title={isExternal ? "Opens in a new tab" : undefined}
-                      className="group flex flex-col items-center justify-center gap-3 bg-carbon p-5 transition-colors duration-300 hover:bg-carbon-2"
+                      className="group relative flex flex-col items-center justify-center gap-3 overflow-hidden bg-carbon p-5 transition-all duration-300 hover:-translate-y-0.5 hover:bg-carbon-2 hover:shadow-[inset_0_-2px_0_0_#c7f542]"
                     >
+                      <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-acid/0 transition-colors duration-300 group-hover:bg-acid/40" />
                       <link.icon className="h-6 w-6 text-muted transition-colors duration-300 group-hover:text-acid" />
                       <span className="label text-muted transition-colors duration-300 group-hover:text-ink">
                         {link.label}

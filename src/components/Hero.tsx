@@ -241,12 +241,18 @@ export function Hero() {
               transition={{ delay: 0.38, duration: 0.6 }}
               className="mt-4 flex flex-wrap items-center gap-3 font-mono text-[0.65rem]"
             >
-              <span className="inline-flex items-center gap-1.5 border border-line bg-carbon-2 px-2.5 py-1.5 text-muted">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-acid" />
+              <a
+                href="#contact"
+                className="inline-flex items-center gap-1.5 border border-acid/40 bg-carbon-2 px-2.5 py-1.5 text-ink transition-all duration-200 hover:-translate-y-0.5 hover:border-acid hover:text-acid hover:shadow-[3px_3px_0_0_#c7f542]"
+              >
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-acid opacity-50" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-acid" />
+                </span>
                 open to work · 2026
-              </span>
-              <span className="text-muted">
-                合 pokhara, nepal <span className="text-acid">/</span> npt
+              </a>
+              <span className="inline-flex items-center gap-2 border border-line bg-carbon/50 px-2.5 py-1.5 text-muted">
+                <span className="text-vermilion">合</span> pokhara, nepal <span className="text-acid">/</span> npt
               </span>
             </motion.div>
 
@@ -259,7 +265,7 @@ export function Hero() {
               <Magnetic>
               <a
                 href="#projects"
-                className="group inline-flex items-center gap-2 bg-acid px-6 py-3 text-sm font-bold text-carbon transition-transform duration-200 hover:-translate-y-0.5"
+                className="group inline-flex items-center gap-2 bg-acid px-6 py-3 text-sm font-bold text-carbon shadow-[4px_4px_0_0_#ece9de] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_#ece9de] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_0_#ece9de]"
               >
                 View work
                 <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -267,13 +273,13 @@ export function Hero() {
             </Magnetic>
               <a
                 href="#contact"
-                className="inline-flex items-center gap-2 border border-line bg-carbon-2 px-6 py-3 text-sm font-semibold text-ink transition-colors duration-200 hover:border-acid hover:text-acid"
+                className="inline-flex items-center gap-2 border border-line bg-carbon-2 px-6 py-3 text-sm font-semibold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:border-acid hover:text-acid hover:shadow-[4px_4px_0_0_#c7f542]"
               >
                 Get in touch
               </a>
               <Link
                 href="/cv"
-                className="inline-flex items-center gap-2 border border-line bg-carbon-2 px-6 py-3 text-sm font-semibold text-ink transition-colors duration-200 hover:border-acid hover:text-acid"
+                className="inline-flex items-center gap-2 border border-line bg-carbon-2 px-6 py-3 text-sm font-semibold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:border-acid hover:text-acid hover:shadow-[4px_4px_0_0_#c7f542]"
               >
                 Résumé
                 <ArrowUpRight className="h-4 w-4" />

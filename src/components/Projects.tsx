@@ -129,10 +129,10 @@ export function Projects() {
           <button
             onClick={() => setTag(null)}
             aria-pressed={tag === null}
-            className={`border px-3 py-1.5 font-mono text-[0.68rem] transition-colors duration-200 ${
+            className={`border px-3 py-1.5 font-mono text-[0.68rem] transition-all duration-200 ${
               tag === null
-                ? "border-acid bg-acid text-carbon"
-                : "border-line text-muted hover:border-acid hover:text-acid"
+                ? "border-acid bg-acid text-carbon shadow-[3px_3px_0_0_#ece9de]"
+                : "border-line text-muted hover:-translate-y-0.5 hover:border-acid hover:text-acid hover:shadow-[3px_3px_0_0_#c7f542]"
             }`}
           >
             all · {projects.length}
@@ -142,10 +142,10 @@ export function Projects() {
               key={t}
               onClick={() => setTag(tag === t ? null : t)}
               aria-pressed={tag === t}
-              className={`border px-3 py-1.5 font-mono text-[0.68rem] transition-colors duration-200 ${
+              className={`border px-3 py-1.5 font-mono text-[0.68rem] transition-all duration-200 ${
                 tag === t
-                  ? "border-acid bg-acid text-carbon"
-                  : "border-line text-muted hover:border-acid hover:text-acid"
+                  ? "border-acid bg-acid text-carbon shadow-[3px_3px_0_0_#ece9de]"
+                  : "border-line text-muted hover:-translate-y-0.5 hover:border-acid hover:text-acid hover:shadow-[3px_3px_0_0_#c7f542]"
               }`}
             >
               {t.toLowerCase()} · {count}

@@ -106,6 +106,14 @@ html {
   box-shadow: 5px 5px 0 0 #ece9de;
 }
 
+@utility ui-lift {
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+@utility ui-lift-hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0 0 #c7f542;
+}
+
 @keyframes blink {
   0%,
   49% {
