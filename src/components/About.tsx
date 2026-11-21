@@ -83,7 +83,7 @@ export function About() {
         <div className="mt-16 grid gap-0 sm:grid-cols-2 lg:grid-cols-4">
           {focuses.map((f, i) => (
             <Reveal key={f.title} delay={i * 0.08}>
-              <div className="group relative h-full border border-line p-6 transition-colors duration-300 hover:bg-carbon-2">
+              <div className="group relative h-full border border-line p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-carbon-2 hover:shadow-[inset_0_-2px_0_0_#c7f542]">
                 <ArrowUpRight className="absolute right-4 top-4 h-4 w-4 -translate-x-1 -translate-y-1 text-acid opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100" />
                 <p className="font-mono text-xs text-muted">0{i + 1}.</p>
                 <h3 className="font-display mt-3 text-xl font-semibold text-ink transition-colors duration-300 group-hover:text-acid">

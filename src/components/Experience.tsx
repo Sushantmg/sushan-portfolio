@@ -24,7 +24,7 @@ export function Experience() {
             const cases = projectsForCompany(item.company);
             return (
             <Reveal key={item.company} delay={0.04 * i}>
-              <div className="group grid gap-2 border-b border-line py-8 transition-colors duration-300 hover:bg-carbon/60 sm:grid-cols-12 sm:gap-6 sm:px-4">
+              <div className="group grid gap-2 border-b border-line py-8 transition-all duration-300 hover:bg-carbon/60 hover:shadow-[inset_3px_0_0_0_#c7f542] sm:grid-cols-12 sm:gap-6 sm:px-4">
                 <div className="font-mono text-xs text-acid sm:col-span-1 sm:pt-1.5">
                   0{i + 1}
                 </div>

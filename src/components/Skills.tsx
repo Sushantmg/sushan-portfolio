@@ -32,10 +32,10 @@ export function Skills() {
             );
             return (
             <Reveal key={group.label} delay={0.05 * i}>
-              <div className="group flex h-full flex-col border border-line bg-carbon-2 p-6 transition-colors duration-300 hover:border-acid">
+              <div className="group flex h-full flex-col border border-line bg-carbon-2 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-acid hover:shadow-[4px_4px_0_0_#c7f542]">
                 <div className="flex items-baseline justify-between">
                   <h3 className="label text-acid">{group.label}</h3>
-                  <span className="font-mono text-xs text-muted">
+                  <span className="font-mono text-xs text-muted transition-colors duration-300 group-hover:text-acid">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                 </div>

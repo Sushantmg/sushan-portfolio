@@ -50,7 +50,7 @@ export function Footer() {
         </p>
         <a
           href="#top"
-          className="flex items-center gap-2 transition-colors hover:text-acid"
+          className="inline-flex items-center gap-2 border border-line px-3 py-1.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-acid hover:text-acid hover:shadow-[3px_3px_0_0_#c7f542]"
         >
           <span className="text-acid">↑</span> back to top
         </a>
