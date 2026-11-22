@@ -113,10 +113,10 @@ export function EducationCertifications() {
                   type="button"
                   onClick={() => setFilter(f)}
                   aria-pressed={filter === f}
-                  className={`label border px-3 py-1.5 transition-colors duration-200 ${
+                  className={`label border px-3 py-1.5 transition-all duration-200 ${
                     filter === f
-                      ? "border-acid bg-acid text-carbon"
-                      : "border-line text-muted hover:border-acid hover:text-acid"
+                      ? "border-acid bg-acid text-carbon shadow-[3px_3px_0_0_#ece9de]"
+                      : "border-line text-muted hover:-translate-y-0.5 hover:border-acid hover:text-acid hover:shadow-[3px_3px_0_0_#c7f542]"
                   }`}
                 >
                   {f}
@@ -167,7 +167,7 @@ export function EducationCertifications() {
                       </div>
                     </button>
                   ) : (
-                    <div className="group flex items-center gap-3 border border-line bg-carbon-2 p-4 transition-colors duration-300 hover:border-acid">
+                    <div className="group flex items-center gap-3 border border-line bg-carbon-2 p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-acid hover:shadow-[3px_3px_0_0_#c7f542]">
                       <span className="font-mono grid h-8 w-8 shrink-0 place-items-center border border-line text-xs text-acid">
                         {String(i + 1).padStart(2, "0")}
                       </span>

@@ -49,7 +49,7 @@ export function MobileDock() {
       className="fixed bottom-5 left-1/2 z-50 lg:hidden"
       aria-label="Quick navigation"
     >
-      <div className="flex items-center gap-1 border border-line bg-carbon-2/95 p-1.5 backdrop-blur">
+      <div className="flex items-center gap-1 border border-line bg-carbon-2/95 p-1.5 shadow-[4px_4px_0_0_#c7f5421a] backdrop-blur">
         {items.map((item) => {
           const isActive = active === item.href.slice(1);
           return (
@@ -59,16 +59,16 @@ export function MobileDock() {
               aria-label={item.label}
               aria-current={isActive ? "true" : undefined}
               title={item.label}
-              className={`grid w-12 place-items-center py-2.5 font-mono text-sm transition-colors duration-200 ${
+              className={`grid w-12 place-items-center py-2.5 font-mono text-sm transition-all duration-200 ${
                 isActive
                   ? "text-acid"
-                  : "text-muted hover:text-acid"
+                  : "text-muted hover:-translate-y-0.5 hover:text-acid"
               }`}
             >
               <span
-                className={`grid h-8 w-8 place-items-center border transition-colors duration-200 ${
+                className={`grid h-8 w-8 place-items-center border transition-all duration-200 ${
                   isActive
-                    ? "border-acid bg-acid/10"
+                    ? "border-acid bg-acid/10 shadow-[inset_0_-2px_0_0_#c7f542]"
                     : "border-transparent"
                 }`}
               >

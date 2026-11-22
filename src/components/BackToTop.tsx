@@ -22,7 +22,7 @@ export function BackToTop() {
         initial={false}
         animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 12, pointerEvents: visible ? "auto" : "none" }}
         transition={{ duration: 0.25 }}
-        className="fixed bottom-5 left-5 z-50 grid h-12 w-12 place-items-center border border-line bg-carbon-2 text-muted transition-colors duration-200 hover:border-acid hover:text-acid"
+        className="fixed bottom-5 left-5 z-50 grid h-12 w-12 place-items-center border border-line bg-carbon-2 text-muted transition-all duration-200 hover:-translate-y-0.5 hover:border-acid hover:text-acid hover:shadow-[3px_3px_0_0_#c7f542]"
       >
         <ArrowUp className="h-4 w-4" />
       </motion.a>
