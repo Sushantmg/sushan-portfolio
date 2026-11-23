@@ -159,7 +159,7 @@ export function Navbar() {
               rel="noopener noreferrer"
               aria-label="GitHub (opens in a new tab)"
               title="GitHub — opens in a new tab"
-              className="text-muted transition-colors hover:text-acid"
+              className="text-muted transition-all duration-200 hover:-translate-y-0.5 hover:text-acid"
             >
               <GitHubIcon className="h-4 w-4" />
             </a>
@@ -169,7 +169,7 @@ export function Navbar() {
               rel="noopener noreferrer"
               aria-label="LinkedIn (opens in a new tab)"
               title="LinkedIn — opens in a new tab"
-              className="text-muted transition-colors hover:text-acid"
+              className="text-muted transition-all duration-200 hover:-translate-y-0.5 hover:text-acid"
             >
               <LinkedInIcon className="h-4 w-4" />
             </a>
@@ -206,7 +206,7 @@ export function Navbar() {
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
               aria-controls="mobile-nav"
-              className="grid h-9 w-9 place-items-center border border-line text-ink"
+              className="grid h-9 w-9 place-items-center border border-line text-ink transition-all duration-200 hover:border-acid hover:text-acid hover:shadow-[3px_3px_0_0_#c7f542]"
             >
               {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>

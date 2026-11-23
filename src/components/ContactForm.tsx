@@ -127,7 +127,7 @@ export function ContactForm() {
         placeholder="your name"
         maxLength={80}
         autoComplete="name"
-        className="mt-2 w-full border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted focus:border-acid focus:outline-none"
+        className="mt-2 w-full border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted transition-colors duration-200 focus:border-acid focus:outline-none"
       />
       <span className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden" aria-hidden>
         <label htmlFor="cn-company">Company (leave blank)</label>
@@ -159,7 +159,7 @@ export function ContactForm() {
         inputMode="email"
         aria-describedby={errorField === "email" ? "cn-status" : undefined}
         aria-invalid={errorField === "email"}
-        className="mt-2 w-full border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted focus:border-acid focus:outline-none"
+        className="mt-2 w-full border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted transition-colors duration-200 focus:border-acid focus:outline-none"
       />
       <label htmlFor="cn-message" className="label mt-4 block text-muted">
         / message
@@ -180,13 +180,13 @@ export function ContactForm() {
         required
         aria-describedby="cn-status"
         aria-invalid={errorField === "message"}
-        className="mt-2 w-full resize-none border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted focus:border-acid focus:outline-none"
+        className="mt-2 w-full resize-none border-b border-line bg-transparent pb-2 font-mono text-sm text-ink caret-acid placeholder:text-muted transition-colors duration-200 focus:border-acid focus:outline-none"
       />
       <div className="mt-3 flex items-center justify-between gap-3">
         <span
           id="cn-status"
           aria-live="polite"
-          className="font-mono text-[0.65rem] text-muted"
+          className={`font-mono text-[0.65rem] ${status === "error" ? "text-vermilion" : status === "sent" ? "text-acid" : "text-muted"}`}
         >
           {status === "sending"
             ? "sending…"
@@ -201,7 +201,7 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={!message.trim() || status === "sending"}
-          className="inline-flex items-center gap-2 bg-acid px-4 py-2 text-xs font-bold text-carbon transition-transform duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex items-center gap-2 bg-acid px-4 py-2 text-xs font-bold text-carbon shadow-[3px_3px_0_0_#ece9de] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#ece9de] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0_0_#ece9de] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
         >
           send <Send className="h-3.5 w-3.5" />
         </button>
