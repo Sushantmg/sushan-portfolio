@@ -30,19 +30,19 @@ export default function NotFound() {
       <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 bg-acid px-6 py-3 text-sm font-bold text-carbon transition-transform duration-200 hover:-translate-y-0.5"
+          className="inline-flex items-center gap-2 bg-acid px-6 py-3 text-sm font-bold text-carbon shadow-[4px_4px_0_0_#ece9de] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_#ece9de]"
         >
           帰る home
         </Link>
         <Link
           href="/#projects"
-          className="inline-flex items-center gap-2 border border-line bg-carbon-2 px-6 py-3 text-sm font-semibold text-ink transition-colors duration-200 hover:border-acid hover:text-acid"
+          className="inline-flex items-center gap-2 border border-line bg-carbon-2 px-6 py-3 text-sm font-semibold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:border-acid hover:text-acid hover:shadow-[4px_4px_0_0_#c7f542]"
         >
           see work
         </Link>
         <Link
           href="/journal"
-          className="inline-flex items-center gap-2 border border-line bg-carbon-2 px-6 py-3 text-sm font-semibold text-ink transition-colors duration-200 hover:border-acid hover:text-acid"
+          className="inline-flex items-center gap-2 border border-line bg-carbon-2 px-6 py-3 text-sm font-semibold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:border-acid hover:text-acid hover:shadow-[4px_4px_0_0_#c7f542]"
         >
           field notes
         </Link>

@@ -153,7 +153,7 @@ export function ProjectModal({
                   <button
                     onClick={onPrev}
                     aria-label="Previous project"
-                    className="grid h-9 w-9 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
+                    className="grid h-9 w-9 place-items-center border border-line text-muted transition-all duration-200 hover:-translate-y-0.5 hover:border-acid hover:text-acid hover:shadow-[3px_3px_0_0_#c7f542]"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
@@ -162,7 +162,7 @@ export function ProjectModal({
                   <button
                     onClick={onNext}
                     aria-label="Next project"
-                    className="grid h-9 w-9 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
+                    className="grid h-9 w-9 place-items-center border border-line text-muted transition-all duration-200 hover:-translate-y-0.5 hover:border-acid hover:text-acid hover:shadow-[3px_3px_0_0_#c7f542]"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>
@@ -170,7 +170,7 @@ export function ProjectModal({
                 <button
                   onClick={onClose}
                   aria-label="Close project details"
-                  className="grid h-9 w-9 place-items-center border border-line text-muted transition-colors hover:border-acid hover:text-acid"
+                  className="grid h-9 w-9 place-items-center border border-line text-muted transition-all duration-200 hover:-translate-y-0.5 hover:border-acid hover:text-acid hover:shadow-[3px_3px_0_0_#c7f542]"
                 >
                   <X className="h-4 w-4" />
                 </button>
