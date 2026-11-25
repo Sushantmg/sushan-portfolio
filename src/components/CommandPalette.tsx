@@ -237,7 +237,7 @@ className="w-full max-w-lg overflow-hidden border border-line bg-carbon-2 shadow
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close palette"
-                className="border border-line px-2 py-1 font-mono text-[0.65rem] text-muted transition-colors hover:border-acid hover:text-acid"
+                className="border border-line px-2 py-1 font-mono text-[0.65rem] text-muted transition-all duration-200 hover:-translate-y-0.5 hover:border-acid hover:text-acid hover:shadow-[2px_2px_0_0_#c7f542]"
               >
                 esc
               </button>
@@ -265,8 +265,8 @@ className="w-full max-w-lg overflow-hidden border border-line bg-carbon-2 shadow
                     type="button"
                     onMouseEnter={() => setIndex(i)}
                     onClick={() => run(action)}
-                    className={`flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition-colors ${
-                      active ? "bg-acid/10" : ""
+                    className={`flex w-full items-center justify-between gap-3 border-l-2 px-3 py-2.5 text-left transition-all duration-150 ${
+                      active ? "border-acid bg-acid/10" : "border-transparent hover:bg-carbon"
                     }`}
                   >
 <span className="flex min-w-0 items-center gap-3">

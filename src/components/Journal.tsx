@@ -114,15 +114,15 @@ export function Journal() {
             </span>
             <Link
               href="/journal"
-              className="inline-flex items-center gap-1 text-acid underline underline-offset-2 transition-colors hover:text-ink"
+              className="group inline-flex items-center gap-1 text-acid underline decoration-acid/40 underline-offset-2 transition-all duration-200 hover:text-ink hover:decoration-acid"
             >
               all entries
-              <ArrowUpRight className="h-3 w-3" />
+              <ArrowUpRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
             <a
               href="/feed.xml"
               type="application/rss+xml"
-              className="inline-flex items-center gap-1 text-acid underline underline-offset-2 transition-colors hover:text-ink"
+              className="inline-flex items-center gap-1 text-acid underline decoration-acid/40 underline-offset-2 transition-all duration-200 hover:text-ink hover:decoration-acid"
             >
               rss
             </a>

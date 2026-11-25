@@ -30,7 +30,7 @@ export function Contact() {
               <span className="flex flex-wrap items-center gap-2">
                 <a
                   href={`mailto:${profile.email}`}
-                  className="font-display group inline-block text-2xl font-semibold text-ink underline decoration-acid decoration-2 underline-offset-8 transition-colors duration-300 hover:text-acid sm:text-2xl"
+                  className="font-display group inline-block text-2xl font-semibold text-ink underline decoration-acid decoration-2 underline-offset-8 transition-all duration-300 hover:text-acid hover:decoration-vermilion sm:text-2xl"
                 >
                   {profile.email}
                 </a>
