@@ -41,6 +41,8 @@ export const metadata: Metadata = {
     "LangChain",
     "Nepal",
     "Pokhara",
+    "Portfolio",
+    "Software Engineer",
   ],
   creator: "Sushan Tamang",
   authors: [{ name: "Sushan Tamang", url: "https://github.com/Sushantmg" }],
@@ -73,6 +75,7 @@ export const metadata: Metadata = {
     description:
       "Building production-grade AI-powered applications, scalable web platforms, and multi-service architectures.",
     images: ["/twitter-image"],
+    creator: "@Sushantmg",
   },
   robots: { index: true, follow: true },
   icons: {
@@ -93,6 +96,8 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: dark)", color: "#10120f" },
   ],
   colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -19,6 +19,7 @@ export default function manifest(): MetadataRoute.Manifest {
       { name: "Resume", short_name: "Résumé", url: "/cv" },
       { name: "Journal", short_name: "Journal", url: "/journal" },
       { name: "Projects", short_name: "Projects", url: "/#projects" },
+      { name: "Contact", short_name: "Contact", url: "/#contact" },
     ],
     icons: [
       {
